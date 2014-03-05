@@ -1,6 +1,7 @@
 package com.song1.musicno1.activities;
 
 import android.os.Bundle;
+import butterknife.ButterKnife;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.song1.musicno1.R;
 
@@ -14,5 +15,6 @@ public class MainActivity extends SherlockFragmentActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    ButterKnife.inject(this);
   }
 }

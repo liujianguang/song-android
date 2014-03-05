@@ -11,6 +11,8 @@ import org.cybergarage.upnp.std.av.controller.MediaController;
  * Time: PM5:14
  */
 public class UpnpService extends Service {
+  private MediaController mediaController;
+
   @Override
   public IBinder onBind(Intent intent) {
     return null;
