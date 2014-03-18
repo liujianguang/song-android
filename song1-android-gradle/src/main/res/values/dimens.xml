@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- Device -->
+  <dimen name="space">20dip</dimen>
+  <dimen name="height">70dip</dimen>
+  <dimen name="marginLeft">30dip</dimen>
+  <dimen name="button_width">120dp</dimen>
+</resources>

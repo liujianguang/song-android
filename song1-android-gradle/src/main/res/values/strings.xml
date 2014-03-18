@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">音乐1号</string>
+  <string name="app_name">音乐1号</string>
+  <string name="cancle">取消</string>
+  <string name="confirm">确定</string>
+  <!-- Device -->
+  <string name="newDevice">添加新设备</string>
+  <string name="selectDevice">选择设备：</string>
+  <string name="selectNetwork">选择网络：</string>
+  <string name="setDeviceName">设备名称：</string>
 </resources>

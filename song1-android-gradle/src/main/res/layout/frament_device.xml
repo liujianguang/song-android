@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+  <LinearLayout
+      style="@style/layout_style">
+
+    <TextView
+        style="@style/textView_style"
+        android:text="@string/setDeviceName"/>
+
+    <Spinner
+        style="@style/spinner_style"
+        android:id="@+id/deviceNameSpinner"/>
+
+  </LinearLayout>
+
+  <LinearLayout
+      style="@style/layout_style">
+
+    <TextView
+        style="@style/textView_style"
+        android:text="@string/selectDevice"/>
+
+    <Spinner
+        style="@style/spinner_style"
+        android:id="@+id/deviceSpinner"/>
+  </LinearLayout>
+
+  <LinearLayout
+      style="@style/layout_style">
+
+    <TextView
+        style="@style/textView_style"
+        android:text="@string/selectNetwork"/>
+
+    <Spinner
+        style="@style/spinner_style"
+        android:id="@+id/networkSpinner"/>
+  </LinearLayout>
+
+  <LinearLayout
+      style="@style/layout_style"
+      android:layout_height="100dp">
+
+    <Button
+        style="@style/button_style"
+        android:text="@string/cancle"/>
+
+    <View
+        android:layout_width="@dimen/space"
+        android:layout_height="match_parent"
+        />
+
+    <Button
+        style="@style/button_style"
+        android:text="@string/confirm"/>
+  </LinearLayout>
+
+</LinearLayout>

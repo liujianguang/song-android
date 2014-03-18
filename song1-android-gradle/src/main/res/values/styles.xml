@@ -1,8 +1,36 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light">
-        <!-- Customize your theme here. -->
-    </style>
+
+  <!-- Device -->
+  <style name="layout_style">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">@dimen/height</item>
+    <item name="android:orientation">horizontal</item>
+    <item name="android:gravity">center</item>
+  </style>
+  <style name="textView_style">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginLeft">@dimen/space</item>
+  </style>
+  <style name="button_style">
+    <item name="android:layout_width">@dimen/button_width</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:background">@drawable/button</item>
+  </style>
+  <style name="spinner_style">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_weight">1</item>
+    <item name="android:layout_marginLeft">@dimen/space</item>
+    <item name="android:layout_marginRight">@dimen/space</item>
+  </style>
+
+
+  <!-- Base application theme. -->
+  <style name="AppTheme" parent="android:Theme.Holo.Light">
+    <!-- Customize your theme here. -->
+    <item name="android:buttonStyle">@style/button_style</item>
+  </style>
 
 </resources>
