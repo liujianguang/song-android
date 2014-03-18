@@ -20,7 +20,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
   @OnClick(R.id.newDeviceButton)
   public void newDeviceButtonClick() {
-    DeviceDialog deviceDialog = new DeviceDialog(this);
+    DeviceDialog deviceDialog = new DeviceDialog();
     deviceDialog.show(fragmentManager,"deviceDialog");
   }
 

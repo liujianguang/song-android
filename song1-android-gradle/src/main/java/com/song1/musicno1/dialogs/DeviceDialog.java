@@ -1,9 +1,8 @@
 package com.song1.musicno1.dialogs;
 
-import android.app.Activity;
 import android.content.Context;
+import android.net.wifi.ScanResult;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.models.WifiModel;
@@ -22,10 +22,11 @@ import java.util.List;
 /**
  * Created by kate on 14-3-17.
  */
-public class DeviceDialog extends DialogFragment {
+public class DeviceDialog extends SherlockDialogFragment implements WifiModel.ScanListener{
 
-  Context context;
-  WifiModel wifiModel;
+  @InjectView(R.id.deviceNameSpinner) Spinner deviceNameSpinner;
+  @InjectView(R.id.deviceSpinner)     Spinner deviceSpinner;
+  @InjectView(R.id.networkSpinner)    Spinner networkSpinner;
 
   List<String> deviceNameList = Lists.newArrayList();
   List<String> deviceList     = Lists.newArrayList();
@@ -35,14 +36,8 @@ public class DeviceDialog extends DialogFragment {
   SpinnerAdapter deviceAdapter;
   SpinnerAdapter networkAdapter;
 
-  @InjectView(R.id.deviceNameSpinner) Spinner deviceNameSpinner;
-  @InjectView(R.id.deviceSpinner)     Spinner deviceSpinner;
-  @InjectView(R.id.networkSpinner)    Spinner networkSpinner;
-
-  @Override
-  public void onAttach(Activity activity) {
-    super.onAttach(activity);
-  }
+  Context context;
+  WifiModel wifiModel;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,6 +60,7 @@ public class DeviceDialog extends DialogFragment {
   }
 
   private void initData() {
+    context = getSherlockActivity();
     wifiModel = new WifiModel(context);
     deviceNameList.addAll(Lists.newArrayList("书房设备", "客厅设备", "卧室设备"));
     deviceList.addAll(Lists.newArrayList("yy199C4", "yy5975B", "yy37858"));
@@ -77,8 +73,8 @@ public class DeviceDialog extends DialogFragment {
     networkAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, networkList);
   }
 
-  public DeviceDialog(Context context) {
-    this.context = context;
-  }
+  @Override
+  public void scanResult(List<ScanResult> scanResultList) {
 
+  }
 }
