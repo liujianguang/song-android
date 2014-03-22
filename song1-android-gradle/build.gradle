@@ -42,4 +42,6 @@ dependencies {
     compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
     compile 'de.akquinet.android.androlog:androlog:1.0.6'
     compile 'com.jakewharton:butterknife:4.0.1'
+    compile 'com.nineoldandroids:library:2.4.0'
+
 }

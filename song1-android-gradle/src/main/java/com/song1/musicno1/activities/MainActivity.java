@@ -1,12 +1,13 @@
 package com.song1.musicno1.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import android.view.View;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.song1.musicno1.R;
-import com.song1.musicno1.dialogs.DeviceDialog;
+import com.song1.musicno1.models.UpnpModel;
 import de.akquinet.android.androlog.Log;
 
 /**
@@ -16,12 +17,12 @@ import de.akquinet.android.androlog.Log;
  */
 public class MainActivity extends SherlockFragmentActivity {
 
-  FragmentManager fragmentManager;
+  UpnpModel       upnpModel;
 
-  @OnClick(R.id.newDeviceButton)
-  public void newDeviceButtonClick() {
-    DeviceDialog deviceDialog = new DeviceDialog();
-    deviceDialog.show(fragmentManager,"deviceDialog");
+
+  @OnClick(R.id.up)
+  public void upClick(View view) {
+    startActivity(new Intent(this, CurrentNotworkDeviceActivity.class));
   }
 
   @Override
@@ -31,6 +32,10 @@ public class MainActivity extends SherlockFragmentActivity {
 
     setContentView(R.layout.activity_main);
     ButterKnife.inject(this);
-    fragmentManager = getSupportFragmentManager();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
   }
 }
