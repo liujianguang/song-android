@@ -44,4 +44,5 @@ dependencies {
     compile 'com.jakewharton:butterknife:4.0.1'
     compile 'de.akquinet.android.androlog:androlog:1.0.6'
     compile 'com.squareup:otto:1.3.4'
+    compile 'com.nineoldandroids:library:2.4.0'
 }
