@@ -10,6 +10,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,6 @@ import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import com.actionbarsherlock.app.SherlockFragment;
 import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.dialogs.DeviceListDialog;
@@ -35,7 +35,7 @@ import java.util.Map;
 /**
  * Created by kate on 14-3-19.
  */
-public class CurrentNetworkDeviceFragment extends SherlockFragment implements UpnpModel.UpnpChangeListener, WifiModel.WifiModleListener {
+public class CurrentNetworkDeviceFragment extends Fragment implements UpnpModel.UpnpChangeListener, WifiModel.WifiModleListener {
 
   private static final int STATUS_CONNECT_SUCC = 0;
   private static final int STATUS_SHOW_DIALOG  = 1;
@@ -99,18 +99,18 @@ public class CurrentNetworkDeviceFragment extends SherlockFragment implements Up
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    dataList = Lists.newArrayList(null);
+    dataList = Lists.newArrayList();
     viewAdapter = new ViewAdapter();
     gridView.setAdapter(viewAdapter);
 
-    progressDialog = new ProgressDialog(getSherlockActivity());
+    progressDialog = new ProgressDialog(getActivity());
     progressDialog.setMessage("连接新设备中...");
     progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     progressDialog.setCanceledOnTouchOutside(false);
     progressDialog.setOnCancelListener(cancelListener);
 
-    wifiManager = (WifiManager) getSherlockActivity().getSystemService(Context.WIFI_SERVICE);
-    wifiModel = new WifiModel(getSherlockActivity());
+    wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
+    wifiModel = new WifiModel(getActivity());
     wifiModel.setListener(this);
     load();
   }
@@ -182,7 +182,7 @@ public class CurrentNetworkDeviceFragment extends SherlockFragment implements Up
     public View getView(int i, View view, ViewGroup viewGroup) {
       ViewHolder viewHolder;
       if (view == null) {
-        view = getSherlockActivity().getLayoutInflater().inflate(R.layout.device, null);
+        view = getActivity().getLayoutInflater().inflate(R.layout.device, null);
         viewHolder = new ViewHolder(view);
         view.setTag(viewHolder);
       } else {
@@ -245,6 +245,7 @@ public class CurrentNetworkDeviceFragment extends SherlockFragment implements Up
         @Override
         public void onCancle() {
           deviceSettingDialog.dismiss();
+
         }
 
         @Override

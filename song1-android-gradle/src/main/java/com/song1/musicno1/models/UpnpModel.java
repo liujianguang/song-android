@@ -42,7 +42,6 @@ public class UpnpModel implements DeviceChangeListener {
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
     mediaController = new MediaController();
-    mediaController.setSearchMx(1000);
     mediaController.addDeviceChangeListener(this);
   }
 
@@ -102,7 +101,13 @@ public class UpnpModel implements DeviceChangeListener {
     handler.post(new Runnable() {
       @Override
       public void run() {
-        boolean b = mediaController.play(dev);
+        UrlItemNode itemNode = new UrlItemNode();
+        itemNode.setUPnPClass("object.item.videoItem.music");
+        String mimeType = "audio/mp3";
+        String protocol = ConnectionManager.HTTP_GET + ":*:" + mimeType + ":*";
+        itemNode.setUrl(url);
+        itemNode.setResource(url, protocol);
+        boolean b = mediaController.play(dev,itemNode);
         System.out.println("isSuc : " + b);
       }
     });

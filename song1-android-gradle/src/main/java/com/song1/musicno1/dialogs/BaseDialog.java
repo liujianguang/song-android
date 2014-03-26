@@ -1,15 +1,15 @@
 package com.song1.musicno1.dialogs;
 
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.song1.musicno1.R;
 
 /**
  * Created by kate on 14-3-18.
  */
-public class BaseDialog extends SherlockDialogFragment {
+public class BaseDialog extends DialogFragment {
 
 
   LinearLayout titleView;

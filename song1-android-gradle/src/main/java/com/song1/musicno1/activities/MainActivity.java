@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import android.support.v7.app.ActionBarActivity;, 
+import android.support.v7.app.ActionBarActivity;
 import com.song1.musicno1.R;
 import com.song1.musicno1.models.UpnpModel;
 import com.song1.musicno1.models.WifiModel;

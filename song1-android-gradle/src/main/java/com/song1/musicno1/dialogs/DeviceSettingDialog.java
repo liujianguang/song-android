@@ -78,7 +78,7 @@ public class DeviceSettingDialog extends BaseDialog implements WifiModel.WifiMod
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    context = getSherlockActivity();
+    context = getActivity();
   }
 
   @Override
@@ -94,7 +94,7 @@ public class DeviceSettingDialog extends BaseDialog implements WifiModel.WifiMod
     deviceNameSpinner.setAdapter(deviceNameAdapter);
     networkSpinner.setAdapter(networkAdapter);
 
-    wifiModel = new WifiModel(getSherlockActivity());
+    wifiModel = new WifiModel(getActivity());
     wifiModel.setListener(this);
     wifiModel.scan();
   }

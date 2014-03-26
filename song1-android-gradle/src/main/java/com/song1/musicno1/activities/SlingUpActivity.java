@@ -2,17 +2,17 @@ package com.song1.musicno1.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Window;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.song1.musicno1.R;
 import com.song1.musicno1.ui.SlingUpLayout;
 
 /**
  * Created by kate on 14-3-20.
  */
-public abstract class SlingUpActivity extends SherlockFragmentActivity implements SlingUpLayout.SlingUpListener {
+public abstract class SlingUpActivity extends ActionBarActivity implements SlingUpLayout.SlingUpListener {
 
 
   @InjectView(R.id.slingUpLayout)

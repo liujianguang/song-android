@@ -2,6 +2,7 @@ package com.song1.musicno1.dialogs;
 
 import android.net.wifi.ScanResult;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,6 @@ import android.widget.Spinner;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.models.WifiModel;
@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by kate on 14-3-21.
  */
-public class DeviceListDialog extends SherlockDialogFragment implements WifiModel.WifiModleListener {
+public class DeviceListDialog extends DialogFragment implements WifiModel.WifiModleListener {
 
   @InjectView(R.id.deviceSpinner)
   Spinner spinner;
@@ -63,10 +63,10 @@ public class DeviceListDialog extends SherlockDialogFragment implements WifiMode
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     allNetworkDeviceList = Lists.newArrayList();
-    deviceAdapter = new ArrayAdapter<String>(getSherlockActivity(), android.R.layout.simple_spinner_dropdown_item, allNetworkDeviceList);
+    deviceAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, allNetworkDeviceList);
     spinner.setAdapter(deviceAdapter);
 
-    wifiModel = new WifiModel(getSherlockActivity());
+    wifiModel = new WifiModel(getActivity());
     wifiModel.setListener(this);
     wifiModel.scan();
   }
