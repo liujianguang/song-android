@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import android.support.v7.app.ActionBarActivity;, 
 import com.song1.musicno1.R;
 import com.song1.musicno1.models.UpnpModel;
 import com.song1.musicno1.models.WifiModel;
@@ -19,7 +19,7 @@ import java.util.List;
  * Date: 14-3-5
  * Time: PM4:40
  */
-public class MainActivity extends SherlockFragmentActivity implements WifiModel.WifiModleListener {
+public class MainActivity extends ActionBarActivity implements WifiModel.WifiModleListener {
 
   UpnpModel upnpModel;
   WifiModel wifiModel;
