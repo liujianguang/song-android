@@ -4,9 +4,13 @@ package com.song1.musicno1.models.play;
  * Created by windless on 3/26/14.
  */
 public interface Renderer {
-  public boolean setUri(String uri);
-  public boolean play();
-  public boolean pause();
-  public boolean isPlaying();
-  public PositionInfo getPositionInfo();
+  public void setUri(String uri) throws RendererException;
+
+  public void play() throws RendererException;
+
+  public void pause() throws RendererException;
+
+  public boolean isPlaying() throws RendererException;
+
+  public PositionInfo getPositionInfo() throws RendererException;
 }

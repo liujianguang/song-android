@@ -4,7 +4,13 @@ import android.app.Service;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
+import com.google.common.collect.Lists;
+import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.NetworkHelp;
+import com.song1.musicno1.models.events.upnp.DeviceChangeEvent;
+import com.song1.musicno1.models.events.upnp.SearchDeviceEvent;
+import com.squareup.otto.Produce;
+import com.squareup.otto.Subscribe;
 import de.akquinet.android.androlog.Log;
 import org.cybergarage.upnp.Device;
 import org.cybergarage.upnp.DeviceList;
@@ -13,6 +19,7 @@ import org.cybergarage.upnp.std.av.controller.MediaController;
 import org.cybergarage.upnp.std.av.renderer.MediaRenderer;
 import org.cybergarage.upnp.std.av.server.MediaServer;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -22,10 +29,11 @@ import java.util.concurrent.Executors;
  * Time: PM5:14
  */
 public class UpnpService extends Service implements DeviceChangeListener {
-  private MediaController mediaController;
-  private NetworkHelp     networkHelp;
-  private ExecutorService executorService;
-  private WifiManager.MulticastLock lock;
+  protected List<Device>              deviceList;
+  private   MediaController           mediaController;
+  private   NetworkHelp               networkHelp;
+  private   ExecutorService           executorService;
+  private   WifiManager.MulticastLock lock;
 
   @Override
   public IBinder onBind(Intent intent) {
@@ -36,11 +44,16 @@ public class UpnpService extends Service implements DeviceChangeListener {
   public void onCreate() {
     super.onCreate();
     Log.init();
+    MainBus.register(this);
+
 
     executorService = Executors.newSingleThreadExecutor();
+
     WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
     lock = wifiManager.createMulticastLock("com.song1.musicno1.upnpservice");
     lock.acquire();
+
+    deviceList = Lists.newArrayList();
 
     networkHelp = new NetworkHelp();
     networkHelp.onConnected(() -> startController())
@@ -51,6 +64,7 @@ public class UpnpService extends Service implements DeviceChangeListener {
   @Override
   public void onDestroy() {
     super.onDestroy();
+    MainBus.unregister(this);
     networkHelp.unregister();
     lock.release();
   }
@@ -109,11 +123,25 @@ public class UpnpService extends Service implements DeviceChangeListener {
 
   private void addMediaRenderer(Device device) {
     Log.d(this, "Device added " + device.getFriendlyName() + " " + device.getDeviceType());
+    deviceList.add(device);
+    MainBus.post(produceDeviceList());
   }
 
   @Override
   public void deviceRemoved(Device device) {
     Log.d(this, "Device removed " + device.getFriendlyName() + " " + device.getDeviceType());
+  }
+
+  @Produce
+  public DeviceChangeEvent produceDeviceList() {
+    Log.d(this, "Produce device list");
+    return new DeviceChangeEvent(deviceList);
+  }
+
+  @Subscribe
+  public void searchDevice(SearchDeviceEvent event) {
+    Log.d(this, "Search device");
+    executorService.submit(() -> mediaController.search());
   }
 }
 

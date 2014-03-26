@@ -9,7 +9,8 @@
   <string name="selectNetwork">选择加入网络</string>
   <string name="setDeviceName">设置设备名称</string>
   <string name="networkPass">输入网络密码</string>
-  <string name="connectDeviceMsg">正在连接设备...</string>
-  <string name="setDeviceMsg">正在设置设备...</string>
-  <string name="connectWifiMsg">正在连接网络...</string>
+  <string name="connectDeviceMsg">正在连接设备…</string>
+  <string name="setDeviceMsg">正在设置设备…</string>
+  <string name="connectWifiMsg">正在连接网络…</string>
+  <string name="not_network">网络未连接</string>
 </resources>
