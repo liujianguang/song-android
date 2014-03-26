@@ -22,6 +22,7 @@ public class SettingCommand {
   public static final short SET_NAME          = 7;
   public static final short GET_VERSION       = 8;
   public static final short UPGRADE           = 9;
+  public static final short GET_SSID          = 12;
   public static final short GET_ALL           = 13;
 
   private final short cmdCode;

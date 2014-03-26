@@ -3,10 +3,10 @@ package com.song1.musicno1.activities;
 import android.content.Intent;
 import android.net.wifi.ScanResult;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import android.support.v7.app.ActionBarActivity;
 import com.song1.musicno1.R;
 import com.song1.musicno1.models.UpnpModel;
 import com.song1.musicno1.models.WifiModel;
@@ -27,7 +27,8 @@ public class MainActivity extends ActionBarActivity implements WifiModel.WifiMod
   @OnClick(R.id.show)
   public void show(View view) {
     startActivity(new Intent(this, CurrentNotworkDeviceActivity.class));
-
+//    wifiModel.connect("songTest","songtest");
+//    wifiModel.connect("PengwuZhuanYong","12345678");
 //    if (upnpModel != null) {
 //      upnpModel.stop();
 //    }

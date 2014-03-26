@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <array name="deviceNames">
+    <item>客厅</item>
+    <item>卧室</item>
+    <item>书房</item>
+  </array>
+  <array name="deviceIcons">
+    <item></item>
+    <item></item>
+    <item></item>
+  </array>
+</resources>

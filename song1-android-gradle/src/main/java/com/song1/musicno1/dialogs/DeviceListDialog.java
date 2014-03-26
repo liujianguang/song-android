@@ -28,25 +28,17 @@ public class DeviceListDialog extends DialogFragment implements WifiModel.WifiMo
 
   @OnClick(R.id.cancle)
   public void cancleClick() {
-    if (listener != null){
-      listener.onCancle();
-    }
+    dismiss();
   }
 
   @OnClick(R.id.confirm)
   public void confirmClick() {
-    if (listener != null){
-      listener.onConfirm(spinner.getSelectedItem().toString());
-    }
+    dismiss();
+    deviceSettingDialog = new DeviceSettingDialog(spinner.getSelectedItem().toString());
+    deviceSettingDialog.show(getFragmentManager(), "deviceFragmentDialg");
   }
-  private OnClickListener listener;
-  public void setListener(OnClickListener listener){
-    this.listener = listener;
-  }
-  public interface OnClickListener{
-    void onCancle();
-    void onConfirm(String ssid);
-  }
+
+  DeviceSettingDialog deviceSettingDialog;
   List<Device>         currentNetworkDevicelist;
   List<String>         allNetworkDeviceList;
   ArrayAdapter<String> deviceAdapter;

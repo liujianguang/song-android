@@ -44,9 +44,10 @@ public class WifiModel {
       } else if (WifiManager.NETWORK_STATE_CHANGED_ACTION.equals(action)) {
         NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
         System.out.println("networkInfo : " + networkInfo.getState());
-        if (networkInfo.isConnected()){
-          isConnect = false;;
-          if (listener != null){
+        if (networkInfo.isConnected()) {
+          isConnect = false;
+          ;
+          if (listener != null) {
             listener.connectSucc();
           }
         }
@@ -77,7 +78,7 @@ public class WifiModel {
     }
     if (wifiManager.getConnectionInfo() != null) {
       if (ssid.equals(wifiManager.getConnectionInfo().getSSID())) {
-        if (listener != null){
+        if (listener != null) {
           listener.connectSucc();
         }
         return;

@@ -89,6 +89,16 @@ public class RemoteSetting {
     }
   }
 
+  public Optional<String> getCurrentSSID(){
+    SettingCommand command = new SettingCommand(SettingCommand.GET_SSID);
+    CommandResult result = execute(command);
+    if (result.isFailed()) {
+      return Optional.absent();
+    } else {
+      return result.getString(0);
+    }
+  }
+
   public boolean setCurrentMode(boolean isAp) {
     SettingCommand command = new SettingCommand(SettingCommand.SET_MODE);
     command.addParam(isAp);
