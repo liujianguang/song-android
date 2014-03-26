@@ -8,6 +8,8 @@ import de.akquinet.android.androlog.Log;
 import org.cybergarage.upnp.Device;
 import org.cybergarage.upnp.device.DeviceChangeListener;
 import org.cybergarage.upnp.std.av.controller.MediaController;
+import org.cybergarage.upnp.std.av.server.ConnectionManager;
+import org.cybergarage.upnp.std.av.server.object.item.UrlItemNode;
 
 import java.util.Map;
 
@@ -17,10 +19,13 @@ import java.util.Map;
 public class UpnpModel implements DeviceChangeListener {
 
   private static final int STATUS_DATA_CHNAGE = 0x1;
-  static UpnpModel _instance;
+
+  Map<String, Device> deviceMap = Maps.newHashMap();
+  String              url       = "http://sc.111ttt.com/up/mp3/303005/B610D4BECEE0DFCE5191ABE874C09C83.mp3";
   MediaController mediaController;
   HandlerThread   handlerThread;
   Handler         handler;
+
   Handler notifyHandler = new Handler() {
     @Override
     public void handleMessage(Message message) {
@@ -32,35 +37,23 @@ public class UpnpModel implements DeviceChangeListener {
     }
   };
 
-  private UpnpModel() {
+  public UpnpModel() {
     handlerThread = new HandlerThread("upnp");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
     mediaController = new MediaController();
+    mediaController.setSearchMx(1000);
     mediaController.addDeviceChangeListener(this);
   }
 
-  public static UpnpModel getInstance() {
-    if (_instance == null) {
-      _instance = new UpnpModel();
-    }
-    return _instance;
-  }
-
   public void start() {
-    handler.post(new Runnable() {
-      @Override
-      public void run() {
-        mediaController.start();
-      }
-    });
-  }
 
-  public void search() {
     handler.post(new Runnable() {
       @Override
       public void run() {
-        mediaController.search();
+        System.out.println("start...");
+        boolean b = mediaController.start();
+        System.out.println("is start success : " + b);
       }
     });
   }
@@ -72,18 +65,48 @@ public class UpnpModel implements DeviceChangeListener {
     handler.post(new Runnable() {
       @Override
       public void run() {
+        System.out.println("stop...");
         mediaController.stop();
         handlerThread.quit();
-        _instance = null;
       }
     });
   }
 
-  public Map<String, Device> getDeviceMap() {
-    return deviceMap;
+  public void search() {
+    handler.post(new Runnable() {
+      @Override
+      public void run() {
+        System.out.println("search...");
+        mediaController.search();
+      }
+    });
   }
 
-  Map<String, Device> deviceMap = Maps.newHashMap();
+  public void setAVTransport(final Device dev) {
+    handler.post(new Runnable() {
+      @Override
+      public void run() {
+        UrlItemNode itemNode = new UrlItemNode();
+        itemNode.setUPnPClass("object.item.videoItem.music");
+        String mimeType = "audio/mp3";
+        String protocol = ConnectionManager.HTTP_GET + ":*:" + mimeType + ":*";
+        itemNode.setUrl(url);
+        itemNode.setResource(url, protocol);
+        boolean b = mediaController.setAVTransportURI(dev, itemNode);
+        System.out.println("isSuc : " + b);
+      }
+    });
+  }
+
+  public void play(final Device dev) {
+    handler.post(new Runnable() {
+      @Override
+      public void run() {
+        boolean b = mediaController.play(dev);
+        System.out.println("isSuc : " + b);
+      }
+    });
+  }
 
   @Override
   public void deviceAdded(Device device) {
@@ -91,7 +114,7 @@ public class UpnpModel implements DeviceChangeListener {
     Log.d("发现设备： " + device.getFriendlyName());
     deviceMap.put(device.getFriendlyName(), device);
     if (listener != null) {
-      notifyHandler.sendEmptyMessage(STATUS_DATA_CHNAGE);
+      notifyHandler.sendEmptyMessage(STATUS_DATA_CHNAGE) ;
     }
   }
 

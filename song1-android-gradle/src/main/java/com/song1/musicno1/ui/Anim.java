@@ -25,8 +25,8 @@ public class Anim {
   //float fromYDelta 动画开始的点离当前View Y坐标上的差值
   //float toYDelta   动画结束的点离当前View Y坐标上的差值
   public static void translateY(View view, Animation.AnimationListener animationListener, float fromYDelta, float toYDelta) {
-    System.out.println(" y1 : " + fromYDelta);
-    System.out.println(" y2 : " + toYDelta);
+//    System.out.println(" y1 : " + fromYDelta);
+//    System.out.println(" y2 : " + toYDelta);
     TranslateAnimation animation = new TranslateAnimation(0, 0, fromYDelta, toYDelta);
     animation.setDuration(DURATION);
     animation.setStartOffset(START_OFFSET);

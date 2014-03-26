@@ -1,6 +1,7 @@
 package com.song1.musicno1.activities;
 
 import android.content.Intent;
+import android.net.wifi.ScanResult;
 import android.os.Bundle;
 import android.view.View;
 import butterknife.ButterKnife;
@@ -8,34 +9,74 @@ import butterknife.OnClick;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.song1.musicno1.R;
 import com.song1.musicno1.models.UpnpModel;
+import com.song1.musicno1.models.WifiModel;
 import de.akquinet.android.androlog.Log;
+
+import java.util.List;
 
 /**
  * User: windless
  * Date: 14-3-5
  * Time: PM4:40
  */
-public class MainActivity extends SherlockFragmentActivity {
+public class MainActivity extends SherlockFragmentActivity implements WifiModel.WifiModleListener {
 
-  UpnpModel       upnpModel;
+  UpnpModel upnpModel;
+  WifiModel wifiModel;
 
-
-  @OnClick(R.id.up)
-  public void upClick(View view) {
+  @OnClick(R.id.show)
+  public void show(View view) {
     startActivity(new Intent(this, CurrentNotworkDeviceActivity.class));
+
+//    if (upnpModel != null) {
+//      upnpModel.stop();
+//    }
+//    upnpModel = new UpnpModel();
+//    upnpModel.start();
+//    upnpModel.search();
+  }
+
+  @OnClick(R.id.connectTest)
+  public void connectTest() {
+    wifiModel.connect("songTest", "songtest");
+  }
+
+  @OnClick(R.id.connectPengWu)
+  public void connectPengWu() {
+    wifiModel.connect("PengWuZhuanYong", "12345678");
   }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Log.init();
-
     setContentView(R.layout.activity_main);
     ButterKnife.inject(this);
+    wifiModel = new WifiModel(this);
+    wifiModel.setListener(this);
+//    upnpModel = new UpnpModel();
+//    upnpModel.start();
+//    upnpModel.search();
   }
 
   @Override
   protected void onDestroy() {
     super.onDestroy();
+    if (upnpModel != null) {
+      upnpModel.stop();
+    }
+    if (wifiModel != null) {
+      wifiModel.stop();
+    }
+  }
+
+  @Override
+  public void scanResult(List<ScanResult> scanResultList) {
+
+  }
+
+  @Override
+  public void connectSucc() {
+
   }
 }

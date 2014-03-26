@@ -50,7 +50,7 @@ public class SlingUpLayout extends RelativeLayout implements Animation.Animation
     int paddingTop = getPaddingTop();
 
     final int childCount = getChildCount();
-    System.out.println("childCount : " + childCount);
+//    System.out.println("childCount : " + childCount);
     if (childCount != 2) {
       exception("child must be two!");
     }
@@ -115,8 +115,8 @@ public class SlingUpLayout extends RelativeLayout implements Animation.Animation
     if (animation instanceof TranslateAnimation) {
       int left = contentView.getLeft();
       int top = contentView.getTop() + (int) toYDelta;
-      System.out.println("left : " + left);
-      System.out.println("top :  " + top);
+//      System.out.println("left : " + left);
+//      System.out.println("top :  " + top);
       contentView.clearAnimation();
       contentView.setX(left);
       contentView.setY(top);
@@ -146,8 +146,8 @@ public class SlingUpLayout extends RelativeLayout implements Animation.Animation
     float top = contentView.getY();
     float right = left + contentView.getMeasuredWidth();
     float bottom = top + contentView.getMeasuredHeight();
-    System.out.println(" x: " + x + "," + " y: " + y);
-    System.out.println("l : " + left + ",t : " + top + ",right : " + right + ",bottom : " + bottom);
+//    System.out.println(" x: " + x + "," + " y: " + y);
+//    System.out.println("l : " + left + ",t : " + top + ",right : " + right + ",bottom : " + bottom);
     if ((x >= left && x <= right) && (y >= top && y <= bottom)) {
       return false;
     } else {
@@ -158,9 +158,9 @@ public class SlingUpLayout extends RelativeLayout implements Animation.Animation
 
   @Override
   public boolean onKeyUp(int keyCode, KeyEvent event) {
-    System.out.println("onKeyUp...");
+//    System.out.println("onKeyUp...");
     boolean b = super.onKeyUp(keyCode, event);
-    System.out.println("b :  " + b);
+//    System.out.println("b :  " + b);
     return b;
   }
 

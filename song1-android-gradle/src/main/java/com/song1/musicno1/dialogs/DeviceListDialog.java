@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by kate on 14-3-21.
  */
-public class DeviceListDialog extends SherlockDialogFragment implements WifiModel.ScanListener {
+public class DeviceListDialog extends SherlockDialogFragment implements WifiModel.WifiModleListener {
 
   @InjectView(R.id.deviceSpinner)
   Spinner spinner;
@@ -66,15 +66,15 @@ public class DeviceListDialog extends SherlockDialogFragment implements WifiMode
     deviceAdapter = new ArrayAdapter<String>(getSherlockActivity(), android.R.layout.simple_spinner_dropdown_item, allNetworkDeviceList);
     spinner.setAdapter(deviceAdapter);
 
-    wifiModel = WifiModel.newInstance(getSherlockActivity());
-    wifiModel.addScanListener(this);
+    wifiModel = new WifiModel(getSherlockActivity());
+    wifiModel.setListener(this);
     wifiModel.scan();
   }
 
   @Override
   public void onDestroy() {
     super.onDestroy();
-    if (wifiModel != null) {
+    if (wifiModel != null){
       wifiModel.stop();
     }
   }
@@ -91,6 +91,11 @@ public class DeviceListDialog extends SherlockDialogFragment implements WifiMode
       }
       deviceAdapter.notifyDataSetChanged();
     }
+  }
+
+  @Override
+  public void connectSucc() {
+
   }
 
   private boolean isExist(String bssid) {

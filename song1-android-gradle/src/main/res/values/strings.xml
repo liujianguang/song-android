@@ -6,6 +6,7 @@
   <string name="currentNetworkDevice">当前网络设备</string>
   <string name="newDevice">添加新设备</string>
   <string name="selectDevice">选择设备：</string>
-  <string name="selectNetwork">选择网络：</string>
-  <string name="setDeviceName">设备名称：</string>
+  <string name="selectNetwork">选择网络</string>
+  <string name="setDeviceName">设备名称</string>
+  <string name="networkPass">网络密码</string>
 </resources>
