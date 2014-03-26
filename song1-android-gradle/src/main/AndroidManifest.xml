@@ -11,10 +11,6 @@
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
-  <uses-sdk
-      android:minSdkVersion="14"
-      android:targetSdkVersion="19"/>
-
   <application
       android:allowBackup="true"
       android:name=".App"
@@ -38,5 +34,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>
     </activity>
+
+    <service android:name=".services.UpnpService"/>
   </application>
 </manifest>
