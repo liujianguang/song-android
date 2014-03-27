@@ -4,7 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
-import com.google.common.collect.Lists;
+import com.song1.musicno1.helpers.List;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.NetworkHelp;
 import com.song1.musicno1.models.events.upnp.DeviceChangeEvent;
@@ -19,7 +19,6 @@ import org.cybergarage.upnp.std.av.controller.MediaController;
 import org.cybergarage.upnp.std.av.renderer.MediaRenderer;
 import org.cybergarage.upnp.std.av.server.MediaServer;
 
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -29,11 +28,11 @@ import java.util.concurrent.Executors;
  * Time: PM5:14
  */
 public class UpnpService extends Service implements DeviceChangeListener {
-  protected List<Device>              deviceList;
-  private   MediaController           mediaController;
-  private   NetworkHelp               networkHelp;
-  private   ExecutorService           executorService;
-  private   WifiManager.MulticastLock lock;
+  private MediaController           mediaController;
+  private NetworkHelp               networkHelp;
+  private ExecutorService           executorService;
+  private WifiManager.MulticastLock lock;
+  private List<Device>              deviceList;
 
   @Override
   public IBinder onBind(Intent intent) {
@@ -53,7 +52,7 @@ public class UpnpService extends Service implements DeviceChangeListener {
     lock = wifiManager.createMulticastLock("com.song1.musicno1.upnpservice");
     lock.acquire();
 
-    deviceList = Lists.newArrayList();
+    deviceList = List.newList();
 
     networkHelp = new NetworkHelp();
     networkHelp.onConnected(() -> startController())
@@ -128,8 +127,10 @@ public class UpnpService extends Service implements DeviceChangeListener {
   }
 
   @Override
-  public void deviceRemoved(Device device) {
-    Log.d(this, "Device removed " + device.getFriendlyName() + " " + device.getDeviceType());
+  public void deviceRemoved(Device removedDevice) {
+    Log.d(this, "Device removed " + removedDevice.getFriendlyName() + " " + removedDevice.getDeviceType());
+    deviceList.deleteIf((device) -> device.getUDN().equals(removedDevice.getUDN()));
+    MainBus.post(produceDeviceList());
   }
 
   @Produce
