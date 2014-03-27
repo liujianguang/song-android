@@ -1,27 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:id="@+id/root">
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/green"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/drawer">
 
-  <Button
-      android:id="@+id/show"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="show"/>
+  <com.song1.musicno1.vender.SlidingUpPanelLayout
+      android:id="@+id/sling_up"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
 
-  <Button
-      android:id="@+id/connectTest"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="connectTest"/>
+    <FrameLayout
+        android:paddingTop="46dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-  <Button
-      android:id="@+id/connectPengWu"
-      android:orientation="vertical"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="connectPengWu"/>
-</LinearLayout>
+      <FrameLayout
+          android:id="@+id/main"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent">
+      </FrameLayout>
+    </FrameLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+      <FrameLayout
+          android:id="@+id/play_bar"
+          android:background="@color/dark_green"
+          android:layout_width="match_parent"
+          android:layout_height="68dp">
+      </FrameLayout>
+    </RelativeLayout>
+  </com.song1.musicno1.vender.SlidingUpPanelLayout>
+
+  <FrameLayout
+      android:id="@+id/navigation"
+      android:background="@color/green"
+      android:layout_gravity="left"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+  </FrameLayout>
+</android.support.v4.widget.DrawerLayout>

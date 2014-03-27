@@ -7,4 +7,6 @@
   <color name="title_bg_color">#427100</color>
   <color name="content_bg_color">#688d33</color>
   <color name="red">#ff0000</color>
+  <color name="green">#7C9B51</color>
+  <color name="dark_green">#437012</color>
 </resources>
