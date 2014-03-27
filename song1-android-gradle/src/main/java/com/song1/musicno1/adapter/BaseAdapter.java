@@ -77,7 +77,7 @@ public class BaseAdapter<E, H extends BaseAdapter.ViewHolder> extends android.wi
     }
 
     E element = getElement(i);
-    setDataProc.call(element, holder);
+    setDataProc.call(i, element, holder);
     return view;
   }
 
@@ -86,7 +86,7 @@ public class BaseAdapter<E, H extends BaseAdapter.ViewHolder> extends android.wi
   }
 
   public interface SetDataProc<E, H> {
-    public void call(E element, H holder);
+    public void call(int index, E element, H holder);
   }
 
   public static abstract class ViewHolder {

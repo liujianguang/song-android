@@ -1,6 +1,6 @@
 package com.song1.musicno1.models.events.upnp;
 
-import org.cybergarage.upnp.Device;
+import com.song1.musicno1.models.play.Player;
 
 import java.util.List;
 
@@ -8,9 +8,9 @@ import java.util.List;
  * Created by windless on 3/27/14.
  */
 public class DeviceChangeEvent {
-  public List<Device> devices;
+  public List<Player> players;
 
-  public DeviceChangeEvent(List<Device> devices) {
-    this.devices = devices;
+  public DeviceChangeEvent(List<Player> players) {
+    this.players = players;
   }
 }

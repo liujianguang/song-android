@@ -20,6 +20,21 @@ public class RemoteRenderer implements Renderer {
   }
 
   @Override
+  public void stop() throws RendererException {
+    postAction(AVTransport.STOP);
+  }
+
+  @Override
+  public String getName() {
+    return device.getFriendlyName();
+  }
+
+  @Override
+  public String getId() {
+    return device.getUDN();
+  }
+
+  @Override
   public void setUri(String uri) throws RendererException {
     postAction(AVTransport.SETAVTRANSPORTURI, (action) -> {
       action.setArgumentValue(AVTransport.CURRENTURI, uri);

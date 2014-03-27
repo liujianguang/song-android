@@ -36,5 +36,6 @@
     </activity>
 
     <service android:name=".services.UpnpService"/>
+    <service android:name=".services.PlayService"/>
   </application>
 </manifest>

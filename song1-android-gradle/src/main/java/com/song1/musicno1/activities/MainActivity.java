@@ -10,6 +10,7 @@ import butterknife.OnClick;
 import com.song1.musicno1.R;
 import com.song1.musicno1.models.UpnpModel;
 import com.song1.musicno1.models.WifiModel;
+import com.song1.musicno1.services.PlayService;
 import com.song1.musicno1.services.UpnpService;
 import de.akquinet.android.androlog.Log;
 
@@ -53,6 +54,7 @@ public class MainActivity extends ActionBarActivity implements WifiModel.WifiMod
     super.onCreate(savedInstanceState);
 
     startService(new Intent(this, UpnpService.class));
+    startService(new Intent(this, PlayService.class));
 
     Log.init();
     setContentView(R.layout.activity_main);

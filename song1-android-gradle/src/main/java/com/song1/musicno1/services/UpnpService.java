@@ -9,6 +9,8 @@ import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.NetworkHelp;
 import com.song1.musicno1.models.events.upnp.DeviceChangeEvent;
 import com.song1.musicno1.models.events.upnp.SearchDeviceEvent;
+import com.song1.musicno1.models.play.Player;
+import com.song1.musicno1.models.play.RemoteRenderer;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 import de.akquinet.android.androlog.Log;
@@ -32,7 +34,7 @@ public class UpnpService extends Service implements DeviceChangeListener {
   private NetworkHelp               networkHelp;
   private ExecutorService           executorService;
   private WifiManager.MulticastLock lock;
-  private List<Device>              deviceList;
+  private List<Player>              playerList;
 
   @Override
   public IBinder onBind(Intent intent) {
@@ -52,7 +54,7 @@ public class UpnpService extends Service implements DeviceChangeListener {
     lock = wifiManager.createMulticastLock("com.song1.musicno1.upnpservice");
     lock.acquire();
 
-    deviceList = List.newList();
+    playerList = List.newList();
 
     networkHelp = new NetworkHelp();
     networkHelp.onConnected(() -> startController())
@@ -122,21 +124,21 @@ public class UpnpService extends Service implements DeviceChangeListener {
 
   private void addMediaRenderer(Device device) {
     Log.d(this, "Device added " + device.getFriendlyName() + " " + device.getDeviceType());
-    deviceList.add(device);
+    playerList.add(new Player(new RemoteRenderer(device)));
     MainBus.post(produceDeviceList());
   }
 
   @Override
   public void deviceRemoved(Device removedDevice) {
     Log.d(this, "Device removed " + removedDevice.getFriendlyName() + " " + removedDevice.getDeviceType());
-    deviceList.deleteIf((device) -> device.getUDN().equals(removedDevice.getUDN()));
+    playerList.deleteIf((player) -> player.getId().equals(removedDevice.getUDN()));
     MainBus.post(produceDeviceList());
   }
 
   @Produce
   public DeviceChangeEvent produceDeviceList() {
     Log.d(this, "Produce device list");
-    return new DeviceChangeEvent(deviceList);
+    return new DeviceChangeEvent(playerList);
   }
 
   @Subscribe
