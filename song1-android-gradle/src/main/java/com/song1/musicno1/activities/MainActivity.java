@@ -11,10 +11,7 @@ import android.view.View;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.song1.musicno1.R;
-import com.song1.musicno1.fragments.BaseFragment;
-import com.song1.musicno1.fragments.LeftFragment;
-import com.song1.musicno1.fragments.PlayBarFragment;
-import com.song1.musicno1.fragments.TestFragment;
+import com.song1.musicno1.fragments.*;
 import com.song1.musicno1.helpers.ViewHelper;
 import com.song1.musicno1.services.PlayService;
 import com.song1.musicno1.services.UpnpService;
@@ -27,6 +24,7 @@ import de.akquinet.android.androlog.Log;
  * Time: PM4:40
  */
 public class MainActivity extends ActionBarActivity implements SlidingUpPanelLayout.PanelSlideListener {
+  protected                  PlayBarFragment      playBarFragment;
   @InjectView(R.id.drawer)   DrawerLayout         drawerLayout;
   @InjectView(R.id.sling_up) SlidingUpPanelLayout slidingUpPanel;
   @InjectView(R.id.play_bar) View                 playBarView;
@@ -42,16 +40,19 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
     startService(new Intent(this, UpnpService.class));
     startService(new Intent(this, PlayService.class));
 
+    playBarFragment = new PlayBarFragment();
+
     slidingUpPanel.setDragView(playBarView);
     slidingUpPanel.setPanelSlideListener(this);
     slidingUpPanel.setEnableDragViewTouchEvents(true);
-    slidingUpPanel.setPanelHeight(ViewHelper.dp2pixels(this, 68f));
+    slidingUpPanel.setPanelHeight(ViewHelper.dp2pixels(this, 60f));
 
     getSupportActionBar().setHomeButtonEnabled(true);
     getSupportFragmentManager().beginTransaction()
-        .replace(R.id.play_bar, new PlayBarFragment())
         .replace(R.id.navigation, new LeftFragment())
+        .replace(R.id.play_bar, playBarFragment)
         .replace(R.id.main, new TestFragment())
+        .replace(R.id.playing, new PlayingFragment())
         .commit();
   }
 
@@ -76,8 +77,10 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
   public void onPanelSlide(View panel, float slideOffset) {
     if (slideOffset >= 0.5) {
       getSupportActionBar().show();
+      playBarFragment.showBottom();
     } else {
       getSupportActionBar().hide();
+      playBarFragment.showTop();
     }
   }
 

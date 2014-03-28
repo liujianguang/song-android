@@ -31,6 +31,10 @@ public class PlayBarFragment extends Fragment {
   @InjectView(R.id.bottom_play)       ImageButton buttonPlayBtn;
   @InjectView(R.id.prepare_progress)  ProgressBar prepareBar;
   @InjectView(R.id.position_progress) ProgressBar positionBar;
+  @InjectView(R.id.top)               View        topView;
+  @InjectView(R.id.bottom)            View        bottomView;
+  @InjectView(R.id.top_title)         TextView    topTitleView;
+  @InjectView(R.id.top_subtitle)      TextView    topSubtitleView;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -97,12 +101,26 @@ public class PlayBarFragment extends Fragment {
     if (event.getAudio() == null) {
       bottomTitleView.setText("");
       bottomSubtitleView.setText("");
+      topTitleView.setText("");
+      topSubtitleView.setText("");
     } else {
       bottomTitleView.setText(event.getAudio().getTitle());
       bottomSubtitleView.setText(event.getAudio().getArtist());
+      topTitleView.setText(event.getAudio().getTitle());
+      topSubtitleView.setText(event.getAudio().getArtist());
     }
 
     positionBar.setMax(event.getDuration());
     positionBar.setProgress(event.getPosition());
+  }
+
+  public void showBottom() {
+    topView.setVisibility(View.GONE);
+    bottomView.setVisibility(View.VISIBLE);
+  }
+
+  public void showTop() {
+    topView.setVisibility(View.VISIBLE);
+    bottomView.setVisibility(View.GONE);
   }
 }

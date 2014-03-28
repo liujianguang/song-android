@@ -26,7 +26,8 @@
     </FrameLayout>
 
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -34,9 +35,15 @@
           android:id="@+id/play_bar"
           android:background="@color/dark_green"
           android:layout_width="match_parent"
-          android:layout_height="68dp">
+          android:layout_height="60dp">
       </FrameLayout>
-    </RelativeLayout>
+
+      <FrameLayout
+          android:id="@+id/playing"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent">
+      </FrameLayout>
+    </LinearLayout>
   </com.song1.musicno1.vender.SlidingUpPanelLayout>
 
   <FrameLayout
