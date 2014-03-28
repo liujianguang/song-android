@@ -8,14 +8,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.song1.musicno1.R;
 import com.song1.musicno1.fragments.BaseFragment;
 import com.song1.musicno1.fragments.LeftFragment;
 import com.song1.musicno1.fragments.PlayBarFragment;
+import com.song1.musicno1.fragments.TestFragment;
 import com.song1.musicno1.helpers.ViewHelper;
 import com.song1.musicno1.services.PlayService;
 import com.song1.musicno1.services.UpnpService;
@@ -52,14 +51,15 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.play_bar, new PlayBarFragment())
         .replace(R.id.navigation, new LeftFragment())
+        .replace(R.id.main, new TestFragment())
         .commit();
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     BaseFragment fragment = (BaseFragment) getSupportFragmentManager().findFragmentById(R.id.main);
-    Fragment parent   = (BaseFragment) fragment.getParent();
-    if (parent != null){
+    Fragment parent = (BaseFragment) fragment.getParent();
+    if (parent != null) {
       show(parent);
       return true;
     }
@@ -67,7 +67,7 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
   }
 
   public void show(Fragment fragment) {
-    FragmentTransaction transaction  = getSupportFragmentManager().beginTransaction();
+    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
     transaction.replace(R.id.main, fragment).commit();
     drawerLayout.closeDrawers();
   }

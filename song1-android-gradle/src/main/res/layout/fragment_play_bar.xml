@@ -2,15 +2,94 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="68dp">
 
-  <ImageButton
-      android:id="@+id/player_list"
-      android:background="@null"
-      android:layout_alignParentRight="true"
-      android:layout_centerVertical="true"
-      android:src="@drawable/ic_device_list"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:contentDescription="@null"/>
+  <RelativeLayout
+      android:id="@+id/bottom"
+      android:gravity="center_vertical"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+
+
+    <ImageButton
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/bottom_player_list"
+        android:background="@null"
+        android:src="@drawable/ic_device_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@null"/>
+
+    <ImageButton
+        android:id="@+id/bottom_play"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/bottom_player_list"
+        android:background="@null"
+        android:src="@drawable/ic_play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <RelativeLayout
+        android:layout_toLeftOf="@id/bottom_play"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+      <ImageView
+          android:id="@+id/bottom_album_art"
+          android:background="@android:color/transparent"
+          android:src="@drawable/ic_device_list"
+          android:layout_width="68dp"
+          android:layout_height="68dp"
+          android:contentDescription="@null"/>
+
+      <TextView
+          android:id="@+id/bottom_title"
+          android:text="title"
+          android:textSize="@dimen/text_size_normal"
+          android:layout_toRightOf="@id/bottom_album_art"
+          android:layout_width="match_parent"
+          android:gravity="center_vertical"
+          android:singleLine="true"
+          android:ellipsize="end"
+          android:layout_height="34dp"/>
+
+      <TextView
+          android:id="@+id/bottom_subtitle"
+          android:singleLine="true"
+          android:ellipsize="end"
+          android:text="subtitle"
+          android:textSize="@dimen/text_size_small"
+          android:layout_alignLeft="@id/bottom_title"
+          android:layout_below="@id/bottom_title"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+
+  </RelativeLayout>
+
+  <RelativeLayout
+      android:id="@+id/top"
+      android:visibility="gone"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+  </RelativeLayout>
+
+  <ProgressBar
+      android:id="@+id/prepare_progress"
+      android:visibility="gone"
+      android:indeterminate="true"
+      style="@android:style/Widget.ProgressBar.Horizontal"
+      android:layout_alignParentBottom="true"
+      android:layout_width="match_parent"
+      android:layout_height="2dp"/>
+
+  <ProgressBar
+      android:id="@+id/position_progress"
+      style="@android:style/Widget.ProgressBar.Horizontal"
+      android:layout_alignParentBottom="true"
+      android:layout_width="match_parent"
+      android:layout_height="2dp"/>
 </RelativeLayout>

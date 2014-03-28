@@ -1,19 +1,17 @@
 package com.song1.musicno1.models.play;
 
+import com.song1.musicno1.helpers.TimeHelper;
+
 /**
  * Created by windless on 3/26/14.
  */
 public class PositionInfo {
-  public  String uri;
-  private String durationStr;
-  private String positionStr;
-
-  public String getDurationStr() {
-    return durationStr;
-  }
+  private String uri;
+  private int    duration;
+  private int    position;
 
   public void setDurationStr(String durationStr) {
-    this.durationStr = durationStr;
+    this.duration = TimeHelper.str2milli(durationStr);
   }
 
   public String getUri() {
@@ -24,19 +22,15 @@ public class PositionInfo {
     this.uri = uri;
   }
 
-  public String getPositionStr() {
-    return positionStr;
-  }
-
   public void setPositionStr(String positionStr) {
-    this.positionStr = positionStr;
+    this.position = TimeHelper.str2milli(positionStr);
   }
 
-  public long getPosition() {
-    return 0;
+  public int getPosition() {
+    return position;
   }
 
-  public long getDuration() {
-    return 0;
+  public int getDuration() {
+    return duration;
   }
 }

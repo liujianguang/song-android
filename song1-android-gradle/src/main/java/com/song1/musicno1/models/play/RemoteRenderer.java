@@ -1,6 +1,7 @@
 package com.song1.musicno1.models.play;
 
 import com.google.common.base.Strings;
+import de.akquinet.android.androlog.Log;
 import org.cybergarage.upnp.Action;
 import org.cybergarage.upnp.Argument;
 import org.cybergarage.upnp.Device;
@@ -57,7 +58,13 @@ public class RemoteRenderer implements Renderer {
   public boolean isPlaying() throws RendererException {
     Action getInfo = postAction(AVTransport.GETTRANSPORTINFO);
     Argument state = getInfo.getArgument(AVTransport.CURRENTTRANSPORTSTATE);
-    return state != null && AVTransport.PLAYING.equals(state.getValue());
+    if (state != null) {
+      Log.d(this, "Renderer state: " + state.getValue());
+      return AVTransport.PLAYING.equals(state.getValue());
+    } else {
+      Log.d(this, "Renderer state: get state failed");
+    }
+    return false;
   }
 
   @Override

@@ -5,11 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import com.song1.musicno1.helpers.LatestExecutor;
 import com.song1.musicno1.helpers.MainBus;
-import com.song1.musicno1.models.events.play.CurrentPlayerEvent;
-import com.song1.musicno1.models.events.play.CurrentPlayerStateEvent;
-import com.song1.musicno1.models.events.play.PositionEvent;
-import com.song1.musicno1.models.events.play.SelectPlayerEvent;
-import com.song1.musicno1.models.play.Audio;
+import com.song1.musicno1.models.events.play.*;
 import com.song1.musicno1.models.play.Player;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
@@ -52,6 +48,29 @@ public class PlayService extends Service {
     event.player.onPositionChanged((player, position, duration) -> {
       if (player == currentPlayer) {
         postEvent(currentPlayerPosition());
+      }
+    });
+  }
+
+  @Subscribe
+  public void play(PlayEvent event) {
+    Player player = currentPlayer;
+    executor.submit(() -> {
+      if (player != null) {
+        if (event.audio != null) {
+          player.play(event.audio);
+        } else {
+          player.play();
+        }
+      }
+    });
+  }
+
+  @Subscribe
+  public void pause(PauseEvent event) {
+    executor.submit(() -> {
+      if (currentPlayer != null) {
+        currentPlayer.pause();
       }
     });
   }
