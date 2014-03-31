@@ -1,6 +1,7 @@
 package com.song1.musicno1.models.play;
 
 import com.google.common.base.Strings;
+import com.song1.musicno1.helpers.TimeHelper;
 import de.akquinet.android.androlog.Log;
 import org.cybergarage.upnp.Action;
 import org.cybergarage.upnp.Argument;
@@ -33,6 +34,14 @@ public class RemoteRenderer implements Renderer {
   @Override
   public String getId() {
     return device.getUDN();
+  }
+
+  @Override
+  public void seek(int seekTo) throws RendererException {
+    postAction(AVTransport.SEEK, (action) -> {
+      action.setArgumentValue(AVTransport.UNIT, "REL_TIME");
+      action.setArgumentValue(AVTransport.TARGET, TimeHelper.mill2lstr(seekTo));
+    });
   }
 
   @Override

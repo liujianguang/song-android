@@ -34,6 +34,14 @@ public class PlayingFragment extends Fragment {
   }
 
   @Override
+  public void onActivityCreated(Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+    getChildFragmentManager().beginTransaction()
+        .replace(R.id.actions, new AudioActionsFragment())
+        .commit();
+  }
+
+  @Override
   public void onPause() {
     super.onPause();
     MainBus.unregister(this);

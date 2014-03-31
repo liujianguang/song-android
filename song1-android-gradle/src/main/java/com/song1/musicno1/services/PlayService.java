@@ -69,8 +69,19 @@ public class PlayService extends Service {
   @Subscribe
   public void pause(PauseEvent event) {
     executor.submit(() -> {
-      if (currentPlayer != null) {
-        currentPlayer.pause();
+      Player player = currentPlayer;
+      if (player != null) {
+        player.pause();
+      }
+    });
+  }
+
+  @Subscribe
+  public void seek(SeekEvent event) {
+    executor.submit(() -> {
+      Player player = currentPlayer;
+      if (player != null) {
+        player.seek(event.getSeekTo());
       }
     });
   }

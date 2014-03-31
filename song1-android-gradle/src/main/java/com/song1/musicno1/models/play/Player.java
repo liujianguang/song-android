@@ -9,6 +9,9 @@ public class Player {
   public static final int PLAYING   = 1;
   public static final int PAUSED    = 2;
   public static final int PREPARING = 3;
+
+  private final static int TIMEOUT = 20;
+
   protected OnPositionChangedListener positionListener;
   protected int                       state;
   protected int                       position;
@@ -63,17 +66,10 @@ public class Player {
       }
       renderer.play();
 
-      int i = 0;
-      while (i <= 10 && state == PREPARING && !renderer.isPlaying()) {
-        i++;
-        Thread.sleep(500);
-      }
-
-      setState(PLAYING);
+      checkStatus(PLAYING, () -> !renderer.isPlaying());
     } catch (RendererException e) {
       stop();
       error(e);
-    } catch (InterruptedException ignored) {
     }
   }
 
@@ -95,18 +91,34 @@ public class Player {
 
   }
 
+  private void checkStatus(int completeState, CheckRunnable runnable) {
+    int i = 0;
+    try {
+      while (i <= TIMEOUT && state == PREPARING && runnable.check()) {
+        i++;
+        try {
+          Thread.sleep(500);
+        } catch (InterruptedException e) {
+          return;
+        }
+      }
+      if (i > TIMEOUT) {
+        error(new RendererException(RendererException.POST_ACTION_FAILED));
+      } else {
+        setState(completeState);
+      }
+    } catch (RendererException e) {
+      error(e);
+    }
+  }
+
   public void pause() {
     setState(PREPARING);
     try {
       renderer.pause();
-      int i = 0;
-      while (i <= 10 && state == PREPARING && renderer.isPlaying()) {
-        Thread.sleep(500);
-      }
-      setState(PAUSED);
+      checkStatus(PAUSED, () -> renderer.isPlaying());
     } catch (RendererException e) {
       error(e);
-    } catch (InterruptedException ignored) {
     }
   }
 
@@ -176,11 +188,36 @@ public class Player {
     return renderer.getId();
   }
 
+  public void seek(int seekTo) {
+    setState(PREPARING);
+    setPosition(seekTo, duration);
+    try {
+      renderer.seek(seekTo);
+
+      checkStatus(PLAYING, () -> !checkPosition(seekTo));
+    } catch (RendererException e) {
+      error(e);
+    }
+  }
+
+  private boolean checkPosition(int seekTo) {
+    try {
+      PositionInfo info = renderer.getPositionInfo();
+      return Math.abs(info.getPosition() - seekTo) <= 3000;
+    } catch (RendererException e) {
+      return false;
+    }
+  }
+
   public interface OnStateChangedListener {
     void onStateChanged(Player player, int state);
   }
 
   public interface OnPositionChangedListener {
     void onPositionChanged(Player player, long position, long duration);
+  }
+
+  private interface CheckRunnable {
+    boolean check() throws RendererException;
   }
 }
