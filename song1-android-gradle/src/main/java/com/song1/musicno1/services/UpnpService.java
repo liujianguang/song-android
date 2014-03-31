@@ -9,6 +9,7 @@ import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.NetworkHelp;
 import com.song1.musicno1.models.events.upnp.DeviceChangeEvent;
 import com.song1.musicno1.models.events.upnp.SearchDeviceEvent;
+import com.song1.musicno1.models.play.LocalRenderer;
 import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.play.RemoteRenderer;
 import com.squareup.otto.Produce;
@@ -30,11 +31,12 @@ import java.util.concurrent.Executors;
  * Time: PM5:14
  */
 public class UpnpService extends Service implements DeviceChangeListener {
-  private MediaController           mediaController;
-  private NetworkHelp               networkHelp;
-  private ExecutorService           executorService;
-  private WifiManager.MulticastLock lock;
-  private List<Player>              playerList;
+  protected Player                    localPlayer;
+  private   MediaController           mediaController;
+  private   NetworkHelp               networkHelp;
+  private   ExecutorService           executorService;
+  private   WifiManager.MulticastLock lock;
+  private   List<Player>              playerList;
 
   @Override
   public IBinder onBind(Intent intent) {
@@ -45,16 +47,18 @@ public class UpnpService extends Service implements DeviceChangeListener {
   public void onCreate() {
     super.onCreate();
     Log.init();
-    MainBus.register(this);
 
+    localPlayer = new Player(new LocalRenderer(this));
+    playerList = List.newList();
+    playerList.add(localPlayer);
+
+    MainBus.register(this);
 
     executorService = Executors.newSingleThreadExecutor();
 
     WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
     lock = wifiManager.createMulticastLock("com.song1.musicno1.upnpservice");
     lock.acquire();
-
-    playerList = List.newList();
 
     networkHelp = new NetworkHelp();
     networkHelp.onConnected(() -> startController())

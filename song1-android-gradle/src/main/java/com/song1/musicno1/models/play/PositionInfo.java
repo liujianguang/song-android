@@ -33,4 +33,12 @@ public class PositionInfo {
   public int getDuration() {
     return duration;
   }
+
+  public void setPosition(int position) {
+    this.position = position;
+  }
+
+  public void setDuration(int duration) {
+    this.duration = duration;
+  }
 }
