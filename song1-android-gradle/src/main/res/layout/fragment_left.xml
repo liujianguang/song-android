@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:paddingTop="46dp"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:baselineAligned="false">
+
+  <ListView
+      android:id="@+id/left_list"
+      android:layout_weight="1"
+      android:layout_width="match_parent"
+      android:layout_height="0dp">
+  </ListView>
+
+  <!--<LinearLayout-->
+      <!--android:clickable="true"-->
+      <!--android:background="#181918"-->
+      <!--android:layout_width="match_parent"-->
+      <!--android:layout_height="40dp">-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/current_version"-->
+        <!--android:layout_marginLeft="4dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:textColor="#ADB4AD"-->
+        <!--android:layout_gravity="center_vertical"-->
+        <!--android:text="@string/current_version"-->
+        <!--android:layout_height="wrap_content"/>-->
+
+    <!--<Button-->
+        <!--android:id="@+id/exit"-->
+        <!--android:text="@string/exit"-->
+        <!--android:textSize="@dimen/text_size_small"-->
+        <!--android:layout_width="60dp"-->
+        <!--android:layout_height="40dp"/>-->
+  <!--</LinearLayout>-->
+</LinearLayout>
