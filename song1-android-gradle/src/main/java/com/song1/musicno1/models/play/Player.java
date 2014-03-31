@@ -23,7 +23,9 @@ public class Player {
     while (!Thread.currentThread().isInterrupted()) {
       try {
         PositionInfo positionInfo = renderer.getPositionInfo();
-        setPosition(positionInfo.getPosition(), positionInfo.getDuration());
+        if (positionInfo.getDuration() != 0) {
+          setPosition(positionInfo.getPosition(), positionInfo.getDuration());
+        }
       } catch (RendererException ignored) {
       }
 
@@ -62,7 +64,7 @@ public class Player {
       renderer.play();
 
       int i = 0;
-      while (i <= 10 && !renderer.isPlaying()) {
+      while (i <= 10 && state == PREPARING && !renderer.isPlaying()) {
         i++;
         Thread.sleep(500);
       }
@@ -97,9 +99,14 @@ public class Player {
     setState(PREPARING);
     try {
       renderer.pause();
+      int i = 0;
+      while (i <= 10 && state == PREPARING && renderer.isPlaying()) {
+        Thread.sleep(500);
+      }
       setState(PAUSED);
     } catch (RendererException e) {
       error(e);
+    } catch (InterruptedException ignored) {
     }
   }
 
