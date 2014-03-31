@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
+import com.song1.musicno1.App;
 import com.song1.musicno1.helpers.List;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.NetworkHelp;
@@ -22,6 +23,7 @@ import org.cybergarage.upnp.std.av.controller.MediaController;
 import org.cybergarage.upnp.std.av.renderer.MediaRenderer;
 import org.cybergarage.upnp.std.av.server.MediaServer;
 
+import javax.inject.Inject;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -32,6 +34,7 @@ import java.util.concurrent.Executors;
  */
 public class UpnpService extends Service implements DeviceChangeListener {
   protected Player                    localPlayer;
+  @Inject   LocalRenderer             localRenderer;
   private   MediaController           mediaController;
   private   NetworkHelp               networkHelp;
   private   ExecutorService           executorService;
@@ -47,8 +50,9 @@ public class UpnpService extends Service implements DeviceChangeListener {
   public void onCreate() {
     super.onCreate();
     Log.init();
+    App.inject(this);
 
-    localPlayer = new Player(new LocalRenderer(this));
+    localPlayer = new Player(localRenderer);
     playerList = List.newList();
     playerList.add(localPlayer);
 

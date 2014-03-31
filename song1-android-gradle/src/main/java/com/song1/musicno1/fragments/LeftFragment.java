@@ -1,9 +1,5 @@
 package com.song1.musicno1.fragments;
 
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -12,16 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
 import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.adapter.NavigationAdapter;
-import com.squareup.otto.Subscribe;
+import com.song1.musicno1.dialogs.LoadingDialog;
+import com.song1.musicno1.models.migu.MiguIniter;
 
+import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -31,13 +28,14 @@ import java.util.List;
  */
 public class LeftFragment extends Fragment implements AdapterView.OnItemClickListener {
 
+  @Inject MiguIniter miguIniter;
+  @InjectView(R.id.left_list)
+
+  ListView listView;
+  MainActivity mainActivity;
+
   private NavigationAdapter adapter;
 
-  @InjectView(R.id.left_list)
-  ListView listView;
-//    @InjectView(R.id.current_version)
-//    TextView currentVersionView;
-  MainActivity mainActivity;
   private Handler handler = new Handler();
 
   @Override
@@ -73,18 +71,19 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
   public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
     Object obj = adapter.getItem(position);
     int resid;
-    if (obj instanceof Integer){
+    if (obj instanceof Integer) {
       resid = Integer.parseInt(obj.toString());
-    }else {
+    } else {
       return;
     }
-    switch (resid){
+    switch (resid) {
       case R.string.local_source:
         mainActivity.show(new LocalAudioFragment().setTitle(getString(R.string.local_source)));
         break;
       case R.string.download_music:
         break;
       case R.string.migu_title:
+        initMigu(() -> mainActivity.show(new MiguFragment()));
         break;
       case R.string.beatles_music:
         break;
@@ -92,6 +91,30 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
         break;
       default:
         break;
+    }
+  }
+
+  private void initMigu(Runnable runnable) {
+    if (!miguIniter.isInited()) {
+      LoadingDialog loadingDialog = new LoadingDialog();
+      loadingDialog.setText(getString(R.string.init_migu));
+      loadingDialog.show(getFragmentManager(), null);
+
+      new Thread(() -> {
+        if (miguIniter.init()) {
+          handler.post(() -> {
+            loadingDialog.dismiss();
+            runnable.run();
+          });
+        } else {
+          handler.post(() -> {
+            loadingDialog.dismiss();
+            Toast.makeText(getActivity(), R.string.init_migu_failed, Toast.LENGTH_LONG).show();
+          });
+        }
+      }).start();
+    } else {
+      runnable.run();
     }
   }
 }

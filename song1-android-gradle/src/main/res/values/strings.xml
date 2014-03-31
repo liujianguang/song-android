@@ -174,8 +174,9 @@
     <string name="device_list">设备列表</string>
     <string name="start_playing">开始播放 %s</string>
     <string name="download_failed_no_sdcard">下载 %s 失败，无法在 SD 卡中创建下载目录</string>
+  <string name="song_menu">歌单</string>
 
-    <array name="device_names">
+  <array name="device_names">
         <item>客厅</item>
         <item>卧室</item>
         <item>儿童房</item>

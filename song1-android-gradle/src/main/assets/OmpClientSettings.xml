@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OMPClient>
+	<Settings
+		GlobalTerRegisterUrl="/1.0/ompregistrationrequest"
+		GlobalGetSeedUrl="/1.1/SeedRequest11"
+		GlobalProductSubUrl="/1.0/terminalsubscription"
+		GlobalProductSubUrl2="/1.1/terminalsubscription11"
+		GlobalEnablerCallingUrl="/1.0/ompregistrationrequest"            
+		GlobalProductQueryUrl="/1.0/queryproductlist"
+		GlobalProductUnsubUrl="/1.0/terminalunscriptionreq"
+		GlobalTerProductSubQuery="/1.0/terproductsubquery"
+		GlobalGetSubVerificationUrl="/1.1/requestsubverificationurl"
+		HttpPort="8081"
+		HttpsPort="443"
+		AppType="1"
+		TestMode="0"
+		InAppBilling="0"
+		SMSInitCode="1065880040"
+	/>
+</OMPClient>
+<!-- SMSInitCode 中兴：10658404407(应用内计费);10658686999(2.0);10658686123(1.1) 
+				   华为：10658404406 -->
+<!-- InAppBilling 是否为应用内计费, 1-是 0-不是 -->
+<!-- TestMode可有可无，若不存在，默认为正常状态。TestMode值为非0时为测试态 -->
+<!-- 该文件也可存放程序需要的其它字段 -->

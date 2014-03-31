@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import com.song1.musicno1.R;
 
+import javax.inject.Inject;
 import java.io.IOException;
 
 /**
@@ -14,6 +15,7 @@ public class LocalRenderer implements Renderer {
   protected final Context     context;
   protected       String      currentUri;
 
+  @Inject
   public LocalRenderer(Context context) {
     mediaPlayer = new MediaPlayer();
     this.context = context;

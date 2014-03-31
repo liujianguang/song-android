@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert Verification Code</title>
+<script type="text/javascript">
+	function resetImgSrc(str){
+		document.getElementById("veriCodeImage").src=str;
+	}
+
+	function submit(){
+		var veriCodeText = document.getElementById("veriCodeId").value;
+
+		window.register.work("veriCodeText:" + veriCodeText);
+	}
+</script>
+</head>
+<body>
+<form>
+<div class="border">
+<table>
+	<tr>
+		<td><img id="veriCodeImage" src=""></img></td>
+	</tr>
+	<tr>
+		<td>输入</td>
+		<td><input name="veriCode" type="text" id="veriCodeId" class="textview"></input></td>
+	</tr>
+	
+</table>
+</div>
+</form>
+<input class="center" onclick="submit();" type="button" value="提交"></input>
+</body>
+</html>
