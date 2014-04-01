@@ -33,4 +33,8 @@ public class Playlist {
   public Audio getCurrentAudio() {
     return currentAudio;
   }
+
+  public List8<Audio> getAudios() {
+    return audios;
+  }
 }

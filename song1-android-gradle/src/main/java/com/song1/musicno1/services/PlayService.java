@@ -101,6 +101,12 @@ public class PlayService extends Service {
   @Subscribe
   public void play(PlayEvent event) {
     Player player = currentPlayer;
+    if (player != null) {
+      Playlist playlist = playlistMap.get(player.getId());
+      if (playlist != null) {
+        playlist.setCurrentAudio(event.audio);
+      }
+    }
 
     executor.submit(() -> {
       if (event.audio != null) {
@@ -165,6 +171,8 @@ public class PlayService extends Service {
       Playlist playlist = playlistMap.get(player.getId());
       if (playlist != null) {
         return new CurrentPlaylistEvent(playlist);
+      } else {
+        return new CurrentPlaylistEvent(new Playlist());
       }
     }
     return null;
