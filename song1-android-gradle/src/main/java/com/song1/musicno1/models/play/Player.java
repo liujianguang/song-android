@@ -1,6 +1,5 @@
 package com.song1.musicno1.models.play;
 
-import javax.xml.namespace.QName;
 
 /**
  * Created by windless on 3/27/14.
@@ -10,18 +9,26 @@ public class Player {
   public static final int PLAYING   = 1;
   public static final int PAUSED    = 2;
   public static final int PREPARING = 3;
+
+  private final static int TIMEOUT = 20;
+
   protected OnPositionChangedListener positionListener;
   protected int                       state;
-  protected long                      position;
-  protected long                      duration;
+  protected int                       position;
+  protected int                       duration;
   Audio                  currentAudio;
   OnStateChangedListener stateListener;
-  Renderer renderer       = null;
-  Thread   positionThread = new Thread(() -> {
+  Renderer renderer = null;
+
+  Thread positionThread;
+
+  Runnable runnable = () -> {
     while (!Thread.currentThread().isInterrupted()) {
       try {
         PositionInfo positionInfo = renderer.getPositionInfo();
-        setPosition(positionInfo.getPosition(), positionInfo.getDuration());
+        if (positionInfo.getDuration() != 0) {
+          setPosition(positionInfo.getPosition(), positionInfo.getDuration());
+        }
       } catch (RendererException ignored) {
       }
 
@@ -31,13 +38,13 @@ public class Player {
         return;
       }
     }
-  });
+  };
 
   public Player(Renderer renderer) {
     this.renderer = renderer;
   }
 
-  private void setPosition(long position, long duration) {
+  private void setPosition(int position, int duration) {
     this.position = position;
     this.duration = duration;
     if (positionListener != null) {
@@ -46,25 +53,28 @@ public class Player {
   }
 
   public void play(Audio audio) {
-    currentAudio = audio;
     setState(PREPARING);
-    stopPositionThread();
+
+    if (audio != null) {
+      currentAudio = audio;
+      setPosition(0, 0);
+    }
+
     try {
-      renderer.setUri(audio.getRemotePlayUrl());
+      if (audio != null) {
+        renderer.setUri(audio.getRemotePlayUrl());
+      }
       renderer.play();
 
-      int i = 0;
-      while (i <= 5 || !renderer.isPlaying()) {
-        i++;
-        Thread.sleep(1000);
-      }
-
-      setState(PLAYING);
+      checkStatus(PLAYING, () -> !renderer.isPlaying());
     } catch (RendererException e) {
       stop();
       error(e);
-    } catch (InterruptedException ignored) {
     }
+  }
+
+  public void play() {
+    play(null);
   }
 
   private void stopPositionThread() {
@@ -81,19 +91,38 @@ public class Player {
 
   }
 
+  private void checkStatus(int completeState, CheckRunnable runnable) {
+    int i = 0;
+    try {
+      while (i <= TIMEOUT && state == PREPARING && runnable.check()) {
+        i++;
+        try {
+          Thread.sleep(500);
+        } catch (InterruptedException e) {
+          return;
+        }
+      }
+      if (i > TIMEOUT) {
+        error(new RendererException(RendererException.POST_ACTION_FAILED));
+      } else {
+        setState(completeState);
+      }
+    } catch (RendererException e) {
+      error(e);
+    }
+  }
+
   public void pause() {
     setState(PREPARING);
     try {
-      stopPositionThread();
       renderer.pause();
-      setState(PAUSED);
+      checkStatus(PAUSED, () -> renderer.isPlaying());
     } catch (RendererException e) {
       error(e);
     }
   }
 
   public void stop() {
-    stopPositionThread();
     try {
       renderer.stop();
     } catch (RendererException ignored) {
@@ -118,17 +147,36 @@ public class Player {
     if (stateListener != null) {
       stateListener.onStateChanged(this, state);
     }
+
+    if (state == PLAYING) {
+      startPositionThread();
+    } else {
+      stopPositionThread();
+    }
+  }
+
+  private void startPositionThread() {
+    if (positionThread != null) {
+      positionThread.interrupt();
+      try {
+        positionThread.join();
+      } catch (InterruptedException ignored) {
+      }
+    }
+
+    positionThread = new Thread(runnable);
+    positionThread.start();
   }
 
   public Audio getCurrentAudio() {
     return currentAudio;
   }
 
-  public long getPosition() {
+  public int getPosition() {
     return position;
   }
 
-  public long getDuration() {
+  public int getDuration() {
     return duration;
   }
 
@@ -140,11 +188,36 @@ public class Player {
     return renderer.getId();
   }
 
+  public void seek(int seekTo) {
+    setState(PREPARING);
+    setPosition(seekTo, duration);
+    try {
+      renderer.seek(seekTo);
+
+      checkStatus(PLAYING, () -> !checkPosition(seekTo));
+    } catch (RendererException e) {
+      error(e);
+    }
+  }
+
+  private boolean checkPosition(int seekTo) {
+    try {
+      PositionInfo info = renderer.getPositionInfo();
+      return Math.abs(info.getPosition() - seekTo) <= 3000;
+    } catch (RendererException e) {
+      return false;
+    }
+  }
+
   public interface OnStateChangedListener {
     void onStateChanged(Player player, int state);
   }
 
   public interface OnPositionChangedListener {
     void onPositionChanged(Player player, long position, long duration);
+  }
+
+  private interface CheckRunnable {
+    boolean check() throws RendererException;
   }
 }

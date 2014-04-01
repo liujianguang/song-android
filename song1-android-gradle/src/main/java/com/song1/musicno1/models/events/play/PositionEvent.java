@@ -7,10 +7,10 @@ import com.song1.musicno1.models.play.Audio;
  */
 public class PositionEvent {
   protected final Audio audio;
-  protected final long  position;
-  protected final long duration;
+  protected final int   position;
+  protected final int   duration;
 
-  public PositionEvent(Audio audio, long position, long duration) {
+  public PositionEvent(Audio audio, int position, int duration) {
     this.audio = audio;
     this.position = position;
     this.duration = duration;
@@ -20,11 +20,11 @@ public class PositionEvent {
     return audio;
   }
 
-  public long getPosition() {
+  public int getPosition() {
     return position;
   }
 
-  public long getDuration() {
+  public int getDuration() {
     return duration;
   }
 }

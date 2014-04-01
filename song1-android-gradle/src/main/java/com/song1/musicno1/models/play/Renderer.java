@@ -19,4 +19,6 @@ public interface Renderer {
   String getName();
 
   String getId();
+
+  void seek(int seekTo) throws RendererException;
 }

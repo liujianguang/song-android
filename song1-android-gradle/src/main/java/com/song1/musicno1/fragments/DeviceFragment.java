@@ -90,14 +90,13 @@ public class DeviceFragment extends Fragment implements AdapterView.OnItemClickL
   public void onResume() {
     super.onResume();
     MainBus.register(this);
-    networkHelp.register(getActivity()).onConnected(() -> {
+    networkHelp.onConnected(() -> {
       WifiInfo info = wifi.getConnectionInfo();
       if (info != null) {
         currentNetworkView.setText(info.getSSID());
       }
-    }).onDisconnected(() -> {
-      currentNetworkView.setText(R.string.not_network);
-    });
+    }).onDisconnected(() -> currentNetworkView.setText(R.string.not_network))
+        .register(getActivity());
   }
 
   @Override

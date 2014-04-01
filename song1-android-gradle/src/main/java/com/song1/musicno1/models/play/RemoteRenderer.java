@@ -1,6 +1,8 @@
 package com.song1.musicno1.models.play;
 
 import com.google.common.base.Strings;
+import com.song1.musicno1.helpers.TimeHelper;
+import de.akquinet.android.androlog.Log;
 import org.cybergarage.upnp.Action;
 import org.cybergarage.upnp.Argument;
 import org.cybergarage.upnp.Device;
@@ -35,6 +37,14 @@ public class RemoteRenderer implements Renderer {
   }
 
   @Override
+  public void seek(int seekTo) throws RendererException {
+    postAction(AVTransport.SEEK, (action) -> {
+      action.setArgumentValue(AVTransport.UNIT, "REL_TIME");
+      action.setArgumentValue(AVTransport.TARGET, TimeHelper.mill2lstr(seekTo));
+    });
+  }
+
+  @Override
   public void setUri(String uri) throws RendererException {
     postAction(AVTransport.SETAVTRANSPORTURI, (action) -> {
       action.setArgumentValue(AVTransport.CURRENTURI, uri);
@@ -57,7 +67,13 @@ public class RemoteRenderer implements Renderer {
   public boolean isPlaying() throws RendererException {
     Action getInfo = postAction(AVTransport.GETTRANSPORTINFO);
     Argument state = getInfo.getArgument(AVTransport.CURRENTTRANSPORTSTATE);
-    return state != null && AVTransport.PLAYING.equals(state.getValue());
+    if (state != null) {
+      Log.d(this, "Renderer state: " + state.getValue());
+      return AVTransport.PLAYING.equals(state.getValue());
+    } else {
+      Log.d(this, "Renderer state: get state failed");
+    }
+    return false;
   }
 
   @Override

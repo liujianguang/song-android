@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+  <FrameLayout
+      android:id="@+id/actions"
+      android:layout_weight="1"
+      android:layout_width="match_parent"
+      android:layout_height="0dp">
+
+  </FrameLayout>
+
+  <LinearLayout
+      android:background="@color/dark_green"
+      android:orientation="horizontal"
+      android:layout_width="match_parent"
+      android:gravity="center_vertical"
+      android:layout_height="60dp">
+
+    <ImageButton
+        android:id="@+id/favorite"
+        android:layout_weight="1"
+        android:src="@drawable/ic_favorite_nor"
+        android:background="@null"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <ImageButton
+        android:id="@+id/previous"
+        android:layout_weight="1"
+        android:src="@drawable/ic_previous_nor"
+        android:background="@null"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <ImageButton
+        android:id="@+id/play"
+        android:layout_weight="1"
+        android:src="@drawable/ic_play_large"
+        android:background="@null"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <ImageButton
+        android:id="@+id/next"
+        android:src="@drawable/ic_next_nor"
+        android:layout_weight="1"
+        android:background="@null"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <ImageButton
+        android:id="@+id/player_list"
+        android:src="@drawable/ic_playing_playlist_nor"
+        android:layout_weight="1"
+        android:background="@null"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+  </LinearLayout>
+
+  <RelativeLayout
+      android:padding="8dp"
+      android:id="@+id/volume_section"
+      android:layout_width="match_parent"
+      android:layout_height="50dp">
+
+    <ImageView
+        android:id="@+id/volume_min"
+        android:src="@drawable/ic_volume_min"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_width="20dp"
+        android:layout_height="20dp"/>
+
+    <ImageView
+        android:id="@+id/volume_max"
+        android:src="@drawable/ic_volume_max"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:scaleType="center"
+        android:layout_width="20dp"
+        android:layout_height="20dp"/>
+
+    <SeekBar
+        android:id="@+id/volume_bar"
+        android:layout_toLeftOf="@id/volume_max"
+        android:layout_toRightOf="@id/volume_min"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+  </RelativeLayout>
+</LinearLayout>

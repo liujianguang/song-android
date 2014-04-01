@@ -3,13 +3,10 @@ package com.song1.musicno1.services;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import com.song1.musicno1.activities.CurrentNotworkDeviceActivity;
 import com.song1.musicno1.helpers.LatestExecutor;
 import com.song1.musicno1.helpers.MainBus;
-import com.song1.musicno1.models.events.play.CurrentPlayerEvent;
-import com.song1.musicno1.models.events.play.CurrentPlayerStateEvent;
-import com.song1.musicno1.models.events.play.PositionEvent;
-import com.song1.musicno1.models.events.play.SelectPlayerEvent;
-import com.song1.musicno1.models.play.Audio;
+import com.song1.musicno1.models.events.play.*;
 import com.song1.musicno1.models.play.Player;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
@@ -20,6 +17,7 @@ import com.squareup.otto.Subscribe;
 public class PlayService extends Service {
   protected LatestExecutor executor;
   protected Player         currentPlayer;
+  protected PlayEvent      waitingEvent;
 
   @Override
   public IBinder onBind(Intent intent) {
@@ -52,6 +50,51 @@ public class PlayService extends Service {
     event.player.onPositionChanged((player, position, duration) -> {
       if (player == currentPlayer) {
         postEvent(currentPlayerPosition());
+      }
+    });
+
+    if (waitingEvent != null) {
+      play(waitingEvent);
+      waitingEvent = null;
+    }
+  }
+
+  @Subscribe
+  public void play(PlayEvent event) {
+    Player player = currentPlayer;
+    if (player == null) {
+      waitingEvent = event;
+      Intent selectPlayer = new Intent(this, CurrentNotworkDeviceActivity.class);
+      selectPlayer.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      startActivity(selectPlayer);
+      return;
+    }
+
+    executor.submit(() -> {
+      if (event.audio != null) {
+        player.play(event.audio);
+      } else {
+        player.play();
+      }
+    });
+  }
+
+  @Subscribe
+  public void pause(PauseEvent event) {
+    executor.submit(() -> {
+      Player player = currentPlayer;
+      if (player != null) {
+        player.pause();
+      }
+    });
+  }
+
+  @Subscribe
+  public void seek(SeekEvent event) {
+    executor.submit(() -> {
+      Player player = currentPlayer;
+      if (player != null) {
+        player.seek(event.getSeekTo());
       }
     });
   }
