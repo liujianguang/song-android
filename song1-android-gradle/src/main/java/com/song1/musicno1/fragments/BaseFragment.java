@@ -21,12 +21,12 @@ public class BaseFragment extends Fragment {
   public BaseFragment(String title){
     this._title = title;
   }
-  public Fragment setTitle(String title) {
+  public BaseFragment setTitle(String title) {
     this._title = title;
     return this;
   }
 
-  public Fragment setParent(Fragment parent){
+  public BaseFragment setParent(Fragment parent){
     this._parent = parent;
     return this;
   }

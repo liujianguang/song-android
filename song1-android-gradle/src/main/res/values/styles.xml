@@ -48,4 +48,9 @@
     <item name="android:descendantFocusability">blocksDescendants</item>
     <item name="android:layout_width">match_parent</item>
   </style>
+
+  <style name="SingleLine">
+    <item name="android:singleLine">true</item>
+    <item name="android:ellipsize">end</item>
+  </style>
 </resources>

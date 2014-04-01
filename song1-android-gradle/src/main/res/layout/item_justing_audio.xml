@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:paddingLeft="8dp"
+                style="@style/ListItem">
+
+  <ImageButton
+      android:id="@+id/more"
+      android:layout_width="@dimen/list_item_height"
+      android:layout_height="match_parent"
+      android:layout_alignParentRight="true"
+      android:layout_centerVertical="true"
+      android:scaleType="fitEnd"
+      android:background="@null"
+      android:contentDescription="@null"/>
+
+  <TextView
+      android:id="@+id/title"
+      android:layout_toLeftOf="@id/more"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp"
+      android:textSize="@dimen/list_item_subtitle_text_size"
+      />
+
+  <TextView
+      android:id="@+id/actor"
+      android:layout_marginLeft="8dp"
+      android:layout_toLeftOf="@id/more"
+      android:layout_width="100dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="4dp"
+      android:textSize="@dimen/list_item_subtitle_text_size"
+      android:layout_below="@id/title"
+      android:gravity="right"
+      />
+
+  <TextView
+      android:id="@+id/author"
+      android:layout_toLeftOf="@id/actor"
+      android:layout_width="100dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="4dp"
+      android:textSize="@dimen/list_item_subtitle_text_size"
+      android:layout_below="@id/title"
+      android:gravity="right"
+      />
+
+
+
+</RelativeLayout>

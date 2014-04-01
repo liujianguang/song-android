@@ -34,7 +34,12 @@ public class DeviceListDialog extends DialogFragment implements WifiModel.WifiMo
   @OnClick(R.id.confirm)
   public void confirmClick() {
     dismiss();
-    deviceSettingDialog = new DeviceSettingDialog(spinner.getSelectedItem().toString());
+//    wifiModel.connect(spinner.getSelectedItem().toString(),"12345678");
+    Object deviceName = spinner.getSelectedItem();
+    if (deviceName == null){
+      return;
+    }
+    deviceSettingDialog = new DeviceSettingDialog(deviceName.toString());
     deviceSettingDialog.show(getFragmentManager(), "deviceFragmentDialg");
   }
 
@@ -54,6 +59,7 @@ public class DeviceListDialog extends DialogFragment implements WifiModel.WifiMo
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
+    currentNetworkDevicelist = Lists.newArrayList();
     allNetworkDeviceList = Lists.newArrayList();
     deviceAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, allNetworkDeviceList);
     spinner.setAdapter(deviceAdapter);
@@ -75,7 +81,9 @@ public class DeviceListDialog extends DialogFragment implements WifiModel.WifiMo
   public void scanResult(List<ScanResult> scanResultList) {
     allNetworkDeviceList.clear();
     for (ScanResult scanResult : scanResultList) {
-      if (scanResult.SSID.startsWith("yy")) {
+//      System.out.println(scanResult.SSID);
+      if (isDevice(scanResult.SSID)) {
+        System.out.println(scanResult.SSID);
         System.out.println(scanResult.BSSID);
         if (!isExist(scanResult.BSSID)) {
           allNetworkDeviceList.add(scanResult.SSID);
@@ -83,6 +91,17 @@ public class DeviceListDialog extends DialogFragment implements WifiModel.WifiMo
       }
       deviceAdapter.notifyDataSetChanged();
     }
+  }
+
+  private boolean isDevice(String ssid){
+    if (ssid.startsWith("yy")){
+      return true;
+    }
+    if (ssid.startsWith("DOMIG") && ssid.endsWith("ONE"))
+    {
+      return true;
+    }
+    return false;
   }
 
   @Override

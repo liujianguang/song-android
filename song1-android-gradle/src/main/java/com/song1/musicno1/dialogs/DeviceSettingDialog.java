@@ -87,6 +87,7 @@ public class DeviceSettingDialog extends BaseDialog implements WifiModel.WifiMod
   public void confirmClick() {
     setEnable();
     DeviceConfig deviceConfig = new DeviceConfig();
+    deviceConfig.setFriendlyName(deviceNameSpinner.getSelectedItem().toString());
     deviceConfig.setSsid(ssid);
     deviceConfig.setWifiSsid(networkSpinner.getSelectedItem().toString());
     deviceConfig.setWifiPass(networkPassView.getText().toString());
@@ -108,8 +109,10 @@ public class DeviceSettingDialog extends BaseDialog implements WifiModel.WifiMod
     ButterKnife.inject(this, getView());
     titleTextView.setText(ssid);
     progressBar.setMax(90);
+    deviceNameList = Lists.newArrayList(getResources().getStringArray(R.array.device_names));
     deviceNameAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, deviceNameList);
     networkAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, networkList);
+
     deviceNameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     deviceNameSpinner.setAdapter(deviceNameAdapter);
     networkSpinner.setAdapter(networkAdapter);
@@ -193,10 +196,13 @@ public class DeviceSettingDialog extends BaseDialog implements WifiModel.WifiMod
     System.out.println("isSuc : " + isSuc);
     isSuc = remoteSetting.setSsidAndPass(deviceConfig.getWifiSsid(), deviceConfig.getWifiPass());
     System.out.println("isSuc : " + isSuc);
+    remoteSetting.setDeviceName(deviceConfig.getFriendlyName());
     while(true){
       Optional<String> ssid = remoteSetting.getCurrentSSID();
-      System.out.println("***********************" + ssid);
+      System.out.println("mode : " + remoteSetting.getCurrentMode());
+//      System.out.println("***********************" + ssid);
       if (ssid.isPresent() && ssid.get().equals(deviceConfig.getWifiSsid())) {
+        System.out.println(ssid);
         break;
       }
 //      System.out.println("***********************" + ssid.get());

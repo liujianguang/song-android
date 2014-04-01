@@ -109,11 +109,11 @@ public class WifiModel {
   }
 
   private WifiConfiguration getConfig(String ssid, String password) {
-    ssid = "\"" + ssid + "\"";
     System.out.println(ssid);
     List<WifiConfiguration> configs = wifiManager.getConfiguredNetworks();
     for (WifiConfiguration config : configs) {
-      if (ssid.equals(config.SSID)) {
+      System.out.println(config.SSID);
+      if (("\"" + ssid + "\"").equals(config.SSID)) {
         System.out.println("*****************");
         return config;
       }
@@ -122,6 +122,7 @@ public class WifiModel {
   }
 
   private WifiConfiguration newConfig(String ssid, String password) {
+    System.out.println("newConfig : " + ssid + " : " + password);
     WifiConfiguration config = new WifiConfiguration();
 
     config.SSID = "\"" + ssid + "\"";

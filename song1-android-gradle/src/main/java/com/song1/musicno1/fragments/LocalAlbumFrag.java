@@ -81,7 +81,7 @@ public class LocalAlbumFrag extends BaseFragment implements LoaderManager.Loader
     localAudioFrag.setAlbum(album);
     localAudioFrag.setTitle(album.title);
     localAudioFrag.setParent(getParentFragment());
-    activity.show(localAudioFrag); 
+    activity.show(localAudioFrag);
 //    LocalAudiosFrag frag = App.get(LocalAudiosFrag.class);
 //    frag.title(album.title);
 //    frag.parent(this.parent());

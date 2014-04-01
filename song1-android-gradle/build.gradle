@@ -45,4 +45,6 @@ dependencies {
     compile 'de.akquinet.android.androlog:androlog:1.0.6'
     compile 'com.squareup:otto:1.3.4'
     compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.google.code.gson:gson:2.2.2'
+    compile 'com.squareup.picasso:picasso:2.0.0'
 }

@@ -53,22 +53,41 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
         .replace(R.id.play_bar, new PlayBarFragment())
         .replace(R.id.navigation, new LeftFragment())
         .commit();
+
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     BaseFragment fragment = (BaseFragment) getSupportFragmentManager().findFragmentById(R.id.main);
-    Fragment parent   = (BaseFragment) fragment.getParent();
-    if (parent != null){
-      show(parent);
+    Fragment parent = (BaseFragment) fragment.getParent();
+    if (parent != null) {
+//      show(parent);
+      onBackPressed();
       return true;
     }
-    return super.onOptionsItemSelected(item);
+    return true;
+//    return super.onOptionsItemSelected(item);
   }
 
-  public void show(Fragment fragment) {
-    FragmentTransaction transaction  = getSupportFragmentManager().beginTransaction();
-    transaction.replace(R.id.main, fragment).commit();
+  @Override
+  public void onBackPressed() {
+//    BaseFragment fragment = (BaseFragment) getSupportFragmentManager().findFragmentById(R.id.main);
+//    if (fragment.getParent() == null){
+//      finish();
+//      return;
+//    }
+    super.onBackPressed();
+  }
+
+  public void show(Fragment fragment){
+    show(null,fragment);
+  }
+  public void show(String stackName,Fragment fragment) {
+
+    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//    getSupportFragmentManager().popBackStack("",1);
+
+    transaction.replace(R.id.main, fragment).addToBackStack(stackName).commit();
     drawerLayout.closeDrawers();
   }
 

@@ -15,8 +15,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.BaseAdapter;
+import com.song1.musicno1.dialogs.DeviceListDialog;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.NetworkHelp;
 import com.song1.musicno1.models.events.play.CurrentPlayerEvent;
@@ -27,6 +29,8 @@ import com.song1.musicno1.models.play.Player;
 import com.squareup.otto.Subscribe;
 import de.akquinet.android.androlog.Log;
 import org.cybergarage.upnp.std.av.renderer.MediaRenderer;
+
+import java.util.List;
 
 /**
  * Created by kate on 14-3-17.
@@ -64,8 +68,15 @@ public class DeviceFragment extends Fragment implements AdapterView.OnItemClickL
     adapter = new BaseAdapter<Player, ViewHolder>(getActivity(), R.layout.item_device)
         .bind(() -> new ViewHolder())
         .setData((i, player, holder) -> {
+          if (player == null) {
+            holder.imageView.setImageResource(R.drawable.addnewdevice_ic_butoon_normal);
+            holder.textView.setTextColor(Color.WHITE);
+            holder.textView.setText(getString(R.string.newDevice));
+            return;
+          }
           if (player == selectedPlayer) {
             holder.imageView.setImageResource(R.drawable.kids_room_ic_butoon_press);
+
             holder.textView.setTextColor(Color.RED);
           } else {
             holder.imageView.setImageResource(R.drawable.kids_room_ic_butoon_normal);
@@ -111,14 +122,21 @@ public class DeviceFragment extends Fragment implements AdapterView.OnItemClickL
   @Subscribe
   public void onDeviceChanged(DeviceChangeEvent event) {
     Log.d(this, "Device change event");
-    adapter.setList(event.players);
+    List<Player> players = Lists.newArrayList(event.players);
+    players.add(null);
+    adapter.setList(players);
     adapter.notifyDataSetChanged();
   }
 
   @Override
   public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
     Player player = adapter.getElement(i);
-    MainBus.post(new SelectPlayerEvent(player));
+    if (player == null) {
+      DeviceListDialog deviceListDialog = new DeviceListDialog();
+      deviceListDialog.show(getFragmentManager(),"deviceListDialog");
+    } else {
+      MainBus.post(new SelectPlayerEvent(player));
+    }
   }
 
   @Subscribe

@@ -36,8 +36,8 @@ public class LocalAudioFragment extends BaseFragment {
   @InjectView(R.id.albumButton)  Button    albumButton;
   @InjectView(R.id.artistButton) Button    artistButton;
   @InjectView(R.id.nextButton)   Button    nextButton;
-
-  Button currentButton;
+  FragmentAdapter adapter;
+  int currentPostion = 0;
 
   @OnClick(R.id.songButton)
   public void songButtonClick(Button button) {
@@ -58,9 +58,10 @@ public class LocalAudioFragment extends BaseFragment {
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
     }
+
     @Override
     public void onPageSelected(int position) {
-      Button button;
+      currentPostion = position;
       changeStyle(buttonList.get(position));
     }
 
@@ -70,18 +71,29 @@ public class LocalAudioFragment extends BaseFragment {
   };
 
   private void changePage(Button button) {
-    changeStyle(button);
-    viewPager.setCurrentItem(buttonList.indexOf(button));
+    currentPostion = buttonList.indexOf(button);
+    viewPager.setCurrentItem(currentPostion);
   }
 
   private void changeStyle(Button button) {
-    currentButton = button;
+    System.out.println("currentPostion : " + currentPostion);
     int color_normal = getResources().getColor(R.color.title_bg_color);
     int color_select = getResources().getColor(R.color.content_bg_color);
-    songButton.setBackgroundColor(color_normal);
-    albumButton.setBackgroundColor(color_normal);
-    artistButton.setBackgroundColor(color_normal);
+    for (Button btn : buttonList) {
+      btn.setBackgroundColor(color_normal);
+      System.out.println("btn : " + btn);
+    }
+    System.out.println("button : " + button);
     button.setBackgroundColor(color_select);
+  }
+
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    fragments.add(new LocalAudioFrag());
+    fragments.add(new LocalAlbumFrag());
+    fragments.add(new LocalArtistFrag());
+    adapter = new FragmentAdapter(getChildFragmentManager());
   }
 
   @Override
@@ -90,23 +102,19 @@ public class LocalAudioFragment extends BaseFragment {
     System.out.println("onActivityCreate...");
 //    has_home_button(true);
     setTitle(getString(R.string.local_source));
-    fragments.add(new LocalAudioFrag());
-    fragments.add(new LocalAlbumFrag());
-    fragments.add(new LocalArtistFrag());
+    buttonList.clear();
     buttonList.add(songButton);
     buttonList.add(albumButton);
     buttonList.add(artistButton);
-    FragmentAdapter adapter = new FragmentAdapter(getChildFragmentManager());
     viewPager.setAdapter(adapter);
     viewPager.setOnPageChangeListener(onPageChangeListener);
-    currentButton = songButton;
+    changeStyle(buttonList.get(currentPostion));
   }
 
   @Override
   public void onResume() {
     System.out.println("onResume...");
     super.onResume();
-    changeStyle(currentButton);
   }
 
   @Override
@@ -131,7 +139,8 @@ public class LocalAudioFragment extends BaseFragment {
 
     @Override
     public Fragment getItem(int position) {
-      return fragments.get(position);
+      Fragment fragment = fragments.get(position);
+      return fragment;
     }
 
     @Override

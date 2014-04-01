@@ -17,12 +17,14 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.adapter.NavigationAdapter;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: windless
@@ -32,10 +34,11 @@ import java.util.List;
 public class LeftFragment extends Fragment implements AdapterView.OnItemClickListener {
 
   private NavigationAdapter adapter;
+  private Map<Integer, BaseFragment> mapFragment = Maps.newHashMap();
 
   @InjectView(R.id.left_list)
   ListView listView;
-//    @InjectView(R.id.current_version)
+  //    @InjectView(R.id.current_version)
 //    TextView currentVersionView;
   MainActivity mainActivity;
   private Handler handler = new Handler();
@@ -78,20 +81,33 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
     }else {
       return;
     }
+    BaseFragment fragment = mapFragment.get(resid);
+    if (fragment != null){
+      mainActivity.show(fragment);
+      System.out.println("fragment : " + fragment.getFragmentManager());
+      return;
+    }
     switch (resid){
       case R.string.local_source:
-        mainActivity.show(new LocalAudioFragment().setTitle(getString(R.string.local_source)));
+        fragment = new LocalAudioFragment().setTitle(getString(R.string.local_source));
         break;
       case R.string.download_music:
         break;
       case R.string.migu_title:
         break;
       case R.string.beatles_music:
+        fragment = new BeatlesFrag();
         break;
       case R.string.justing:
+        fragment = new JustingCategoryFragment();
         break;
       default:
         break;
+    }
+    if (fragment != null) {
+      System.out.println("fragment : " + fragment.getFragmentManager());
+      mapFragment.put(resid,fragment);
+      mainActivity.show(fragment);
     }
   }
 }
