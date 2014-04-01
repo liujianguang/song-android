@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
 import com.song1.musicno1.App;
-import com.song1.musicno1.helpers.List;
+import com.song1.musicno1.helpers.List8;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.NetworkHelp;
 import com.song1.musicno1.models.events.upnp.DeviceChangeEvent;
@@ -39,7 +39,7 @@ public class UpnpService extends Service implements DeviceChangeListener {
   private   NetworkHelp               networkHelp;
   private   ExecutorService           executorService;
   private   WifiManager.MulticastLock lock;
-  private   List<Player>              playerList;
+  private   List8<Player>             playerList;
 
   @Override
   public IBinder onBind(Intent intent) {
@@ -53,7 +53,7 @@ public class UpnpService extends Service implements DeviceChangeListener {
     App.inject(this);
 
     localPlayer = new Player(localRenderer);
-    playerList = List.newList();
+    playerList = List8.newList();
     playerList.add(localPlayer);
 
     MainBus.register(this);

@@ -4,31 +4,38 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by windless on 3/27/14.
  */
-public class List<E> extends ArrayList<E> {
-  public static <E> List<E> newList() {
-    return new List<>();
+public class List8<E> extends ArrayList<E> {
+  public static <E> List8<E> newList() {
+    return new List8<>();
   }
 
-  public List<E> each(Block<E> block) {
+  public static <E> List8<E> newList(List<E> elements) {
+    List8<E> list = new List8<>();
+    list.addAll(elements);
+    return list;
+  }
+
+  public List8<E> each(Block<E> block) {
     for (E e : this) {
       block.call(e);
     }
     return this;
   }
 
-  public <T> List<T> map(Function<E, T> function) {
-    List<T> newList = List.newList();
+  public <T> List8<T> map(Function<E, T> function) {
+    List8<T> newList = List8.newList();
     for (E e : this) {
       newList.add(function.apply(e));
     }
     return newList;
   }
 
-  public List<E> deleteIf(Predicate<E> predicate) {
+  public List8<E> deleteIf(Predicate<E> predicate) {
     for (E e : this) {
       if (predicate.apply(e)) {
         remove(e);
@@ -38,8 +45,8 @@ public class List<E> extends ArrayList<E> {
     return this;
   }
 
-  public List<E> select(Predicate<E> predicate) {
-    List<E> newList = List.newList();
+  public List8<E> select(Predicate<E> predicate) {
+    List8<E> newList = List8.newList();
     for (E e : this) {
       if (predicate.apply(e)) {
         newList.add(e);
@@ -48,8 +55,8 @@ public class List<E> extends ArrayList<E> {
     return newList;
   }
 
-  public List<E> reject(Predicate<E> predicate) {
-    List<E> newList = List.newList();
+  public List8<E> reject(Predicate<E> predicate) {
+    List8<E> newList = List8.newList();
     for (E e : this) {
       if (!predicate.apply(e)) {
         newList.add(e);

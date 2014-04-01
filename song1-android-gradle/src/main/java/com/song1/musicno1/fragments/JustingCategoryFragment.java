@@ -65,7 +65,6 @@ public class JustingCategoryFragment extends PageLoadFragment<JustingCategory> i
       result.setLoadPage(page);
     }
     return result;
-//    return null;
   }
 
   @Override
