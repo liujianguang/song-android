@@ -47,8 +47,8 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
 
   private Handler handler = new Handler();
 
-  public LeftFragment(NavigationAdapter adapter) {
-    this.adapter = adapter;
+  @Inject
+  public LeftFragment() {
   }
 
   @Override
@@ -90,12 +90,12 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
       return;
     }
     BaseFragment fragment = mapFragment.get(resid);
-    if (fragment != null){
+    if (fragment != null) {
       mainActivity.show(fragment);
       System.out.println("fragment : " + fragment.getFragmentManager());
       return;
     }
-    switch (resid){
+    switch (resid) {
       case R.string.local_source:
         fragment = new LocalAudioFragment().setTitle(getString(R.string.local_source));
         break;
@@ -115,7 +115,7 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
     }
     if (fragment != null) {
       System.out.println("fragment : " + fragment.getFragmentManager());
-      mapFragment.put(resid,fragment);
+      mapFragment.put(resid, fragment);
       mainActivity.show(fragment);
     }
   }
