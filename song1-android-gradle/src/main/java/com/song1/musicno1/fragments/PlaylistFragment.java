@@ -16,6 +16,7 @@ import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.events.play.CurrentPlaylistEvent;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Players;
+import com.song1.musicno1.models.play.Playlist;
 import com.squareup.otto.Subscribe;
 
 /**
@@ -23,6 +24,7 @@ import com.squareup.otto.Subscribe;
  */
 public class PlaylistFragment extends Fragment implements AdapterView.OnItemClickListener {
   protected              BaseAdapter<Audio, ViewHolder> adapter;
+  protected              Playlist                       playlist;
   @InjectView(R.id.list) ListView                       listView;
 
   @Override
@@ -62,6 +64,7 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemClic
 
   @Subscribe
   public void playlistChanged(CurrentPlaylistEvent event) {
+    playlist = event.getPlaylist();
     adapter.setList(event.getPlaylist().getAudios());
     adapter.notifyDataSetChanged();
   }
@@ -69,7 +72,8 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemClic
   @Override
   public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
     Audio audio = adapter.getElement(i);
-    Players.play(audio);
+    playlist.setCurrentAudio(audio);
+    Players.play();
   }
 
   class ViewHolder extends BaseAdapter.ViewHolder {

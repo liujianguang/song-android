@@ -70,16 +70,6 @@ public class PlayService extends Service {
 
   private void playNext(Player player) {
     executor.submit(() -> {
-      Playlist playlist = playlistMap.get(player.getId());
-      if (playlist != null) {
-        Audio autoNext = playlist.getAutoNext(player.getPlayMode());
-        if (autoNext != null) {
-          playlist.setCurrentAudio(autoNext);
-          player.play(autoNext);
-        } else {
-          player.stop();
-        }
-      }
     });
   }
 
@@ -89,7 +79,7 @@ public class PlayService extends Service {
     if (player != null) {
       playlistMap.put(player.getId(), event.getPlaylist());
       postEvent(currentPlaylist());
-      play(new PlayEvent(event.getPlaylist().getCurrentAudio()));
+      play(new PlayEvent());
     } else {
       waitingEvent = event;
       Intent selectPlayer = new Intent(this, CurrentNotworkDeviceActivity.class);
@@ -100,19 +90,18 @@ public class PlayService extends Service {
 
   @Subscribe
   public void play(PlayEvent event) {
-    Player player = currentPlayer;
-    if (player != null) {
-      Playlist playlist = playlistMap.get(player.getId());
-      if (playlist != null) {
-        playlist.setCurrentAudio(event.audio);
-      }
-    }
-
     executor.submit(() -> {
-      if (event.audio != null) {
-        player.play(event.audio);
-      } else {
-        player.play();
+      Player player = currentPlayer;
+      if (player != null) {
+        if (player.getState() == Player.PAUSED) {
+          player.play();
+        } else {
+          Playlist playlist = playlistMap.get(player.getId());
+          if (playlist != null) {
+            Audio currentAudio = playlist.getCurrentAudio();
+            if (currentAudio != null) player.play(currentAudio);
+          }
+        }
       }
     });
   }
@@ -143,10 +132,8 @@ public class PlayService extends Service {
     if (player != null) {
       Playlist playlist = playlistMap.get(player.getId());
       if (playlist != null) {
-        Audio next = playlist.getNext(player.getPlayMode());
-        if (next != null) {
-          play(new PlayEvent(next));
-        }
+        playlist.next(player.getPlayMode());
+        play(new PlayEvent());
       }
     }
   }
@@ -157,10 +144,8 @@ public class PlayService extends Service {
     if (player != null) {
       Playlist playlist = playlistMap.get(player.getId());
       if (playlist != null) {
-        Audio previous = playlist.getPrevious();
-        if (previous != null) {
-          play(new PlayEvent(previous));
-        }
+        playlist.previous();
+        play(new PlayEvent());
       }
     }
   }

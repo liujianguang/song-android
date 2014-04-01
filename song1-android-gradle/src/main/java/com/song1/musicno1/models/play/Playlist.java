@@ -21,18 +21,17 @@ public class Playlist {
     this.currentAudio = currentAudio;
   }
 
-  public Audio getAutoNext(int playMode) {
+  public void next(int playMode) {
     switch (playMode) {
       case Player.MODE_NORMAL:
       case Player.MODE_REPEAT_ALL:
       case Player.MODE_REPEAT_ONE:
       case Player.MODE_SHUFFLE:
     }
-    return null;
   }
 
-  public Audio getNext(int playMode) {
-    if (audios.size() == 0) return null;
+  public void autoNext(int playMode) {
+    if (audios.size() == 0) return;
 
     if (playMode != Player.MODE_SHUFFLE) {
       int i = audios.indexOf(currentAudio);
@@ -40,18 +39,14 @@ public class Playlist {
       if (i >= audios.size()) {
         i = 0;
       }
-      return audios.get(i);
-    } else {
-      return null;
+      currentAudio = audios.get(i);
     }
   }
 
-  public Audio getPrevious() {
-    if (historyStack.size() == 0) return null;
+  public void previous() {
+    if (historyStack.size() == 0) return;
 
-    Audio previous = historyStack.pop();
-    currentAudio = previous;
-    return previous;
+    currentAudio = historyStack.pop();
   }
 
   public Audio getCurrentAudio() {
