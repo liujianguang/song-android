@@ -137,6 +137,34 @@ public class PlayService extends Service {
     });
   }
 
+  @Subscribe
+  public void next(NextEvent event) {
+    Player player = currentPlayer;
+    if (player != null) {
+      Playlist playlist = playlistMap.get(player.getId());
+      if (playlist != null) {
+        Audio next = playlist.getNext(player.getPlayMode());
+        if (next != null) {
+          play(new PlayEvent(next));
+        }
+      }
+    }
+  }
+
+  @Subscribe
+  public void previous(PreviousEvent event) {
+    Player player = currentPlayer;
+    if (player != null) {
+      Playlist playlist = playlistMap.get(player.getId());
+      if (playlist != null) {
+        Audio previous = playlist.getPrevious();
+        if (previous != null) {
+          play(new PlayEvent(previous));
+        }
+      }
+    }
+  }
+
   @Produce
   public PositionEvent currentPlayerPosition() {
     Player player = currentPlayer;

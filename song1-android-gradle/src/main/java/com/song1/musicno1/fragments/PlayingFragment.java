@@ -90,6 +90,16 @@ public class PlayingFragment extends Fragment {
     startActivity(new Intent(getActivity(), CurrentNotworkDeviceActivity.class));
   }
 
+  @OnClick(R.id.next)
+  public void playNext() {
+    Players.next();
+  }
+
+  @OnClick(R.id.previous)
+  public void playPrevious() {
+    Players.previous();
+  }
+
   class Adapter extends FragmentPagerAdapter {
 
     public Adapter(FragmentManager fm) {
