@@ -104,9 +104,15 @@ public class PlayBarFragment extends Fragment {
       topTitleView.setText("");
       topSubtitleView.setText("");
     } else {
-      bottomTitleView.setText(event.getAudio().getTitle());
+      if (bottomTitleView.getText() == null) {
+        bottomTitleView.setText(event.getAudio().getTitle());
+        topTitleView.setText(event.getAudio().getTitle());
+      } else if (!bottomTitleView.getText().toString().equals(event.getAudio().getTitle())) {
+        bottomTitleView.setText(event.getAudio().getTitle());
+        topTitleView.setText(event.getAudio().getTitle());
+      }
+
       bottomSubtitleView.setText(event.getAudio().getArtist());
-      topTitleView.setText(event.getAudio().getTitle());
       topSubtitleView.setText(event.getAudio().getArtist());
     }
 

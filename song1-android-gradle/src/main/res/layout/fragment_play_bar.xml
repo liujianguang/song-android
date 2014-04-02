@@ -59,14 +59,18 @@
           android:layout_height="54dp"
           android:contentDescription="@null"/>
 
-      <TextView
+      <com.song1.musicno1.views.AlwaysMarqueeTextView
           android:id="@+id/bottom_title"
           android:textSize="@dimen/text_size_normal"
           android:layout_toRightOf="@id/bottom_album_art"
           android:layout_width="match_parent"
           android:gravity="center_vertical"
           android:singleLine="true"
-          android:ellipsize="end"
+          android:ellipsize="marquee"
+          android:marqueeRepeatLimit="marquee_forever"
+          android:focusable="true"
+          android:focusableInTouchMode="true"
+          android:scrollHorizontally="true"
           android:layout_height="34dp"/>
 
       <TextView
@@ -105,7 +109,7 @@
         android:layout_height="54dp"
         android:contentDescription="@null"/>
 
-    <TextView
+    <com.song1.musicno1.views.AlwaysMarqueeTextView
         android:id="@+id/top_title"
         android:layout_marginLeft="54dp"
         android:layout_marginRight="54dp"
@@ -113,7 +117,11 @@
         android:textSize="@dimen/text_size_normal"
         android:gravity="center"
         android:singleLine="true"
-        android:ellipsize="end"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:scrollHorizontally="true"
         android:layout_width="match_parent"
         android:layout_height="34dp"/>
 

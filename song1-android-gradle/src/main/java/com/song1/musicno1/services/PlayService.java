@@ -70,6 +70,15 @@ public class PlayService extends Service {
 
   private void playNext(Player player) {
     executor.submit(() -> {
+      Playlist playlist = playlistMap.get(player.getId());
+      if (playlist != null) {
+        playlist.autoNext(player.getPlayMode());
+        if (playlist.getCurrentAudio() == null) {
+          player.stop();
+        } else {
+          play(new PlayEvent());
+        }
+      }
     });
   }
 
