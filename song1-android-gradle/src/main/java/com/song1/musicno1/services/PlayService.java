@@ -4,7 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import com.google.common.collect.Maps;
-import com.song1.musicno1.activities.CurrentNotworkDeviceActivity;
+import com.song1.musicno1.fragments.DeviceFragment;
 import com.song1.musicno1.helpers.LatestExecutor;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.events.play.*;
@@ -91,9 +91,7 @@ public class PlayService extends Service {
       play(new PlayEvent());
     } else {
       waitingEvent = event;
-      Intent selectPlayer = new Intent(this, CurrentNotworkDeviceActivity.class);
-      selectPlayer.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-      startActivity(selectPlayer);
+      //
     }
   }
 

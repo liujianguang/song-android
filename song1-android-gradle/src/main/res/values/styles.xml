@@ -82,5 +82,8 @@
     <item name="android:gravity">center_vertical</item>
   </style>
 
-  <dimen name="text_size_actionbar">18sp</dimen>
+  <style name="slingUpStyle">
+    <item name="android:windowEnterAnimation">@anim/enter</item>
+    <item name="android:windowExitAnimation">@anim/exit</item>
+  </style>
 </resources>
