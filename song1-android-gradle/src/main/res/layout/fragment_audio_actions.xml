@@ -12,7 +12,7 @@
 
     <TextView
         android:id="@+id/position"
-        android:text="10:10"
+        android:text="@string/time_zero"
         android:textSize="@dimen/text_size_small"
         android:layout_gravity="center_vertical"
         android:gravity="center"
@@ -22,12 +22,12 @@
     <SeekBar
         android:id="@+id/position_seeker"
         android:layout_weight="1"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/duration"
-        android:text="10:10"
+        android:text="@string/time_zero"
         android:textSize="@dimen/text_size_small"
         android:layout_gravity="center_vertical"
         android:layout_width="wrap_content"
@@ -40,5 +40,24 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:contentDescription="@null"/>
+
+  <LinearLayout
+      android:id="@+id/actions_section"
+      android:visibility="gone"
+      android:layout_marginBottom="8dp"
+      android:layout_alignParentBottom="true"
+      android:orientation="horizontal"
+      android:layout_centerHorizontal="true"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content">
+
+    <ImageButton
+        android:id="@+id/play_mode"
+        android:background="@null"
+        android:src="@drawable/mode_shuffle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/play_mode"/>
+  </LinearLayout>
 
 </RelativeLayout>

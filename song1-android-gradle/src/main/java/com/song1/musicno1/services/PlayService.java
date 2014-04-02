@@ -159,6 +159,15 @@ public class PlayService extends Service {
     }
   }
 
+  @Subscribe
+  public void nextPlayMode(NextPlayModeEvent event) {
+    Player player = currentPlayer;
+    if (player != null) {
+      player.nextPlayMode();
+      postEvent(currentPlayerPlayMode());
+    }
+  }
+
   @Produce
   public PositionEvent currentPlayerPosition() {
     Player player = currentPlayer;
@@ -196,6 +205,15 @@ public class PlayService extends Service {
       } else {
         return new CurrentPlaylistEvent(new Playlist());
       }
+    }
+    return null;
+  }
+
+  @Produce
+  public PlayModeEvent currentPlayerPlayMode() {
+    Player player = currentPlayer;
+    if (player != null) {
+      return new PlayModeEvent(player.getPlayMode());
     }
     return null;
   }

@@ -41,6 +41,7 @@ public class PlayingFragment extends Fragment {
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     pager.setAdapter(new Adapter(getChildFragmentManager()));
+    pager.setCurrentItem(1);
   }
 
   @Override

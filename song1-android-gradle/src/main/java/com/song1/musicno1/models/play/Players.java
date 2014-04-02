@@ -30,4 +30,8 @@ public class Players {
   public static void previous() {
     MainBus.post(new PreviousEvent());
   }
+
+  public static void nextPlayMode() {
+    MainBus.post(new NextPlayModeEvent());
+  }
 }

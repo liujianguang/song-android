@@ -175,6 +175,8 @@
     <string name="start_playing">开始播放 %s</string>
     <string name="download_failed_no_sdcard">下载 %s 失败，无法在 SD 卡中创建下载目录</string>
   <string name="song_menu">歌单</string>
+  <string name="zero_time">00:00</string>
+  <string name="play_mode">播放模式</string>
 
   <array name="device_names">
         <item>客厅</item>

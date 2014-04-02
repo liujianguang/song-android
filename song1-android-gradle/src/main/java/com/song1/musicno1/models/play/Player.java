@@ -19,12 +19,14 @@ public class Player {
 
   private final static int TIMEOUT = 20;
 
-  protected OnPositionChangedListener positionListener;
+  private final int[] PLAY_MODES = new int[]{MODE_NORMAL, MODE_REPEAT_ALL, MODE_REPEAT_ONE, MODE_SHUFFLE};
 
-  protected int state;
-  protected int position;
-  protected int duration;
-  protected int playMode;
+  protected OnPositionChangedListener positionListener;
+  protected int                       state;
+  protected int                       position;
+  protected int                       duration;
+
+  protected int playMode = MODE_REPEAT_ALL;
 
   Audio                  currentAudio;
   OnStateChangedListener stateListener;
@@ -255,6 +257,10 @@ public class Player {
     } catch (RendererException e) {
       return false;
     }
+  }
+
+  public void nextPlayMode() {
+    playMode = (playMode + 1) % PLAY_MODES.length;
   }
 
   public interface OnStateChangedListener {

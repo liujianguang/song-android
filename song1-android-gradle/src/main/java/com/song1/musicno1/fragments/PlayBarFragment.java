@@ -14,6 +14,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.CurrentNotworkDeviceActivity;
+import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.events.play.CurrentPlayerStateEvent;
 import com.song1.musicno1.models.events.play.PositionEvent;
@@ -128,5 +129,11 @@ public class PlayBarFragment extends Fragment {
   public void showTop() {
     topView.setVisibility(View.VISIBLE);
     bottomView.setVisibility(View.GONE);
+  }
+
+  @OnClick(R.id.top_slide_down)
+  public void slideDown() {
+    MainActivity activity = (MainActivity) getActivity();
+    activity.collapsePlayingPanel();
   }
 }
