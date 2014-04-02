@@ -23,8 +23,8 @@ public class SearchActivity extends BaseActivity {
     setContentView(R.layout.activity_search);
 
     searchFragment = new SearchFrag();
-    getSupportActionBar().setIcon(R.drawable.ic_home_clear);
     getSupportActionBar().setHomeButtonEnabled(true);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.main, searchFragment)
         .commit();
