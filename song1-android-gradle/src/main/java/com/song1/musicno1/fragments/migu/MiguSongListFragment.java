@@ -9,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.song1.musicno1.App;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.adapter.MiguSongListAdapter;
@@ -56,8 +55,6 @@ public class MiguSongListFragment extends PageLoadFragment<SubjectInfo> implemen
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    has_touch_mode(false);
-    has_home_button(false);
     adapter = new MiguSongListAdapter(getActivity());
   }
 
@@ -91,15 +88,14 @@ public class MiguSongListFragment extends PageLoadFragment<SubjectInfo> implemen
 
     MiguSongListDetailFragment frag = new MiguSongListDetailFragment();
     frag.setSubjectInfo(subjectItem);
-    frag.setParent(this.getParent());  // 有返回按钮
 
     if ("<unknown>".equals(subjectItem.name)) {
       frag.setTitle(getString(R.string.unknown));
     } else {
       frag.setTitle(subjectItem.name);
     }
-    MainActivity mainActivity = (MainActivity)getActivity();
-    mainActivity.show(frag);
+    MainActivity mainActivity = (MainActivity) getActivity();
+    mainActivity.push(MiguSongListFragment.class.getName(), frag);
   }
 
   @Override

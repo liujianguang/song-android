@@ -8,7 +8,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.song1.musicno1.App;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.adapter.JustingPodCastAdapter;
@@ -60,10 +59,9 @@ public class JustingPodCastFragment extends BaseFragment implements AdapterView.
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     JustingPodCast podCast = adapter.getDataItem(position);
     JustingAudioFragment fragment = new JustingAudioFragment();
-    fragment.setParent(this);
     fragment.setTitle(podCast.title);
     fragment.setAudios(podCast.audios);
     MainActivity mainActivity = (MainActivity) getActivity();
-    mainActivity.show(fragment);
+    mainActivity.replaceMain(fragment);
   }
 }

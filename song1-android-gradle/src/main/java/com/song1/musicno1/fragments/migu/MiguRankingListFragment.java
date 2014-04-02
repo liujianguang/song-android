@@ -8,7 +8,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.song1.musicno1.App;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.adapter.RankingListAdapter;
@@ -53,8 +52,6 @@ public class MiguRankingListFragment extends PageLoadFragment<RankingListInfo> i
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    has_touch_mode(false);
-    has_home_button(false);
     adapter = new RankingListAdapter(getActivity());
   }
 
@@ -86,7 +83,6 @@ public class MiguRankingListFragment extends PageLoadFragment<RankingListInfo> i
     RankingListInfo ranking = adapter.getDataItem(position);
 
     MiguRankingDetailFragment frag = new MiguRankingDetailFragment();
-    frag.setParent(this.getParent());  // 有返回按钮
 
     if ("<unknown>".equals(ranking.name)) {
       frag.setTitle(getString(R.string.unknown));
@@ -95,6 +91,6 @@ public class MiguRankingListFragment extends PageLoadFragment<RankingListInfo> i
     }
     frag.setRankingInfo(ranking);
     MainActivity mainActivity = (MainActivity) getActivity();
-    mainActivity.show(frag);
+    mainActivity.replaceMain(frag);
   }
 }

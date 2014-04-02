@@ -177,6 +177,8 @@
   <string name="song_menu">歌单</string>
   <string name="zero_time">00:00</string>
   <string name="play_mode">播放模式</string>
+  <string name="drawer_open">打开抽屉</string>
+  <string name="drawer_close">关闭抽屉</string>
 
   <array name="device_names">
         <item>客厅</item>

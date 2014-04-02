@@ -58,8 +58,6 @@ public class MiguMusicFragment extends BaseFragment implements ViewPager.OnPageC
 //    artists.viewPage = vp; // 这个参数传递的是不是大了点
 //    tpi = (TitlePageIndicator) view.findViewById(R.id.title_page_indicator);
 
-    has_touch_mode(false);
-
     return view;
 
   }
@@ -84,7 +82,6 @@ public class MiguMusicFragment extends BaseFragment implements ViewPager.OnPageC
     @Override
     public Fragment getItem(int position) {
       BaseFragment fragment = fragments.get(position);
-      fragment.setParent(MiguMusicFragment.this);
       return fragment;
     }
 

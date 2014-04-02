@@ -1,7 +1,6 @@
 package com.song1.musicno1.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.song1.musicno1.App;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.adapter.LocalArtistAdapter;
@@ -75,8 +73,7 @@ public class LocalArtistFrag extends BaseFragment implements LoaderManager.Loade
     LocalAudioFrag localAudioFrag = new LocalAudioFrag();
     localAudioFrag.setArtist(artist);
     localAudioFrag.setTitle(artist.name);
-    localAudioFrag.setParent(getParentFragment());
-    mainActivity.show(localAudioFrag);
+    mainActivity.replaceMain(localAudioFrag);
 //    LocalAudiosFrag frag = App.get(LocalAudiosFrag.class);
 //    frag.artist(artist);
 //    frag.parent(this.parent());

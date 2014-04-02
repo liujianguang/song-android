@@ -9,7 +9,6 @@ import android.widget.ListView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.google.common.collect.Lists;
-import com.song1.musicno1.App;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.adapter.JustingCategoryAdapter;
@@ -82,9 +81,8 @@ public class JustingCategoryFragment extends PageLoadFragment<JustingCategory> i
     JustingPodCastFragment fragment = new JustingPodCastFragment();
     fragment.setPodCasts(category.podcasts);
     fragment.setTitle(category.title);
-    fragment.setParent(this);
 //    show(R.string.justing, fragment);
     MainActivity mainActivity = (MainActivity) getActivity();
-    mainActivity.show(fragment);
+    mainActivity.replaceMain(fragment);
   }
 }

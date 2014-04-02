@@ -9,7 +9,6 @@ import android.widget.GridView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.google.common.collect.Lists;
-import com.song1.musicno1.App;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.adapter.BeatlesModelAdapter;
@@ -85,10 +84,9 @@ public class BeatlesFrag extends PageLoadFragment<BeatlesModel> implements Adapt
     BeatlesModel model = adapter.getDataItem(position);
     BeatlesDetailFragment fragment = new BeatlesDetailFragment();
     fragment.setTitle(model.title);
-    fragment.setParent(this);
     fragment.setAudios(model.audios);
 //    show(R.string.beatles_music, fragment);
     MainActivity mainActivity = (MainActivity) getActivity();
-    mainActivity.show(fragment);
+    mainActivity.replaceMain(fragment);
   }
 }

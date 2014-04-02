@@ -37,13 +37,8 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
   @InjectView(R.id.left_list)
 
   ListView listView;
-
-  //    @InjectView(R.id.current_version)
-//    TextView currentVersionView;
-
-  MainActivity mainActivity;
-
-  private NavigationAdapter adapter;
+  MainActivity      mainActivity;
+  NavigationAdapter adapter;
 
   private Handler handler = new Handler();
 
@@ -83,26 +78,27 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
   @Override
   public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
     Object obj = adapter.getItem(position);
-    int resid;
+    int resId;
     if (obj instanceof Integer) {
-      resid = Integer.parseInt(obj.toString());
+      resId = Integer.parseInt(obj.toString());
     } else {
       return;
     }
-    BaseFragment fragment = mapFragment.get(resid);
+    BaseFragment fragment = mapFragment.get(resId);
     if (fragment != null) {
-      mainActivity.show(fragment);
+      mainActivity.replaceMain(fragment);
       System.out.println("fragment : " + fragment.getFragmentManager());
       return;
     }
-    switch (resid) {
+
+    switch (resId) {
       case R.string.local_source:
-        fragment = new LocalAudioFragment().setTitle(getString(R.string.local_source));
+        fragment = new LocalAudioFragment();
         break;
       case R.string.download_music:
         break;
       case R.string.migu_title:
-        initMigu(() -> mainActivity.show(new MiguMusicFragment()));
+        initMigu(() -> mainActivity.replaceMain(new MiguMusicFragment()));
         break;
       case R.string.beatles_music:
         fragment = new BeatlesFrag();
@@ -115,8 +111,7 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
     }
     if (fragment != null) {
       System.out.println("fragment : " + fragment.getFragmentManager());
-      mapFragment.put(resid, fragment);
-      mainActivity.show(fragment);
+      mainActivity.replaceMain(fragment);
     }
   }
 

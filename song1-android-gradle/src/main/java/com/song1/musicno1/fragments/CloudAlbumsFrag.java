@@ -101,11 +101,10 @@ public class CloudAlbumsFrag extends Fragment
     Album album = (Album) list_view.item(position);
     CloudAudiosFrag frag = new CloudAudiosFrag();
     frag.setTitle(album.title);
-    frag.setParent(parent_frag);
     frag.load(album);
 
     MainActivity activity = (MainActivity) getActivity();
-    activity.show(frag);
+    activity.replaceMain(frag);
   }
 
   @Override

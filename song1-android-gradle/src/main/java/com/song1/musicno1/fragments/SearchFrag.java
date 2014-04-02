@@ -62,7 +62,6 @@ public class SearchFrag extends BaseFragment implements TextWatcher, LoaderManag
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    has_home_button(false);
   }
 
   @Override

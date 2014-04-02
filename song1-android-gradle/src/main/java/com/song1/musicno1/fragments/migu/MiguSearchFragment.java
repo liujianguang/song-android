@@ -26,8 +26,6 @@ public class MiguSearchFragment extends BaseFragment implements View.OnFocusChan
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    has_touch_mode(false);
-    has_home_button(false);
   }
 
   @Override
@@ -53,9 +51,8 @@ public class MiguSearchFragment extends BaseFragment implements View.OnFocusChan
   public void onItemClick(View view) {
     MiguArtistFragment fragment = new MiguArtistFragment();
     fragment.setCategoryId(view.getId());
-    fragment.setParent(this.getParent());
     MainActivity mainActivity = (MainActivity) getActivity();
-    mainActivity.show(fragment);
+    mainActivity.replaceMain(fragment);
   }
 
   @Override
