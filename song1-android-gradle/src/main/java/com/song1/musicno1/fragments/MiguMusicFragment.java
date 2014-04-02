@@ -37,7 +37,7 @@ public class MiguMusicFragment extends BaseFragment implements ViewPager.OnPageC
   private PagerTitleStrip pagerTitleStrip;
   private MyViewPager     vp;
 
-  private String[]           titles    = new String[]{"歌单", "排行榜", "专辑", "搜索"};
+  private int[]           titles    = new int[]{R.string.song_list,R.string.ranking,R.string.album,R.string.search};
   private List<BaseFragment> fragments = new ArrayList<BaseFragment>();
 
   public MiguMusicFragment() {
@@ -100,7 +100,7 @@ public class MiguMusicFragment extends BaseFragment implements ViewPager.OnPageC
 
     @Override
     public CharSequence getPageTitle(int position) {
-      return titles[position];
+      return getResources().getString(titles[position]);
     }
   }
 
