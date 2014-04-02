@@ -1,9 +1,7 @@
 package com.song1.musicno1.fragments;
 
 import android.app.ActionBar;
-import android.app.DownloadManager;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -23,11 +21,9 @@ import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.AudioAdapter;
 import com.song1.musicno1.loader.MiguMusicLoaders;
 import com.song1.musicno1.models.cmmusic.CMMusicStore;
-import com.song1.musicno1.models.cmmusic.GetDownloadUrlCallback;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.ui.XMListView;
 
-import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -36,10 +32,10 @@ import java.util.List;
  * Time: PM11:38
  */
 public class SearchFrag extends BaseFragment implements TextWatcher, LoaderManager.LoaderCallbacks<Object>, AudioAdapter.MoreMenuListener, ListView.OnItemClickListener, XMListView.Listener, View.OnFocusChangeListener, View.OnTouchListener {
-  @Inject XMListView       list_view;
-  @Inject MiguMusicLoaders loaders;
-  @Inject AudioAdapter     adapter;
-  @Inject CMMusicStore     music_store;
+  XMListView       list_view;
+  MiguMusicLoaders loaders;
+  AudioAdapter     adapter;
+  CMMusicStore     music_store;
 
   private EditText edit_view;
   private String   search;
@@ -48,7 +44,6 @@ public class SearchFrag extends BaseFragment implements TextWatcher, LoaderManag
 
   private int page = 1;
 
-  @Inject
   public SearchFrag() {
   }
 
@@ -62,6 +57,10 @@ public class SearchFrag extends BaseFragment implements TextWatcher, LoaderManag
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    list_view = new XMListView();
+    adapter = new AudioAdapter(getActivity());
+    music_store = new CMMusicStore(getActivity());
+    loaders = new MiguMusicLoaders(getActivity(), music_store);
   }
 
   @Override

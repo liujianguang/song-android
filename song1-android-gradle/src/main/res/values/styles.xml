@@ -22,6 +22,7 @@
   <style name="ActionBarStyle" parent="Widget.AppCompat.ActionBar">
     <item name="android:background">@color/green</item>
     <item name="android:titleTextStyle">@style/ActionBarStyle.TextStyle</item>
+    <item name="android:divider">@color/red</item>
   </style>
 
   <!-- Base application theme. -->
@@ -57,6 +58,7 @@
     <item name="android:singleLine">true</item>
     <item name="android:ellipsize">end</item>
   </style>
+
   <style name="ListItemTitle">
     <item name="android:textSize">@dimen/list_item_title_text_size</item>
     <item name="android:ellipsize">end</item>
