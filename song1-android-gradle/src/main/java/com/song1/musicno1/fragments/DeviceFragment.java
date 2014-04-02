@@ -5,7 +5,7 @@ import android.graphics.Color;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +44,8 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
   @InjectView(R.id.current_network) TextView                        currentNetworkView;
   private                           BaseAdapter<Player, ViewHolder> adapter;
   private                           WifiManager                     wifi;
+
+  private Handler handler = new Handler();
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -121,7 +123,6 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
 
   @Subscribe
   public void onDeviceChanged(DeviceChangeEvent event) {
-    Log.d(this, "Device change event");
     List<Player> players = Lists.newArrayList(event.players);
     players.add(null);
     adapter.setList(players);
@@ -133,9 +134,12 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
     Player player = adapter.getElement(i);
     if (player == null) {
       DeviceListDialog deviceListDialog = new DeviceListDialog();
-      deviceListDialog.show(getFragmentManager(),"deviceListDialog");
+      deviceListDialog.show(getFragmentManager(), "deviceListDialog");
     } else {
       MainBus.post(new SelectPlayerEvent(player));
+      selectedPlayer = player;
+      adapter.notifyDataSetChanged();
+      handler.postDelayed(() -> dismiss(), 100);
     }
   }
 

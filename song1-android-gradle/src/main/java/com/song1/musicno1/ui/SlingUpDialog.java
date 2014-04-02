@@ -1,10 +1,10 @@
 package com.song1.musicno1.ui;
 
-import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.util.DisplayMetrics;
-import android.view.*;
+import android.view.Gravity;
+import android.view.Window;
+import android.view.WindowManager;
 import com.song1.musicno1.R;
 
 /**
