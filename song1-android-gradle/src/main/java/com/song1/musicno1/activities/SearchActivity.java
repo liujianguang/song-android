@@ -15,13 +15,14 @@ import javax.inject.Inject;
  */
 public class SearchActivity extends BaseActivity {
 //  @Inject PlayerAction playerAction;
-  @Inject SearchFrag   searchFragment;
+  SearchFrag   searchFragment;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    App.inject(this);
     setContentView(R.layout.activity_search);
+
+    searchFragment = new SearchFrag();
     getSupportActionBar().setIcon(R.drawable.ic_home_clear);
     getSupportActionBar().setHomeButtonEnabled(true);
     getSupportFragmentManager().beginTransaction()

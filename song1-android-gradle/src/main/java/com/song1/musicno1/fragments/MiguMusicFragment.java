@@ -4,7 +4,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerTabStrip;
+import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +34,8 @@ import java.util.List;
  */
 public class MiguMusicFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
 
-  private NavigationBar navigationBar;
-  private MyViewPager   vp;
+  private PagerTitleStrip pagerTitleStrip;
+  private MyViewPager     vp;
 
   private String[]           titles    = new String[]{"歌单", "排行榜", "专辑", "搜索"};
   private List<BaseFragment> fragments = new ArrayList<BaseFragment>();
@@ -52,8 +56,10 @@ public class MiguMusicFragment extends BaseFragment implements ViewPager.OnPageC
     View view = inflater.inflate(R.layout.migu_content, container, false);
 
     vp = (MyViewPager) view.findViewById(R.id.view_page);
-    navigationBar = (NavigationBar) view.findViewById(R.id.navigationBar);
-    navigationBar.setViewPager(vp);
+    pagerTitleStrip = (PagerTitleStrip) view.findViewById(R.id.pagerTitleStrip);
+    pagerTitleStrip.setGravity(Gravity.CENTER);
+    pagerTitleStrip.setTextSize(TypedValue.COMPLEX_UNIT_DIP,18);
+
 //    MiguArtistsListFrag artists = (MiguArtistsListFrag) fragments.get(fragments.size() - 2);
 //    artists.viewPage = vp; // 这个参数传递的是不是大了点
 //    tpi = (TitlePageIndicator) view.findViewById(R.id.title_page_indicator);
@@ -69,7 +75,6 @@ public class MiguMusicFragment extends BaseFragment implements ViewPager.OnPageC
     super.onActivityCreated(savedInstanceState);
 
     setTitle(getString(R.string.migu_title));
-    navigationBar.setTitles(titles);
     vp.setAdapter(new MiguMusicAdapter(getChildFragmentManager()));
 //    tpi.setViewPager(vp);
 //    tpi.setOnPageChangeListener(this);

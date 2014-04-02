@@ -18,6 +18,7 @@
   <style name="ActionBarStyle" parent="Widget.AppCompat.ActionBar">
     <item name="android:background">@color/dark_green</item>
     <item name="android:titleTextStyle">@color/white</item>
+    <item name="android:divider">@color/red</item>
   </style>
 
   <!-- Base application theme. -->

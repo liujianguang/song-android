@@ -20,14 +20,21 @@ import java.util.List;
 public class NavigationBar extends LinearLayout implements ViewPager.OnPageChangeListener {
 
   String[]     titles;
+  List<String> titleList;
   List<Button> buttonList;
   ViewPager    viewPager;
   int             colorResIdNormal   = R.color.content_bg_color;
   int             colorResIdSelected = R.color.title_bg_color;
+  Button prevButton;
+  Button nextButton;
   OnClickListener onClickListener    = new OnClickListener() {
     @Override
     public void onClick(View view) {
-      changePage((Button) view);
+      int position = buttonList.indexOf(view);
+      if (position == 0 || position == (buttonList.size() - 1)){
+        return;
+      }
+      changePage(position - 1);
     }
   };
 
@@ -47,6 +54,10 @@ public class NavigationBar extends LinearLayout implements ViewPager.OnPageChang
 
   public void setTitles(String[] titles) {
     this.titles = titles;
+    titleList = Lists.newArrayList();
+    titleList.add("");
+    titleList.addAll(Lists.newArrayList(titles));
+    titleList.add("");
     createBar();
   }
 
@@ -57,29 +68,40 @@ public class NavigationBar extends LinearLayout implements ViewPager.OnPageChang
 
   private void createBar() {
     buttonList = Lists.newArrayList();
-    for (String title : titles) {
-      Button button = new Button(getContext());
-      button.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT, 1.0f));
-      button.setText(title);
-      button.setOnClickListener(onClickListener);
+    for (String title : titleList) {
+      Button button = createButton(title);
       buttonList.add(button);
       addView(button);
     }
-    setSelected(buttonList.get(0));
+    setSelected(1);
   }
-
-  private void changePage(Button button) {
+  private Button createButton(String title){
+    Button button = new Button(getContext());
+    button.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT, 1.0f));
+    button.setText(title);
+    button.setOnClickListener(onClickListener);
+    return button;
+  }
+  private void changePage(int position) {
     if (viewPager != null) {
-      viewPager.setCurrentItem(buttonList.indexOf(button));
-      setSelected(button);
+      viewPager.setCurrentItem(position);
     }
   }
 
-  private void setSelected(Button button) {
+  private void setSelected(int position) {
     for (Button btn : buttonList) {
       btn.setBackgroundColor(getResources().getColor(colorResIdNormal));
+      btn.setVisibility(View.GONE);
     }
+    Button prevButton = buttonList.get(position - 1);
+    Button button     = buttonList.get(position);
+    Button nextButton = buttonList.get(position + 1);
+
+    prevButton.setVisibility(View.VISIBLE);
+    button.setVisibility(View.VISIBLE);
+    nextButton.setVisibility(View.VISIBLE);
     button.setBackgroundColor(getResources().getColor(colorResIdSelected));
+//    button.setBackgroundColor(getResources().getColor(colorResIdSelected));
   }
 
   @Override
@@ -89,7 +111,7 @@ public class NavigationBar extends LinearLayout implements ViewPager.OnPageChang
 
   @Override
   public void onPageSelected(int position) {
-    setSelected(buttonList.get(position));
+    setSelected(position + 1);
   }
 
   @Override

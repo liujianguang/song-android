@@ -4,7 +4,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerTabStrip;
+import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,67 +29,15 @@ import java.util.List;
  */
 public class LocalAudioFragment extends BaseFragment {
 
-  List<Integer>  titles     = Lists.newArrayList(R.string.song, R.string.album, R.string.artist);
-  List<Fragment> fragments  = Lists.newArrayList();
-  List<Button>   buttonList = Lists.newArrayList();
+
+  List<Integer>  titles    = Lists.newArrayList(R.string.song, R.string.album, R.string.artist);
+  List<Fragment> fragments = Lists.newArrayList();
 
   //  @InjectView(R.id.indicator) TitlePageIndicator indicator;
-  @InjectView(R.id.pager)        ViewPager viewPager;
-  @InjectView(R.id.prevButton)   Button    preButton;
-  @InjectView(R.id.songButton)   Button    songButton;
-  @InjectView(R.id.albumButton)  Button    albumButton;
-  @InjectView(R.id.artistButton) Button    artistButton;
-  @InjectView(R.id.nextButton)   Button    nextButton;
+  @InjectView(R.id.pagerTitleStrip) PagerTitleStrip pagerTitleStrip;
+  @InjectView(R.id.pager)           ViewPager       viewPager;
+
   FragmentAdapter adapter;
-  int currentPostion = 0;
-
-  @OnClick(R.id.songButton)
-  public void songButtonClick(Button button) {
-    changePage(button);
-  }
-
-  @OnClick(R.id.albumButton)
-  public void albumButtonClick(Button button) {
-    changePage(button);
-  }
-
-  @OnClick(R.id.artistButton)
-  public void artistButtonClick(Button button) {
-    changePage(button);
-  }
-
-  ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-      currentPostion = position;
-      changeStyle(buttonList.get(position));
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-    }
-  };
-
-  private void changePage(Button button) {
-    currentPostion = buttonList.indexOf(button);
-    viewPager.setCurrentItem(currentPostion);
-  }
-
-  private void changeStyle(Button button) {
-    System.out.println("currentPostion : " + currentPostion);
-    int color_normal = getResources().getColor(R.color.title_bg_color);
-    int color_select = getResources().getColor(R.color.content_bg_color);
-    for (Button btn : buttonList) {
-      btn.setBackgroundColor(color_normal);
-      System.out.println("btn : " + btn);
-    }
-    System.out.println("button : " + button);
-    button.setBackgroundColor(color_select);
-  }
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -102,13 +54,10 @@ public class LocalAudioFragment extends BaseFragment {
     System.out.println("onActivityCreate...");
 //    has_home_button(true);
     setTitle(getString(R.string.local_source));
-    buttonList.clear();
-    buttonList.add(songButton);
-    buttonList.add(albumButton);
-    buttonList.add(artistButton);
+    pagerTitleStrip.setGravity(Gravity.CENTER);
+    pagerTitleStrip.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
+
     viewPager.setAdapter(adapter);
-    viewPager.setOnPageChangeListener(onPageChangeListener);
-    changeStyle(buttonList.get(currentPostion));
   }
 
   @Override

@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.google.common.base.Strings;
+import com.song1.musicno1.App;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.AudioAdapter;
 import com.song1.musicno1.loader.MiguMusicLoaders;
@@ -36,10 +37,10 @@ import java.util.List;
  * Time: PM11:38
  */
 public class SearchFrag extends BaseFragment implements TextWatcher, LoaderManager.LoaderCallbacks<Object>, AudioAdapter.MoreMenuListener, ListView.OnItemClickListener, XMListView.Listener, View.OnFocusChangeListener, View.OnTouchListener {
-  @Inject XMListView       list_view;
-  @Inject MiguMusicLoaders loaders;
-  @Inject AudioAdapter     adapter;
-  @Inject CMMusicStore     music_store;
+  XMListView       list_view;
+  MiguMusicLoaders loaders;
+  AudioAdapter     adapter;
+  CMMusicStore     music_store;
 
   private EditText edit_view;
   private String   search;
@@ -48,7 +49,6 @@ public class SearchFrag extends BaseFragment implements TextWatcher, LoaderManag
 
   private int page = 1;
 
-  @Inject
   public SearchFrag() {
   }
 
@@ -62,6 +62,10 @@ public class SearchFrag extends BaseFragment implements TextWatcher, LoaderManag
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    list_view = new XMListView();
+    adapter = new AudioAdapter(getActivity());
+    music_store = new CMMusicStore(getActivity());
+    loaders = new MiguMusicLoaders(getActivity(),music_store);
     has_home_button(false);
   }
 
