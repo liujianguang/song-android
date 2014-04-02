@@ -1,15 +1,12 @@
 package com.song1.musicno1.adapter;
 
-import android.app.DownloadManager;
 import android.content.Context;
-import android.net.Uri;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;

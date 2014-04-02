@@ -11,6 +11,10 @@ import butterknife.InjectView;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.JustingAudioAdapter;
 import com.song1.musicno1.entity.JustingAudio;
+import com.song1.musicno1.helpers.List8;
+import com.song1.musicno1.models.play.Audio;
+import com.song1.musicno1.models.play.Players;
+import com.song1.musicno1.models.play.Playlist;
 
 import java.util.List;
 
@@ -24,6 +28,7 @@ public class JustingAudioFragment extends BaseFragment implements AdapterView.On
 
   private List<JustingAudio>  audios;
   private JustingAudioAdapter adapter;
+  private List8<Audio>        normalAudios;
 
   public JustingAudioFragment() {
 
@@ -52,11 +57,12 @@ public class JustingAudioFragment extends BaseFragment implements AdapterView.On
 
   public void setAudios(List<JustingAudio> audios) {
     this.audios = audios;
+    List8<JustingAudio> justingAudios = List8.newList(audios);
+    normalAudios = justingAudios.map((justingAudio) -> justingAudio.toAudio());
   }
 
   @Override
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    JustingAudio audio = adapter.getDataItem(position);
-//    playerAction.play(audio.toAudio());
+    Players.setPlaylist(new Playlist(normalAudios, normalAudios.get(position)));
   }
 }

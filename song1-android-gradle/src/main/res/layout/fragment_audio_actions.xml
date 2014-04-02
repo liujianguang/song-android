@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:padding="8dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
   <LinearLayout
+      android:paddingLeft="4dp"
+      android:paddingRight="4dp"
       android:orientation="horizontal"
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/position"
-        android:text="10:10"
-        android:textSize="@dimen/text_size_small"
+        android:text="@string/time_zero"
+        android:textSize="10sp"
         android:layout_gravity="center_vertical"
         android:gravity="center"
         android:layout_width="wrap_content"
@@ -22,13 +24,13 @@
     <SeekBar
         android:id="@+id/position_seeker"
         android:layout_weight="1"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/duration"
-        android:text="10:10"
-        android:textSize="@dimen/text_size_small"
+        android:text="@string/time_zero"
+        android:textSize="10sp"
         android:layout_gravity="center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
@@ -37,8 +39,29 @@
 
   <ImageView
       android:id="@+id/album_art"
+      android:layout_margin="8dp"
+      android:src="@drawable/bg_album_art"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
       android:contentDescription="@null"/>
 
-</RelativeLayout>
+  <LinearLayout
+      android:id="@+id/actions_section"
+      android:visibility="gone"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginBottom="8dp"
+      android:orientation="horizontal"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content">
+
+    <ImageButton
+        android:id="@+id/play_mode"
+        android:background="@null"
+        android:src="@drawable/mode_shuffle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/play_mode"/>
+  </LinearLayout>
+
+</LinearLayout>

@@ -14,6 +14,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.CurrentNotworkDeviceActivity;
+import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.events.play.CurrentPlayerStateEvent;
 import com.song1.musicno1.models.events.play.PositionEvent;
@@ -67,7 +68,7 @@ public class PlayBarFragment extends Fragment {
         Players.pause();
         break;
       case Player.PAUSED:
-        Players.play();
+        Players.resume();
         break;
     }
   }
@@ -104,9 +105,15 @@ public class PlayBarFragment extends Fragment {
       topTitleView.setText("");
       topSubtitleView.setText("");
     } else {
-      bottomTitleView.setText(event.getAudio().getTitle());
+      if (bottomTitleView.getText() == null) {
+        bottomTitleView.setText(event.getAudio().getTitle());
+        topTitleView.setText(event.getAudio().getTitle());
+      } else if (!bottomTitleView.getText().toString().equals(event.getAudio().getTitle())) {
+        bottomTitleView.setText(event.getAudio().getTitle());
+        topTitleView.setText(event.getAudio().getTitle());
+      }
+
       bottomSubtitleView.setText(event.getAudio().getArtist());
-      topTitleView.setText(event.getAudio().getTitle());
       topSubtitleView.setText(event.getAudio().getArtist());
     }
 
@@ -122,5 +129,11 @@ public class PlayBarFragment extends Fragment {
   public void showTop() {
     topView.setVisibility(View.VISIBLE);
     bottomView.setVisibility(View.GONE);
+  }
+
+  @OnClick(R.id.top_slide_down)
+  public void slideDown() {
+    MainActivity activity = (MainActivity) getActivity();
+    activity.collapsePlayingPanel();
   }
 }

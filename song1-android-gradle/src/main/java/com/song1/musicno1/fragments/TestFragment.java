@@ -32,8 +32,6 @@ public class TestFragment extends Fragment {
     audio.setAlbum("");
     audio.setArtist("By2");
     audio.setFrom(Audio.OTHER);
-
-    Players.play(audio);
   }
 
   @OnClick(R.id.pause)

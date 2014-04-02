@@ -1,6 +1,8 @@
 package com.song1.musicno1.models.play;
 
 
+import de.akquinet.android.androlog.Log;
+
 /**
  * Created by windless on 3/27/14.
  */
@@ -10,24 +12,45 @@ public class Player {
   public static final int PAUSED    = 2;
   public static final int PREPARING = 3;
 
+  public static final int MODE_NORMAL     = 0;
+  public static final int MODE_REPEAT_ALL = 1;
+  public static final int MODE_REPEAT_ONE = 2;
+  public static final int MODE_SHUFFLE    = 3;
+
   private final static int TIMEOUT = 20;
+
+  private final int[] PLAY_MODES = new int[]{MODE_NORMAL, MODE_REPEAT_ALL, MODE_REPEAT_ONE, MODE_SHUFFLE};
 
   protected OnPositionChangedListener positionListener;
   protected int                       state;
   protected int                       position;
   protected int                       duration;
+
+  protected int playMode = MODE_REPEAT_ALL;
+
   Audio                  currentAudio;
   OnStateChangedListener stateListener;
-  Renderer renderer = null;
-
-  Thread positionThread;
+  Thread                 positionThread;
+  Renderer               renderer;
+  OnCompleteListener     completeListener;
 
   Runnable runnable = () -> {
     while (!Thread.currentThread().isInterrupted()) {
       try {
         PositionInfo positionInfo = renderer.getPositionInfo();
         if (positionInfo.getDuration() != 0) {
+          Log.d(this, "Position: " + positionInfo.getPosition() + "-" + positionInfo.getDuration());
           setPosition(positionInfo.getPosition(), positionInfo.getDuration());
+          if (positionInfo.getPosition() == positionInfo.getDuration()) {
+            state = STOPPED;
+            if (stateListener != null) {
+              stateListener.onStateChanged(this, state);
+            }
+            if (completeListener != null) {
+              completeListener.onComplete(this);
+            }
+            return;
+          }
         }
       } catch (RendererException ignored) {
       }
@@ -42,6 +65,22 @@ public class Player {
 
   public Player(Renderer renderer) {
     this.renderer = renderer;
+    if (renderer instanceof LocalRenderer) {
+      LocalRenderer localRenderer = (LocalRenderer) renderer;
+      localRenderer.onComplete((mediaPlayer) -> {
+        if (completeListener != null) {
+          completeListener.onComplete(this);
+        }
+      });
+    }
+  }
+
+  public int getPlayMode() {
+    return playMode;
+  }
+
+  public void setPlayMode(int playMode) {
+    this.playMode = playMode;
   }
 
   private void setPosition(int position, int duration) {
@@ -189,6 +228,13 @@ public class Player {
   }
 
   public void seek(int seekTo) {
+    if (seekTo == duration && seekTo != 0) {
+      if (completeListener != null) {
+        completeListener.onComplete(this);
+      }
+      return;
+    }
+
     setState(PREPARING);
     setPosition(seekTo, duration);
     try {
@@ -200,6 +246,10 @@ public class Player {
     }
   }
 
+  public void onPlayComplete(OnCompleteListener listener) {
+    completeListener = listener;
+  }
+
   private boolean checkPosition(int seekTo) {
     try {
       PositionInfo info = renderer.getPositionInfo();
@@ -209,12 +259,20 @@ public class Player {
     }
   }
 
+  public void nextPlayMode() {
+    playMode = (playMode + 1) % PLAY_MODES.length;
+  }
+
   public interface OnStateChangedListener {
     void onStateChanged(Player player, int state);
   }
 
   public interface OnPositionChangedListener {
     void onPositionChanged(Player player, long position, long duration);
+  }
+
+  public interface OnCompleteListener {
+    void onComplete(Player player);
   }
 
   private interface CheckRunnable {

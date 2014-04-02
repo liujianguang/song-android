@@ -3,6 +3,9 @@ package com.song1.musicno1.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,7 @@ import com.song1.musicno1.models.events.play.CurrentPlayerStateEvent;
 import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.play.Players;
 import com.squareup.otto.Subscribe;
+import com.viewpagerindicator.CirclePageIndicator;
 
 /**
  * Created by windless on 3/28/14.
@@ -24,7 +28,9 @@ import com.squareup.otto.Subscribe;
 public class PlayingFragment extends Fragment {
   protected int state;
 
-  @InjectView(R.id.play) ImageButton playBtn;
+  @InjectView(R.id.play)      ImageButton         playBtn;
+  @InjectView(R.id.pager)     ViewPager           pager;
+  @InjectView(R.id.indicator) CirclePageIndicator indicator;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,9 +42,9 @@ public class PlayingFragment extends Fragment {
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    getChildFragmentManager().beginTransaction()
-        .replace(R.id.actions, new AudioActionsFragment())
-        .commit();
+    pager.setAdapter(new Adapter(getChildFragmentManager()));
+    pager.setCurrentItem(1);
+    indicator.setViewPager(pager);
   }
 
   @Override
@@ -78,7 +84,7 @@ public class PlayingFragment extends Fragment {
         Players.pause();
         break;
       case Player.PAUSED:
-        Players.play();
+        Players.resume();
         break;
     }
   }
@@ -86,5 +92,37 @@ public class PlayingFragment extends Fragment {
   @OnClick(R.id.player_list)
   public void onPlayerListClick() {
     startActivity(new Intent(getActivity(), CurrentNotworkDeviceActivity.class));
+  }
+
+  @OnClick(R.id.next)
+  public void playNext() {
+    Players.next();
+  }
+
+  @OnClick(R.id.previous)
+  public void playPrevious() {
+    Players.previous();
+  }
+
+  class Adapter extends FragmentPagerAdapter {
+
+    public Adapter(FragmentManager fm) {
+      super(fm);
+    }
+
+    @Override
+    public Fragment getItem(int position) {
+      switch (position) {
+        case 0:
+          return new PlaylistFragment();
+        default:
+          return new AudioActionsFragment();
+      }
+    }
+
+    @Override
+    public int getCount() {
+      return 2;
+    }
   }
 }

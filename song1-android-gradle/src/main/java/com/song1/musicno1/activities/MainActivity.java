@@ -81,10 +81,12 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
   public void onBackPressed() {
     super.onBackPressed();
   }
-  public void show(Fragment fragment){
-    show(null,fragment);
+
+  public void show(Fragment fragment) {
+    show(null, fragment);
   }
-  public void show(String stackName,Fragment fragment) {
+
+  public void show(String stackName, Fragment fragment) {
 
     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
     transaction.replace(R.id.main, fragment).addToBackStack(stackName).commit();
@@ -116,5 +118,9 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
   @Override
   public void onPanelAnchored(View panel) {
 
+  }
+
+  public void collapsePlayingPanel() {
+    slidingUpPanel.collapsePane();
   }
 }

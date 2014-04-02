@@ -10,9 +10,9 @@ import java.util.ArrayList;
  * To change this template use File | Settings | File Templates.
  */
 public class GetRankingSongResp {
-  public int offSet;
-  public int pageSize;
-  public int recordCount;
-  public int pageNum;
+  public int                 offSet;
+  public int                 pageSize;
+  public int                 recordCount;
+  public int                 pageNum;
   public ArrayList<SongInfo> listPageObject;
 }

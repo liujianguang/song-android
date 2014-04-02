@@ -78,4 +78,8 @@ public class LocalRenderer implements Renderer {
     mediaPlayer.seekTo(seekTo);
     mediaPlayer.start();
   }
+
+  public void onComplete(MediaPlayer.OnCompletionListener listener) {
+    mediaPlayer.setOnCompletionListener(listener);
+  }
 }

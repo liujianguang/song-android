@@ -3,21 +3,28 @@ package com.song1.musicno1.services;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import com.google.common.collect.Maps;
 import com.song1.musicno1.activities.CurrentNotworkDeviceActivity;
 import com.song1.musicno1.helpers.LatestExecutor;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.events.play.*;
+import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Player;
+import com.song1.musicno1.models.play.Playlist;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
+
+import java.util.Map;
 
 /**
  * Created by windless on 3/27/14.
  */
 public class PlayService extends Service {
-  protected LatestExecutor executor;
-  protected Player         currentPlayer;
-  protected PlayEvent      waitingEvent;
+  protected LatestExecutor   executor;
+  protected Player           currentPlayer;
+  protected SetPlaylistEvent waitingEvent;
+
+  protected Map<String, Playlist> playlistMap = Maps.newHashMap();
 
   @Override
   public IBinder onBind(Intent intent) {
@@ -53,27 +60,62 @@ public class PlayService extends Service {
       }
     });
 
+    event.player.onPlayComplete((player) -> playNext(player));
+
     if (waitingEvent != null) {
-      play(waitingEvent);
+      setPlaylist(waitingEvent);
       waitingEvent = null;
+    }
+  }
+
+  private void playNext(Player player) {
+    executor.submit(() -> {
+      Playlist playlist = playlistMap.get(player.getId());
+      if (playlist != null) {
+        playlist.autoNext(player.getPlayMode());
+        if (playlist.getCurrentAudio() == null) {
+          player.stop();
+        } else {
+          play(new PlayEvent());
+        }
+      }
+    });
+  }
+
+  @Subscribe
+  public void setPlaylist(SetPlaylistEvent event) {
+    Player player = currentPlayer;
+    if (player != null) {
+      playlistMap.put(player.getId(), event.getPlaylist());
+      postEvent(currentPlaylist());
+      play(new PlayEvent());
+    } else {
+      waitingEvent = event;
+      Intent selectPlayer = new Intent(this, CurrentNotworkDeviceActivity.class);
+      selectPlayer.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      startActivity(selectPlayer);
     }
   }
 
   @Subscribe
   public void play(PlayEvent event) {
-    Player player = currentPlayer;
-    if (player == null) {
-      waitingEvent = event;
-      Intent selectPlayer = new Intent(this, CurrentNotworkDeviceActivity.class);
-      selectPlayer.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-      startActivity(selectPlayer);
-      return;
-    }
-
     executor.submit(() -> {
-      if (event.audio != null) {
-        player.play(event.audio);
-      } else {
+      Player player = currentPlayer;
+      if (player != null) {
+        Playlist playlist = playlistMap.get(player.getId());
+        if (playlist != null) {
+          Audio currentAudio = playlist.getCurrentAudio();
+          if (currentAudio != null) player.play(currentAudio);
+        }
+      }
+    });
+  }
+
+  @Subscribe
+  public void resume(ResumeEvent event) {
+    executor.submit(() -> {
+      Player player = currentPlayer;
+      if (player != null && player.getState() == Player.PAUSED) {
         player.play();
       }
     });
@@ -99,6 +141,39 @@ public class PlayService extends Service {
     });
   }
 
+  @Subscribe
+  public void next(NextEvent event) {
+    Player player = currentPlayer;
+    if (player != null) {
+      Playlist playlist = playlistMap.get(player.getId());
+      if (playlist != null) {
+        playlist.next(player.getPlayMode());
+        play(new PlayEvent());
+      }
+    }
+  }
+
+  @Subscribe
+  public void previous(PreviousEvent event) {
+    Player player = currentPlayer;
+    if (player != null) {
+      Playlist playlist = playlistMap.get(player.getId());
+      if (playlist != null) {
+        playlist.previous();
+        play(new PlayEvent());
+      }
+    }
+  }
+
+  @Subscribe
+  public void nextPlayMode(NextPlayModeEvent event) {
+    Player player = currentPlayer;
+    if (player != null) {
+      player.nextPlayMode();
+      postEvent(currentPlayerPlayMode());
+    }
+  }
+
   @Produce
   public PositionEvent currentPlayerPosition() {
     Player player = currentPlayer;
@@ -119,8 +194,32 @@ public class PlayService extends Service {
 
   @Produce
   public CurrentPlayerEvent currentPlayer() {
-    if (currentPlayer != null) {
-      return new CurrentPlayerEvent(currentPlayer);
+    Player player = currentPlayer;
+    if (player != null) {
+      return new CurrentPlayerEvent(player);
+    }
+    return null;
+  }
+
+  @Produce
+  public CurrentPlaylistEvent currentPlaylist() {
+    Player player = currentPlayer;
+    if (player != null) {
+      Playlist playlist = playlistMap.get(player.getId());
+      if (playlist != null) {
+        return new CurrentPlaylistEvent(playlist);
+      } else {
+        return new CurrentPlaylistEvent(new Playlist());
+      }
+    }
+    return null;
+  }
+
+  @Produce
+  public PlayModeEvent currentPlayerPlayMode() {
+    Player player = currentPlayer;
+    if (player != null) {
+      return new PlayModeEvent(player.getPlayMode());
     }
     return null;
   }
@@ -128,6 +227,7 @@ public class PlayService extends Service {
   public void setCurrentPlayer(Player currentPlayer) {
     this.currentPlayer = currentPlayer;
     postEvent(currentPlayer());
+    postEvent(currentPlaylist());
   }
 
   private void postEvent(Object event) {
