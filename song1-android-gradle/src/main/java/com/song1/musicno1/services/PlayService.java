@@ -91,7 +91,7 @@ public class PlayService extends Service {
       play(new PlayEvent());
     } else {
       waitingEvent = event;
-      //
+      MainBus.post(new ShowDeviceFragmentEvent());
     }
   }
 
@@ -226,6 +226,9 @@ public class PlayService extends Service {
     this.currentPlayer = currentPlayer;
     postEvent(currentPlayer());
     postEvent(currentPlaylist());
+    postEvent(currentPlayerPosition());
+    postEvent(currentPlayerState());
+    postEvent(currentPlayerPlayMode());
   }
 
   private void postEvent(Object event) {

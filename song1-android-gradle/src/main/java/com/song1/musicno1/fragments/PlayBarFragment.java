@@ -1,6 +1,5 @@
 package com.song1.musicno1.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,6 +16,8 @@ import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.events.play.CurrentPlayerStateEvent;
 import com.song1.musicno1.models.events.play.PositionEvent;
+import com.song1.musicno1.models.events.play.SelectPlayerEvent;
+import com.song1.musicno1.models.events.play.ShowDeviceFragmentEvent;
 import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.play.Players;
 import com.squareup.otto.Subscribe;
@@ -25,16 +26,17 @@ import com.squareup.otto.Subscribe;
  * Created by windless on 3/27/14.
  */
 public class PlayBarFragment extends Fragment {
-  protected                           int         state;
-  @InjectView(R.id.bottom_title)      TextView    bottomTitleView;
-  @InjectView(R.id.bottom_subtitle)   TextView    bottomSubtitleView;
-  @InjectView(R.id.bottom_play)       ImageButton buttonPlayBtn;
-  @InjectView(R.id.prepare_progress)  ProgressBar prepareBar;
-  @InjectView(R.id.position_progress) ProgressBar positionBar;
-  @InjectView(R.id.top)               View        topView;
-  @InjectView(R.id.bottom)            View        bottomView;
-  @InjectView(R.id.top_title)         TextView    topTitleView;
-  @InjectView(R.id.top_subtitle)      TextView    topSubtitleView;
+  protected                            int         state;
+  @InjectView(R.id.bottom_title)       TextView    bottomTitleView;
+  @InjectView(R.id.bottom_subtitle)    TextView    bottomSubtitleView;
+  @InjectView(R.id.bottom_play)        ImageButton bottomPlayBtn;
+  @InjectView(R.id.bottom_player_list) ImageButton playerListBtn;
+  @InjectView(R.id.prepare_progress)   ProgressBar prepareBar;
+  @InjectView(R.id.position_progress)  ProgressBar positionBar;
+  @InjectView(R.id.top)                View        topView;
+  @InjectView(R.id.bottom)             View        bottomView;
+  @InjectView(R.id.top_title)          TextView    topTitleView;
+  @InjectView(R.id.top_subtitle)       TextView    topSubtitleView;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,7 +60,7 @@ public class PlayBarFragment extends Fragment {
   @OnClick(R.id.bottom_player_list)
   public void showPlayerList() {
     DeviceFragment deviceFragment = new DeviceFragment();
-    deviceFragment.show(getFragmentManager(),"deviceFragment");
+    deviceFragment.show(getFragmentManager(), "deviceFragment");
   }
 
   @OnClick(R.id.bottom_play)
@@ -74,24 +76,31 @@ public class PlayBarFragment extends Fragment {
   }
 
   @Subscribe
+  public void onPlayerSelected(SelectPlayerEvent event) {
+    if (event.player != null) {
+      playerListBtn.setImageResource(R.drawable.ic_player_selected);
+    }
+  }
+
+  @Subscribe
   public void onCurrentPlayerStateChanged(CurrentPlayerStateEvent event) {
     state = event.state;
     switch (event.state) {
       case Player.PAUSED:
       case Player.STOPPED:
-        buttonPlayBtn.setImageResource(R.drawable.ic_play);
-        buttonPlayBtn.setEnabled(true);
+        bottomPlayBtn.setImageResource(R.drawable.ic_play);
+        bottomPlayBtn.setEnabled(true);
         prepareBar.setVisibility(View.GONE);
         positionBar.setVisibility(View.VISIBLE);
         break;
       case Player.PLAYING:
-        buttonPlayBtn.setImageResource(R.drawable.ic_pause);
-        buttonPlayBtn.setEnabled(true);
+        bottomPlayBtn.setImageResource(R.drawable.ic_pause);
+        bottomPlayBtn.setEnabled(true);
         prepareBar.setVisibility(View.GONE);
         positionBar.setVisibility(View.VISIBLE);
         break;
       case Player.PREPARING:
-        buttonPlayBtn.setEnabled(false);
+        bottomPlayBtn.setEnabled(false);
         prepareBar.setVisibility(View.VISIBLE);
         positionBar.setVisibility(View.GONE);
     }
@@ -135,5 +144,10 @@ public class PlayBarFragment extends Fragment {
   public void slideDown() {
     MainActivity activity = (MainActivity) getActivity();
     activity.collapsePlayingPanel();
+  }
+
+  @Subscribe
+  public void onShowDeviceFragment(ShowDeviceFragmentEvent event) {
+    showPlayerList();
   }
 }
