@@ -92,8 +92,7 @@ public class MiguAlbumListFragment extends PageLoadFragment<AlbumInfo> implement
       frag.setTitle(albumItem.name);
     }
     MainActivity mainActivity = (MainActivity) getActivity();
-    mainActivity.replaceMain(frag);
-//    show(R.string.migu_title, frag);
+    mainActivity.push(MiguAlbumDetailFragment.class.getName(), frag);
   }
 
   @Override

@@ -145,6 +145,6 @@ public class MiguArtistFragment extends PageLoadFragment<ArtistInfo> implements 
     }
 
     MainActivity mainActivity = (MainActivity) getActivity();
-    mainActivity.replaceMain(detail);
+    mainActivity.push(CloudArtistDetailFrag.class.getName(), detail);
   }
 }

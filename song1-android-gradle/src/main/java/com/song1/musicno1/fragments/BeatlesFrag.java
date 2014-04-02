@@ -85,8 +85,7 @@ public class BeatlesFrag extends PageLoadFragment<BeatlesModel> implements Adapt
     BeatlesDetailFragment fragment = new BeatlesDetailFragment();
     fragment.setTitle(model.title);
     fragment.setAudios(model.audios);
-//    show(R.string.beatles_music, fragment);
     MainActivity mainActivity = (MainActivity) getActivity();
-    mainActivity.replaceMain(fragment);
+    mainActivity.push(BeatlesDetailFragment.class.getName(), fragment);
   }
 }

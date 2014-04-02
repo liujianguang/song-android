@@ -62,6 +62,6 @@ public class JustingPodCastFragment extends BaseFragment implements AdapterView.
     fragment.setTitle(podCast.title);
     fragment.setAudios(podCast.audios);
     MainActivity mainActivity = (MainActivity) getActivity();
-    mainActivity.replaceMain(fragment);
+    mainActivity.push(JustingAudioFragment.class.getName(), fragment);
   }
 }

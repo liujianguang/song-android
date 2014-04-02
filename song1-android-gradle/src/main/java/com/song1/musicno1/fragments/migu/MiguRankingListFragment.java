@@ -91,6 +91,6 @@ public class MiguRankingListFragment extends PageLoadFragment<RankingListInfo> i
     }
     frag.setRankingInfo(ranking);
     MainActivity mainActivity = (MainActivity) getActivity();
-    mainActivity.replaceMain(frag);
+    mainActivity.push(MiguRankingDetailFragment.class.getName(), frag);
   }
 }

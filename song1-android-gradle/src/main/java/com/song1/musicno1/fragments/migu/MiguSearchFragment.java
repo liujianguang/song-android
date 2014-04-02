@@ -52,7 +52,7 @@ public class MiguSearchFragment extends BaseFragment implements View.OnFocusChan
     MiguArtistFragment fragment = new MiguArtistFragment();
     fragment.setCategoryId(view.getId());
     MainActivity mainActivity = (MainActivity) getActivity();
-    mainActivity.replaceMain(fragment);
+    mainActivity.push(MiguArtistFragment.class.getName(), fragment);
   }
 
   @Override

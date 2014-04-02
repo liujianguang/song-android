@@ -73,18 +73,6 @@ public class LocalArtistFrag extends BaseFragment implements LoaderManager.Loade
     LocalAudioFrag localAudioFrag = new LocalAudioFrag();
     localAudioFrag.setArtist(artist);
     localAudioFrag.setTitle(artist.name);
-    mainActivity.replaceMain(localAudioFrag);
-//    LocalAudiosFrag frag = App.get(LocalAudiosFrag.class);
-//    frag.artist(artist);
-//    frag.parent(this.parent());
-//
-//    if ("<unknown>".equals(artist.name)) {
-//      frag.title(getString(R.string.unknown));
-//    } else {
-//      frag.title(artist.name);
-//    }
-//
-//    ContainerActivity activity = (ContainerActivity) getSherlockActivity();
-//    activity.show(R.string.local_source, frag);
+    mainActivity.push(LocalAudioFrag.class.getName(), localAudioFrag);
   }
 }

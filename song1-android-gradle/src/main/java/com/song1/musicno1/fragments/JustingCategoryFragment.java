@@ -81,8 +81,7 @@ public class JustingCategoryFragment extends PageLoadFragment<JustingCategory> i
     JustingPodCastFragment fragment = new JustingPodCastFragment();
     fragment.setPodCasts(category.podcasts);
     fragment.setTitle(category.title);
-//    show(R.string.justing, fragment);
     MainActivity mainActivity = (MainActivity) getActivity();
-    mainActivity.replaceMain(fragment);
+    mainActivity.push(JustingPodCastFragment.class.getName(), fragment);
   }
 }
