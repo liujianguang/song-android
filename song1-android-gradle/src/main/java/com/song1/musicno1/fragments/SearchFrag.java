@@ -1,9 +1,7 @@
 package com.song1.musicno1.fragments;
 
 import android.app.ActionBar;
-import android.app.DownloadManager;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -19,16 +17,13 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.google.common.base.Strings;
-import com.song1.musicno1.App;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.AudioAdapter;
 import com.song1.musicno1.loader.MiguMusicLoaders;
 import com.song1.musicno1.models.cmmusic.CMMusicStore;
-import com.song1.musicno1.models.cmmusic.GetDownloadUrlCallback;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.ui.XMListView;
 
-import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -65,8 +60,7 @@ public class SearchFrag extends BaseFragment implements TextWatcher, LoaderManag
     list_view = new XMListView();
     adapter = new AudioAdapter(getActivity());
     music_store = new CMMusicStore(getActivity());
-    loaders = new MiguMusicLoaders(getActivity(),music_store);
-    has_home_button(false);
+    loaders = new MiguMusicLoaders(getActivity(), music_store);
   }
 
   @Override

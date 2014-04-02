@@ -1,9 +1,10 @@
 package com.song1.musicno1.activities;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
@@ -12,7 +13,10 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.song1.musicno1.App;
 import com.song1.musicno1.R;
-import com.song1.musicno1.fragments.*;
+import com.song1.musicno1.fragments.LeftFragment;
+import com.song1.musicno1.fragments.PlayBarFragment;
+import com.song1.musicno1.fragments.PlayingFragment;
+import com.song1.musicno1.fragments.TestFragment;
 import com.song1.musicno1.helpers.ViewHelper;
 import com.song1.musicno1.services.PlayService;
 import com.song1.musicno1.services.UpnpService;
@@ -33,7 +37,8 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
   @InjectView(R.id.play_bar) View                 playBarView;
   @InjectView(R.id.main)     View                 mainView;
 
-  @Inject LeftFragment leftFragment;
+  @Inject   LeftFragment          leftFragment;
+  protected ActionBarDrawerToggle actionBarDrawerToggle;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -62,36 +67,75 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
         .replace(R.id.playing, new PlayingFragment())
         .commit();
 
+    actionBarDrawerToggle = new ActionBarDrawerToggle(
+        this,
+        drawerLayout,
+        R.drawable.ic_navigation_drawer,
+        R.string.drawer_open,
+        R.string.drawer_close
+    );
+    drawerLayout.setDrawerListener(actionBarDrawerToggle);
+    getActionBar().setDisplayHomeAsUpEnabled(true);
+    getActionBar().setHomeButtonEnabled(true);
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    BaseFragment fragment = (BaseFragment) getSupportFragmentManager().findFragmentById(R.id.main);
-    Fragment parent = (BaseFragment) fragment.getParent();
-    if (parent != null) {
-//      show(parent);
-      onBackPressed();
+    if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
       return true;
     }
-    return true;
-//    return super.onOptionsItemSelected(item);
+
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        onBackPressed();
+        return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  protected void onPostCreate(Bundle savedInstanceState) {
+    super.onPostCreate(savedInstanceState);
+    actionBarDrawerToggle.syncState();
+  }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+    actionBarDrawerToggle.onConfigurationChanged(newConfig);
   }
 
   @Override
   public void onBackPressed() {
-    super.onBackPressed();
+    if (slidingUpPanel.isExpanded()) {
+      slidingUpPanel.collapsePane();
+      if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+      }
+    } else {
+      super.onBackPressed();
+      if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+        actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+      }
+    }
+
   }
 
-  public void show(Fragment fragment) {
-    show(null, fragment);
-  }
-
-  public void show(String stackName, Fragment fragment) {
-
-    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-    transaction.replace(R.id.main, fragment).addToBackStack(stackName).commit();
+  public void replaceMain(Fragment fragment) {
+    getSupportFragmentManager().beginTransaction()
+        .replace(R.id.main, fragment)
+        .commit();
     drawerLayout.closeDrawers();
+  }
 
+  public void push(String stackName, Fragment fragment) {
+    getSupportFragmentManager().beginTransaction()
+        .replace(R.id.main, fragment)
+        .addToBackStack(stackName)
+        .commit();
+    actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
+    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
   }
 
   @Override
@@ -107,12 +151,14 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
 
   @Override
   public void onPanelCollapsed(View panel) {
-    mainView.setEnabled(true);
+    if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+      drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+    }
   }
 
   @Override
   public void onPanelExpanded(View panel) {
-    mainView.setEnabled(true);
+    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
   }
 
   @Override

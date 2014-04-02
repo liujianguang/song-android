@@ -33,9 +33,7 @@ public class CloudArtistPagerAdapter extends FragmentPagerAdapter {
     switch (position) {
       case 0:
         CloudAudiosFrag audios_frag = App.get(CloudAudiosFrag.class);
-        audios_frag.has_home_button(false);
         audios_frag.load(artist);
-        audios_frag.has_touch_mode(false);
         return audios_frag;
       default:
         CloudAlbumsFrag albums_frag = App.get(CloudAlbumsFrag.class);

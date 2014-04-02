@@ -138,8 +138,6 @@ public class MiguArtistFragment extends PageLoadFragment<ArtistInfo> implements 
     CloudArtistDetailFrag detail = new CloudArtistDetailFrag();
     detail.artist(info.toArtist());
 
-    detail.setParent(this);  // 有返回按钮
-
     if ("<unknown>".equals(info.name)) {
       detail.setTitle(getString(R.string.unknown));
     } else {
@@ -147,6 +145,6 @@ public class MiguArtistFragment extends PageLoadFragment<ArtistInfo> implements 
     }
 
     MainActivity mainActivity = (MainActivity) getActivity();
-    mainActivity.show(detail);
+    mainActivity.push(CloudArtistDetailFrag.class.getName(), detail);
   }
 }

@@ -22,7 +22,7 @@ public class LocalAudioLoader extends AsyncTaskLoader<List<Audio>> {
 
   public LocalAudioLoader(Context context) {
     super(context);
-    _audio_store = new LocalAudioStore(context.getContentResolver());
+    _audio_store = new LocalAudioStore(context);
   }
 
   @Override

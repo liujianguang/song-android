@@ -36,7 +36,7 @@
     <activity
         android:name=".activities.CurrentNotworkDeviceActivity"
         android:screenOrientation="portrait"
-        android:theme="@style/SligupTheme">
+        android:theme="@style/SlideUpTheme">
       <intent-filter>
         <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>

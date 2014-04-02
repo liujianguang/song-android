@@ -1,7 +1,6 @@
 package com.song1.musicno1.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
@@ -80,12 +79,6 @@ public class LocalAlbumFrag extends BaseFragment implements LoaderManager.Loader
     LocalAudioFrag localAudioFrag = new LocalAudioFrag();
     localAudioFrag.setAlbum(album);
     localAudioFrag.setTitle(album.title);
-    localAudioFrag.setParent(getParentFragment());
-    activity.show(localAudioFrag);
-//    LocalAudiosFrag frag = App.get(LocalAudiosFrag.class);
-//    frag.title(album.title);
-//    frag.parent(this.parent());
-//    frag.load(album);
-//    activity.show(R.string.local_source, frag);
+    activity.push(LocalAudioFrag.class.getName(), localAudioFrag);
   }
 }
