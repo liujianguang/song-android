@@ -79,11 +79,6 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
 
   @Override
   public void onBackPressed() {
-//    BaseFragment fragment = (BaseFragment) getSupportFragmentManager().findFragmentById(R.id.main);
-//    if (fragment.getParent() == null){
-//      finish();
-//      return;
-//    }
     super.onBackPressed();
   }
 
@@ -94,10 +89,9 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
   public void show(String stackName, Fragment fragment) {
 
     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//    getSupportFragmentManager().popBackStack("",1);
-
     transaction.replace(R.id.main, fragment).addToBackStack(stackName).commit();
     drawerLayout.closeDrawers();
+
   }
 
   @Override

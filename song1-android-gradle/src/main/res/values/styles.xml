@@ -53,4 +53,26 @@
     <item name="android:singleLine">true</item>
     <item name="android:ellipsize">end</item>
   </style>
+  <style name="ListItemTitle">
+    <item name="android:textSize">@dimen/list_item_title_text_size</item>
+    <item name="android:ellipsize">end</item>
+    <item name="android:singleLine">true</item>
+  </style>
+
+  <style name="ListItemSubtitle">
+    <item name="android:textSize">@dimen/list_item_subtitle_text_size</item>
+    <item name="android:ellipsize">end</item>
+    <item name="android:singleLine">true</item>
+  </style>
+
+  <style name="CardTextItem">
+    <item name="android:textSize">@dimen/list_item_title_text_size</item>
+    <item name="android:padding">8dp</item>
+    <item name="android:layout_marginBottom">1dp</item>
+    <item name="android:clickable">true</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:minHeight">50dp</item>
+    <item name="android:gravity">center_vertical</item>
+  </style>
 </resources>

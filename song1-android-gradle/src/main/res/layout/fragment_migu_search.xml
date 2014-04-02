@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="1dp"
+      >
+
+    <EditText
+        android:id="@+id/search_edit"
+        android:editable="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/input_song_title_or_artist_name"
+        android:drawableLeft="@android:drawable/ic_menu_search"
+        android:inputType="text"/>
+  </LinearLayout>
+
+  <ScrollView
+      android:layout_width="match_parent"
+      android:paddingLeft="8dp"
+      android:paddingRight="8dp"
+      android:layout_height="0dp"
+      android:layout_weight="1">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+      <TextView
+          android:id="@+id/chinese_male"
+          android:layout_marginTop="8dp"
+          android:text="@string/chinese_male"
+          style="@style/CardTextItem"
+          />
+
+      <TextView
+          android:id="@+id/chinese_female"
+          android:text="@string/chinese_female"
+          style="@style/CardTextItem"
+          />
+
+      <TextView
+          android:id="@+id/chinese_band"
+          android:text="@string/chinese_band"
+          style="@style/CardTextItem"
+          />
+
+      <TextView
+          android:layout_marginTop="16dp"
+          android:id="@+id/ea_male"
+          android:text="@string/ea_male"
+          style="@style/CardTextItem"
+          />
+
+      <TextView
+          android:id="@+id/ea_female"
+          android:text="@string/ea_female"
+          style="@style/CardTextItem"
+          />
+
+      <TextView
+          android:id="@+id/ea_band"
+          android:text="@string/ea_band"
+          style="@style/CardTextItem"
+          />
+
+      <TextView
+          android:layout_marginTop="16dp"
+          android:id="@+id/jk_male"
+          android:text="@string/jk_male"
+          style="@style/CardTextItem"
+          />
+
+      <TextView
+          android:id="@+id/jk_female"
+          android:text="@string/jk_female"
+          style="@style/CardTextItem"
+          />
+
+      <TextView
+          android:id="@+id/jk_band"
+          android:text="@string/jk_band"
+          android:layout_marginBottom="8dp"
+          style="@style/CardTextItem"
+          />
+
+    </LinearLayout>
+  </ScrollView>
+</LinearLayout>

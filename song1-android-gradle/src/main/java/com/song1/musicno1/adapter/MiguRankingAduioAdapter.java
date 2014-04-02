@@ -1,6 +1,5 @@
 package com.song1.musicno1.adapter;
 
-import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
@@ -21,37 +20,32 @@ import javax.inject.Inject;
 
 /**
  * User: windless
- * Date: 13-9-5
- * Time: PM10:24
+ * Date: 13-12-9
+ * Time: AM11:42
  */
-public class MiguAudioAdapter extends YYAdapter<SongInfo> {
-
-  protected Activity activity;
-
+public class MiguRankingAduioAdapter extends MiguAudioAdapter {
   @Inject
-  public MiguAudioAdapter(Context context) {
+  public MiguRankingAduioAdapter(Context context) {
     super(context);
-  }
-
-  public void setActivity(Activity activity) {
-    this.activity = activity;
   }
 
   @Override
   public View getView(int position, View view, ViewGroup parent) {
     ViewHolder holder;
     if (view == null) {
-      view = View.inflate(context, R.layout.item_migu_audio, null);
+      view = View.inflate(context, R.layout.item_migu_ranking_audio, null);
       holder = new ViewHolder(view);
       view.setTag(holder);
     } else {
       holder = (ViewHolder) view.getTag();
     }
 
-    SongInfo info = getDataItem(position);
-    holder.title.setText(info.musicName);
-    holder.subtitle.setText(info.miguArtistName);
-    holder.more.setTag(info);
+    SongInfo songInfo = getDataItem(position);
+    holder.number.setText("" + (position + 1));
+    holder.title.setText(songInfo.musicName);
+    holder.subtitle.setText(songInfo.miguArtistName);
+    holder.more.setTag(songInfo);
+
     return view;
   }
 
@@ -59,6 +53,7 @@ public class MiguAudioAdapter extends YYAdapter<SongInfo> {
     @InjectView(R.id.title)    TextView    title;
     @InjectView(R.id.subtitle) TextView    subtitle;
     @InjectView(R.id.more)     ImageButton more;
+    @InjectView(R.id.number)   TextView    number;
 
     private SongInfo info;
 
@@ -77,34 +72,26 @@ public class MiguAudioAdapter extends YYAdapter<SongInfo> {
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-//      switch (item.getItemId()) {
-//        case R.id.add_to_playlist:
+      switch (item.getItemId()) {
+        case R.id.add_to_playlist:
 //          playerAction.add_to_playlist(info.toAudio());
-//          break;
+          break;
 //        case R.id.download:
-//          if (info.toAudio().from == Audio.MIGU) {
-//            musicStore.download_url(activity, info.toAudio(), new GetDownloadUrlCallback() {
-//              @Override
-//              public void OnUrlGot(String code, String msg, String url) {
-//                if (url != null) {
-//                  download(url, info.musicName);
+//          musicStore.downlo ad_url(activity, info.toAudio(), new GetDownloadUrlCallback() {
+//            @Override
+//            public void OnUrlGot(String code, String msg, String url) {
+//              if (url != null) {
+//                try {
+//                  DownloadManager.Request request = downloadStore.newRequest(Uri.parse(url), info.musicName);
+//                  downloadStore.start(context, request, info.musicName);
+//                } catch (IllegalStateException e) {
+//                  Toast.makeText(context, context.getString(R.string.download_failed_no_sdcard, info.musicName), Toast.LENGTH_LONG).show();
 //                }
 //              }
-//            });
-//          } else {
-//            download(info.toAudio().remote_play_uri, info.musicName);
-//          }
-//      }
+//            }
+//          });
+      }
       return true;
-    }
-
-    private void download(String url, String name) {
-//      try {
-//        DownloadManager.Request request = downloadStore.newRequest(Uri.parse(url), name);
-//        downloadStore.start(context, request, name);
-//      } catch (IllegalStateException e) {
-//        Toast.makeText(context, context.getString(R.string.download_failed_no_sdcard, name), Toast.LENGTH_LONG).show();
-//      }
     }
   }
 }

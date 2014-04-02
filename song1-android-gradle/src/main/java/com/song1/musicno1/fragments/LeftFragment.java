@@ -102,7 +102,7 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
       case R.string.download_music:
         break;
       case R.string.migu_title:
-        initMigu(() -> mainActivity.show(new MiguFragment()));
+        initMigu(() -> mainActivity.show(new MiguMusicFragment()));
         break;
       case R.string.beatles_music:
         fragment = new BeatlesFrag();
@@ -127,7 +127,7 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
       loadingDialog.show(getFragmentManager(), null);
 
       new Thread(() -> {
-        if (miguIniter.init()) {
+        if (true) {
           handler.post(() -> {
             loadingDialog.dismiss();
             runnable.run();
