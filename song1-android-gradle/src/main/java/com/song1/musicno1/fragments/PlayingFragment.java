@@ -20,6 +20,7 @@ import com.song1.musicno1.models.events.play.CurrentPlayerStateEvent;
 import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.play.Players;
 import com.squareup.otto.Subscribe;
+import com.viewpagerindicator.CirclePageIndicator;
 
 /**
  * Created by windless on 3/28/14.
@@ -27,8 +28,9 @@ import com.squareup.otto.Subscribe;
 public class PlayingFragment extends Fragment {
   protected int state;
 
-  @InjectView(R.id.play)  ImageButton playBtn;
-  @InjectView(R.id.pager) ViewPager   pager;
+  @InjectView(R.id.play)      ImageButton         playBtn;
+  @InjectView(R.id.pager)     ViewPager           pager;
+  @InjectView(R.id.indicator) CirclePageIndicator indicator;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class PlayingFragment extends Fragment {
     super.onActivityCreated(savedInstanceState);
     pager.setAdapter(new Adapter(getChildFragmentManager()));
     pager.setCurrentItem(1);
+    indicator.setViewPager(pager);
   }
 
   @Override

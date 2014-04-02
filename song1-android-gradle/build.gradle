@@ -13,6 +13,7 @@ apply plugin: 'retrolambda'
 apply plugin: 'android-apt'
 
 repositories {
+    maven { url "http://dl.bintray.com/populov/maven" }
     mavenCentral()
 }
 
@@ -51,5 +52,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.squareup.dagger:dagger:1.+'
     compile 'com.github.kevinsawicki:http-request:5.+'
+    compile 'com.viewpagerindicator:library:2.+@aar'
     apt 'com.squareup.dagger:dagger-compiler:1.+'
 }
