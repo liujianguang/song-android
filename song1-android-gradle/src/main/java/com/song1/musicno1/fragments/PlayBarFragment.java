@@ -13,7 +13,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.song1.musicno1.R;
-import com.song1.musicno1.activities.CurrentNotworkDeviceActivity;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.events.play.CurrentPlayerStateEvent;
@@ -58,7 +57,8 @@ public class PlayBarFragment extends Fragment {
 
   @OnClick(R.id.bottom_player_list)
   public void showPlayerList() {
-    startActivity(new Intent(getActivity(), CurrentNotworkDeviceActivity.class));
+    DeviceFragment deviceFragment = new DeviceFragment();
+    deviceFragment.show(getFragmentManager(),"deviceFragment");
   }
 
   @OnClick(R.id.bottom_play)

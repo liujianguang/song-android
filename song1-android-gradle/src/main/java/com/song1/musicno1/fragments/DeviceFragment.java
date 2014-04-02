@@ -26,6 +26,7 @@ import com.song1.musicno1.models.events.play.SelectPlayerEvent;
 import com.song1.musicno1.models.events.upnp.DeviceChangeEvent;
 import com.song1.musicno1.models.events.upnp.SearchDeviceEvent;
 import com.song1.musicno1.models.play.Player;
+import com.song1.musicno1.ui.SlingUpDialog;
 import com.squareup.otto.Subscribe;
 import de.akquinet.android.androlog.Log;
 import org.cybergarage.upnp.std.av.renderer.MediaRenderer;
@@ -35,7 +36,7 @@ import java.util.List;
 /**
  * Created by kate on 14-3-17.
  */
-public class DeviceFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemClickListener {
 
   protected                         NetworkHelp                     networkHelp;
   protected                         Player                          selectedPlayer;
