@@ -63,7 +63,7 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
 
     items.add(getString(R.string.my_music));
     items.add(R.string.local_source);
-    items.add(R.string.download_music);
+//    items.add(R.string.download_music);
 
     items.add(getString(R.string.cloud_source));
     items.add(R.string.migu_title);
@@ -73,21 +73,14 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
     adapter.setChannels(items);
     listView.setOnItemClickListener(this);
     mainActivity = (MainActivity) getActivity();
+
+    showFragment(R.string.local_source);
   }
 
-  @Override
-  public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-    Object obj = adapter.getItem(position);
-    int resId;
-    if (obj instanceof Integer) {
-      resId = Integer.parseInt(obj.toString());
-    } else {
-      return;
-    }
+  private void showFragment(int resId) {
     BaseFragment fragment = mapFragment.get(resId);
     if (fragment != null) {
       mainActivity.replaceMain(fragment);
-      System.out.println("fragment : " + fragment.getFragmentManager());
       return;
     }
 
@@ -98,7 +91,11 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
       case R.string.download_music:
         break;
       case R.string.migu_title:
-        initMigu(() -> mainActivity.replaceMain(new MiguMusicFragment()));
+        initMigu(() -> {
+          MiguMusicFragment miguMusicFragment = new MiguMusicFragment();
+          mapFragment.put(R.string.migu_title, miguMusicFragment);
+          mainActivity.replaceMain(miguMusicFragment);
+        });
         break;
       case R.string.beatles_music:
         fragment = new BeatlesFrag();
@@ -106,12 +103,23 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
       case R.string.justing:
         fragment = new JustingCategoryFragment();
         break;
-      default:
-        break;
     }
+
     if (fragment != null) {
-      System.out.println("fragment : " + fragment.getFragmentManager());
+      mapFragment.put(resId, fragment);
       mainActivity.replaceMain(fragment);
+    }
+  }
+
+  @Override
+  public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+    Object obj = adapter.getItem(position);
+    int resId;
+    if (obj instanceof Integer) {
+      resId = Integer.parseInt(obj.toString());
+      showFragment(resId);
+    } else {
+      return;
     }
   }
 
