@@ -18,6 +18,7 @@ import com.song1.musicno1.fragments.PlayBarFragment;
 import com.song1.musicno1.fragments.PlayingFragment;
 import com.song1.musicno1.fragments.TestFragment;
 import com.song1.musicno1.helpers.ViewHelper;
+import com.song1.musicno1.services.HttpService;
 import com.song1.musicno1.services.PlayService;
 import com.song1.musicno1.services.UpnpService;
 import com.song1.musicno1.vender.SlidingUpPanelLayout;
@@ -51,6 +52,7 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
 
     startService(new Intent(this, UpnpService.class));
     startService(new Intent(this, PlayService.class));
+    startService(new Intent(this, HttpService.class));
 
     playBarFragment = new PlayBarFragment();
 

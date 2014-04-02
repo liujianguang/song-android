@@ -1,6 +1,8 @@
 package com.song1.musicno1.models.play;
 
 
+import com.google.common.base.Strings;
+import com.song1.musicno1.services.HttpService;
 import de.akquinet.android.androlog.Log;
 
 /**
@@ -99,9 +101,18 @@ public class Player {
       setPosition(0, 0);
     }
 
+
     try {
       if (audio != null) {
-        renderer.setUri(audio.getRemotePlayUrl());
+        if (renderer instanceof LocalRenderer) {
+          renderer.setUri(audio.getLocalPlayUri());
+        } else {
+          if (Strings.isNullOrEmpty(audio.getRemotePlayUrl()) && audio.getFrom() == Audio.LOCAL) {
+            audio.setRemotePlayUrl(HttpService.instance().share(audio.getLocalPlayUri()));
+          }
+
+          renderer.setUri(audio.getRemotePlayUrl());
+        }
       }
       renderer.play();
 
