@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                style="@style/ListItem"
+                android:minHeight="70dp">
+
+  <ImageView
+      android:id="@+id/ranking_item_image"
+      android:layout_width="65dp"
+      android:layout_height="65dp"
+      android:layout_centerVertical="true"
+      android:layout_marginRight="8dp"
+      android:scaleType="fitXY"
+      android:contentDescription="@null"/>
+
+  <TextView
+      android:id="@+id/ranking_item_text"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+
+      android:layout_toRightOf="@id/ranking_item_image"
+      android:layout_alignParentTop="true"
+      android:layout_marginTop="8dp"
+      style="@style/ListItemTitle"
+      android:singleLine="false"
+      android:ellipsize="none"
+      />
+
+  <TextView
+      android:id="@+id/ranking_item_desc"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_toRightOf="@id/ranking_item_image"
+      android:layout_below="@id/ranking_item_text"
+      android:layout_marginBottom="4dp"
+      android:layout_marginTop="4dp"
+      style="@style/ListItemSubtitle"
+      android:singleLine="false"
+      android:ellipsize="none"
+      />
+
+</RelativeLayout>
