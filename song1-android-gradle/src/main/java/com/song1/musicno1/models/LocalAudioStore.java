@@ -1,8 +1,10 @@
 package com.song1.musicno1.models;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
+import com.song1.musicno1.R;
 import com.song1.musicno1.entity.Album;
 import com.song1.musicno1.entity.Artist;
 import com.song1.musicno1.models.play.Audio;
@@ -17,19 +19,21 @@ import static android.provider.MediaStore.Audio.Media.TITLE;
 import static android.provider.MediaStore.MediaColumns.DATA;
 
 public class LocalAudioStore {
-  private final ContentResolver contentResolver;
+  private final   ContentResolver contentResolver;
+  protected final Context         context;
 
-  public LocalAudioStore(ContentResolver contentResolver) {
-    this.contentResolver = contentResolver;
+  public LocalAudioStore(Context context) {
+    this.context = context;
+    this.contentResolver = context.getContentResolver();
   }
 
   public List<Audio> all_audios() {
 
     Cursor cursor = contentResolver.query(
         EXTERNAL_CONTENT_URI,
-        new String[]{ TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE },
+        new String[]{TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE},
         MIME_TYPE + " IN (?,?,?,?)",
-        new String[]{ "audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac" },
+        new String[]{"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac"},
         TITLE
     );
 
@@ -40,9 +44,9 @@ public class LocalAudioStore {
   public List<Audio> audios(String col, String selection) {
     Cursor cursor = contentResolver.query(
         EXTERNAL_CONTENT_URI,
-        new String[]{ TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE },
+        new String[]{TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE},
         MIME_TYPE + " IN (?,?,?,?) AND " + col + "=?",
-        new String[]{ "audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac", selection },
+        new String[]{"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac", selection},
         TITLE
     );
 
@@ -57,8 +61,21 @@ public class LocalAudioStore {
       Audio audio = new Audio();
       audio.setId(cursor.getString(cursor.getColumnIndex(_ID)));
       audio.setTitle(cursor.getString(cursor.getColumnIndex(TITLE)));
-      audio.setAlbum(cursor.getString(cursor.getColumnIndex(ALBUM)));
-      audio.setArtist(cursor.getString(cursor.getColumnIndex(ARTIST)));
+
+      String album = cursor.getString(cursor.getColumnIndex(ALBUM));
+      if ("<unknown>".equals(album)) {
+        audio.setAlbum(context.getString(R.string.unknown));
+      } else {
+        audio.setAlbum(album);
+      }
+
+      String artist = cursor.getString(cursor.getColumnIndex(ARTIST));
+      if ("<unknown>".equals(artist)) {
+        audio.setArtist(context.getString(R.string.unknown));
+      } else {
+        audio.setArtist(artist);
+      }
+
       audio.setLocalPlayUri(cursor.getString(cursor.getColumnIndex(DATA)));
       audio.setFrom(Audio.LOCAL);
 //      audio.album_id = cursor.getString(cursor.getColumnIndex(ALBUM_ID));
@@ -72,9 +89,9 @@ public class LocalAudioStore {
   public String find_album_path_by(String album_id) {
     Cursor cursor = contentResolver.query(
         MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
-        new String[]{ MediaStore.Audio.Albums.ALBUM_ART },
+        new String[]{MediaStore.Audio.Albums.ALBUM_ART},
         MediaStore.Audio.Albums._ID + "=?",
-        new String[]{ album_id }, null
+        new String[]{album_id}, null
     );
 
     String album_path = null;
@@ -90,9 +107,9 @@ public class LocalAudioStore {
   public int audios_count() {
     Cursor cursor = contentResolver.query(
         EXTERNAL_CONTENT_URI,
-        new String[]{ "count(*) AS count" },
+        new String[]{"count(*) AS count"},
         MIME_TYPE + " IN (?,?,?,?)",
-        new String[]{ "audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac" }, null
+        new String[]{"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac"}, null
     );
     if (cursor == null) return 0;
 
@@ -103,9 +120,9 @@ public class LocalAudioStore {
   public int lossless_count() {
     Cursor cursor = contentResolver.query(
         EXTERNAL_CONTENT_URI,
-        new String[]{ "count(*) AS count" },
+        new String[]{"count(*) AS count"},
         MIME_TYPE + " IN (?,?,?)",
-        new String[]{ "audio/wav", "audio/x-wav", "audio/flac" }, null
+        new String[]{"audio/wav", "audio/x-wav", "audio/flac"}, null
     );
     if (cursor == null) return 0;
     cursor.moveToFirst();
@@ -130,7 +147,14 @@ public class LocalAudioStore {
     for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
       Artist artist = new Artist();
       artist.id = cursor.getString(0);
-      artist.name = cursor.getString(1);
+
+      String name = cursor.getString(1);
+      if ("<unknown>".equals(name)) {
+        artist.name = context.getString(R.string.unknown);
+      } else {
+        artist.name = name;
+      }
+
       artist.album_count = cursor.getInt(2);
       artist.audio_count = cursor.getInt(3);
       artists.add(artist);
@@ -160,7 +184,14 @@ public class LocalAudioStore {
       album.id = cursor.getString(0);
       album.title = (cursor.getString(1));
       album.album_art = (cursor.getString(2));
-      album.artist = cursor.getString(3);
+
+      String artist = cursor.getString(3);
+      if ("<unknown>".equals(artist)) {
+        album.artist = context.getString(R.string.unknown);
+      } else {
+        album.artist = artist;
+      }
+
       album.number_of_songs = (cursor.getInt(4));
       album.from = Album.LOCAL;
       albums.add(album);
@@ -181,9 +212,9 @@ public class LocalAudioStore {
   public List<Audio> get_all_lossless() {
     Cursor cursor = contentResolver.query(
         EXTERNAL_CONTENT_URI,
-        new String[]{ TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE },
+        new String[]{TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE},
         MIME_TYPE + " IN (?,?,?)",
-        new String[]{ "audio/wav", "audio/x-wav", "audio/flac" },
+        new String[]{"audio/wav", "audio/x-wav", "audio/flac"},
         TITLE);
     if (cursor == null) {
       return null;

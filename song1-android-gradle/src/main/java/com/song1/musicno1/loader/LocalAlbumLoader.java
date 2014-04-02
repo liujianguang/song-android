@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 import com.song1.musicno1.entity.Album;
 import com.song1.musicno1.models.LocalAudioStore;
+
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ public class LocalAlbumLoader extends AsyncTaskLoader<List<Album>> {
 
   public LocalAlbumLoader(Context context) {
     super(context);
-    _store = new LocalAudioStore(context.getContentResolver());
+    _store = new LocalAudioStore(context);
   }
 
   @Override
