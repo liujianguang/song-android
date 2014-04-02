@@ -68,7 +68,7 @@ public class PlayBarFragment extends Fragment {
         Players.pause();
         break;
       case Player.PAUSED:
-        Players.play();
+        Players.resume();
         break;
     }
   }

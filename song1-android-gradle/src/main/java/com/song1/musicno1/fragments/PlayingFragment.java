@@ -84,7 +84,7 @@ public class PlayingFragment extends Fragment {
         Players.pause();
         break;
       case Player.PAUSED:
-        Players.play();
+        Players.resume();
         break;
     }
   }

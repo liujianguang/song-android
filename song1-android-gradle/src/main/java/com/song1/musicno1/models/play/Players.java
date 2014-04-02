@@ -34,4 +34,8 @@ public class Players {
   public static void nextPlayMode() {
     MainBus.post(new NextPlayModeEvent());
   }
+
+  public static void resume() {
+    MainBus.post(new ResumeEvent());
+  }
 }

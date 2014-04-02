@@ -102,15 +102,21 @@ public class PlayService extends Service {
     executor.submit(() -> {
       Player player = currentPlayer;
       if (player != null) {
-        if (player.getState() == Player.PAUSED) {
-          player.play();
-        } else {
-          Playlist playlist = playlistMap.get(player.getId());
-          if (playlist != null) {
-            Audio currentAudio = playlist.getCurrentAudio();
-            if (currentAudio != null) player.play(currentAudio);
-          }
+        Playlist playlist = playlistMap.get(player.getId());
+        if (playlist != null) {
+          Audio currentAudio = playlist.getCurrentAudio();
+          if (currentAudio != null) player.play(currentAudio);
         }
+      }
+    });
+  }
+
+  @Subscribe
+  public void resume(ResumeEvent event) {
+    executor.submit(() -> {
+      Player player = currentPlayer;
+      if (player != null && player.getState() == Player.PAUSED) {
+        player.play();
       }
     });
   }
