@@ -21,4 +21,14 @@ public class BeatlesAudio {
     info.from = Audio.OTHER;
     return info;
   }
+
+  public Audio toAudio() {
+    Audio audio = new Audio();
+    audio.setTitle(title);
+    audio.setAlbum(author);
+    audio.setArtist(actor);
+    audio.setRemotePlayUrl(url);
+    audio.setLocalPlayUri(url);
+    return audio;
+  }
 }

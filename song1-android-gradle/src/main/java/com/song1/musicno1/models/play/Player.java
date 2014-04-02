@@ -1,7 +1,9 @@
 package com.song1.musicno1.models.play;
 
 
+import android.content.Context;
 import com.google.common.base.Strings;
+import com.song1.musicno1.models.cmmusic.CMMusicStore;
 import com.song1.musicno1.services.HttpService;
 import de.akquinet.android.androlog.Log;
 
@@ -22,6 +24,7 @@ public class Player {
   private final static int TIMEOUT = 20;
 
   private final int[] PLAY_MODES = new int[]{MODE_NORMAL, MODE_REPEAT_ALL, MODE_REPEAT_ONE, MODE_SHUFFLE};
+  protected final Context context;
 
   protected OnPositionChangedListener positionListener;
   protected int                       state;
@@ -65,8 +68,10 @@ public class Player {
     }
   };
 
-  public Player(Renderer renderer) {
+  public Player(Context context, Renderer renderer) {
     this.renderer = renderer;
+    this.context = context;
+
     if (renderer instanceof LocalRenderer) {
       LocalRenderer localRenderer = (LocalRenderer) renderer;
       localRenderer.onComplete((mediaPlayer) -> {
@@ -104,6 +109,19 @@ public class Player {
 
     try {
       if (audio != null) {
+        if (audio.getFrom() == Audio.MIGU) {
+          String playUrl = getPlayUrl(audio);
+          if (playUrl != null) {
+            audio.setRemotePlayUrl(playUrl);
+            audio.setLocalPlayUri(playUrl);
+            Log.d(this, "Get " + audio.getTitle() + " play url :" + playUrl);
+          } else {
+            Log.d(this, "Get " + audio.getTitle() + " play url failed.");
+            stop();
+            error(new RendererException(""));
+            return;
+          }
+        }
         if (renderer instanceof LocalRenderer) {
           renderer.setUri(audio.getLocalPlayUri());
         } else {
@@ -268,6 +286,16 @@ public class Player {
     } catch (RendererException e) {
       return false;
     }
+  }
+
+  private String getPlayUrl(final Audio audio) {
+    CMMusicStore ms = new CMMusicStore(context);
+    String songUrl = null;
+    try {
+      songUrl = ms.getOnLineListenerSongUrl(audio.getId());
+    } catch (Exception ignored) {
+    }
+    return songUrl;
   }
 
   public void nextPlayMode() {

@@ -1,20 +1,18 @@
 package com.song1.musicno1.adapter;
 
-import android.app.DownloadManager;
 import android.content.Context;
-import android.net.Uri;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.song1.musicno1.R;
 import com.song1.musicno1.entity.SongInfo;
+import com.song1.musicno1.models.play.Audio;
 
 import javax.inject.Inject;
 
@@ -40,11 +38,11 @@ public class MiguRankingAduioAdapter extends MiguAudioAdapter {
       holder = (ViewHolder) view.getTag();
     }
 
-    SongInfo songInfo = getDataItem(position);
+    Audio audio = getDataItem(position);
     holder.number.setText("" + (position + 1));
-    holder.title.setText(songInfo.musicName);
-    holder.subtitle.setText(songInfo.miguArtistName);
-    holder.more.setTag(songInfo);
+    holder.title.setText(audio.getTitle());
+    holder.subtitle.setText(audio.getArtist());
+    holder.more.setTag(audio);
 
     return view;
   }

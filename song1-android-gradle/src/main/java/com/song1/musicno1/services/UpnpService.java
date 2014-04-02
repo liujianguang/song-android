@@ -52,7 +52,7 @@ public class UpnpService extends Service implements DeviceChangeListener {
     Log.init();
     App.inject(this);
 
-    localPlayer = new Player(localRenderer);
+    localPlayer = new Player(this, localRenderer);
     playerList = List8.newList();
     playerList.add(localPlayer);
 
@@ -132,7 +132,7 @@ public class UpnpService extends Service implements DeviceChangeListener {
 
   private void addMediaRenderer(Device device) {
     Log.d(this, "Device added " + device.getFriendlyName() + " " + device.getDeviceType());
-    playerList.add(new Player(new RemoteRenderer(device)));
+    playerList.add(new Player(this, new RemoteRenderer(device)));
     MainBus.post(produceDeviceList());
   }
 

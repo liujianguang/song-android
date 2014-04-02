@@ -8,13 +8,13 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.MiguAudioAdapter;
 import com.song1.musicno1.entity.BeatlesAudio;
-import com.song1.musicno1.entity.SongInfo;
+import com.song1.musicno1.helpers.List8;
 import com.song1.musicno1.models.play.Audio;
+import com.song1.musicno1.models.play.Players;
+import com.song1.musicno1.models.play.Playlist;
 
 import java.util.List;
 
@@ -24,14 +24,14 @@ import java.util.List;
  * Time: PM4:08
  */
 public class BeatlesDetailFragment extends BaseFragment implements AdapterView.OnItemClickListener {
-  private List<BeatlesAudio> audios;
+  private List<Audio> audios;
 
   MiguAudioAdapter adapter;
 
   @InjectView(R.id.list) ListView listView;
 
   public void setAudios(List<BeatlesAudio> audios) {
-    this.audios = audios;
+    this.audios = List8.newList(audios).map((beatlesAudio) -> beatlesAudio.toAudio());
   }
 
   @Override
@@ -55,18 +55,13 @@ public class BeatlesDetailFragment extends BaseFragment implements AdapterView.O
     listView.setOnItemClickListener(this);
 
     adapter.setActivity(getActivity());
-    List<SongInfo> songInfos = Lists.transform(audios, new Function<BeatlesAudio, SongInfo>() {
-      @Override
-      public SongInfo apply(BeatlesAudio beatlesAudio) {
-        return beatlesAudio.toSongInfo();
-      }
-    });
-    adapter.setDataList(songInfos);
+    adapter.setDataList(audios);
   }
 
   @Override
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    Audio audio = adapter.getDataItem(position).toAudio();
-//    adapter.getPlayAction().play(audio);
+    Audio audio = adapter.getDataItem(position);
+    Playlist playlist = new Playlist(List8.newList(audios), audio);
+    Players.setPlaylist(playlist);
   }
 }

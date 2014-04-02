@@ -15,8 +15,12 @@ import com.song1.musicno1.entity.LoadResult;
 import com.song1.musicno1.entity.RankingListInfo;
 import com.song1.musicno1.entity.SongInfo;
 import com.song1.musicno1.fragments.PageLoadFragment;
+import com.song1.musicno1.helpers.List8;
 import com.song1.musicno1.models.MiguService;
 import com.song1.musicno1.models.RspException;
+import com.song1.musicno1.models.play.Audio;
+import com.song1.musicno1.models.play.Players;
+import com.song1.musicno1.models.play.Playlist;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -85,7 +89,8 @@ public class MiguRankingDetailFragment extends PageLoadFragment<SongInfo> implem
 
   @Override
   protected void didLoadFinish(List<SongInfo> dataList) {
-    adapter.setDataList(dataList);
+    List8<Audio> audios = List8.newList(dataList).map((songInfo) -> songInfo.toAudio());
+    adapter.setDataList(audios);
   }
 
   public void setRankingInfo(RankingListInfo info) {
@@ -94,7 +99,7 @@ public class MiguRankingDetailFragment extends PageLoadFragment<SongInfo> implem
 
   @Override
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    SongInfo info = adapter.getDataItem(position);
-//    playerAction.play(info.toAudio());
+    Playlist playlist = new Playlist(List8.newList(adapter.getDataList()), adapter.getDataItem(position));
+    Players.setPlaylist(playlist);
   }
 }

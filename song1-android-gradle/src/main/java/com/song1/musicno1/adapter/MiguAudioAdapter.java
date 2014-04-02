@@ -1,21 +1,19 @@
 package com.song1.musicno1.adapter;
 
 import android.app.Activity;
-import android.app.DownloadManager;
 import android.content.Context;
-import android.net.Uri;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.song1.musicno1.R;
 import com.song1.musicno1.entity.SongInfo;
+import com.song1.musicno1.models.play.Audio;
 
 import javax.inject.Inject;
 
@@ -24,7 +22,7 @@ import javax.inject.Inject;
  * Date: 13-9-5
  * Time: PM10:24
  */
-public class MiguAudioAdapter extends YYAdapter<SongInfo> {
+public class MiguAudioAdapter extends YYAdapter<Audio> {
 
   protected Activity activity;
 
@@ -48,10 +46,10 @@ public class MiguAudioAdapter extends YYAdapter<SongInfo> {
       holder = (ViewHolder) view.getTag();
     }
 
-    SongInfo info = getDataItem(position);
-    holder.title.setText(info.musicName);
-    holder.subtitle.setText(info.miguArtistName);
-    holder.more.setTag(info);
+    Audio audio = getDataItem(position);
+    holder.title.setText(audio.getTitle());
+    holder.subtitle.setText(audio.getArtist());
+    holder.more.setTag(audio);
     return view;
   }
 

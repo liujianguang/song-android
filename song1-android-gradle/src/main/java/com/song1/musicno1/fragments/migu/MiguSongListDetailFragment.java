@@ -15,10 +15,13 @@ import com.song1.musicno1.entity.LoadResult;
 import com.song1.musicno1.entity.SongInfo;
 import com.song1.musicno1.entity.SubjectInfo;
 import com.song1.musicno1.fragments.PageLoadFragment;
+import com.song1.musicno1.helpers.List8;
 import com.song1.musicno1.models.MiguService;
 import com.song1.musicno1.models.RspException;
+import com.song1.musicno1.models.play.Audio;
+import com.song1.musicno1.models.play.Players;
+import com.song1.musicno1.models.play.Playlist;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 
@@ -76,7 +79,8 @@ public class MiguSongListDetailFragment extends PageLoadFragment<SongInfo> imple
 
   @Override
   protected void didLoadFinish(List<SongInfo> dataList) {
-    adapter.setDataList(dataList);
+    List<Audio> audios = List8.newList(dataList).map((songInfo) -> songInfo.toAudio());
+    adapter.setDataList(audios);
   }
 
   public void setSubjectInfo(SubjectInfo subjectInfo) {
@@ -85,6 +89,7 @@ public class MiguSongListDetailFragment extends PageLoadFragment<SongInfo> imple
 
   @Override
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    SongInfo info = adapter.getDataItem(position);
+    Playlist playlist = new Playlist(List8.newList(adapter.getDataList()), adapter.getDataItem(position));
+    Players.setPlaylist(playlist);
   }
 }

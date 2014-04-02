@@ -33,6 +33,10 @@ public abstract class YYAdapter<T> extends BaseAdapter {
     notifyDataSetChanged();
   }
 
+  public List<T> getDataList() {
+    return this.dataList;
+  }
+
   @Override
   public Object getItem(int position) {
     return getDataItem(position);
