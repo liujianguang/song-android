@@ -139,13 +139,25 @@
         android:layout_height="wrap_content"/>
   </RelativeLayout>
 
-  <ProgressBar
-      android:id="@+id/prepare_progress"
-      android:visibility="gone"
-      android:indeterminate="true"
-      style="@android:style/Widget.ProgressBar.Horizontal"
+  <FrameLayout
       android:layout_alignParentBottom="true"
       android:layout_width="match_parent"
-      android:layout_height="2dp"/>
+      android:layout_height="1dp">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+      <ScrollView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+      </ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+  </FrameLayout>
 
 </RelativeLayout>

@@ -2,6 +2,7 @@ package com.song1.musicno1.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,17 +27,28 @@ import com.squareup.otto.Subscribe;
  * Created by windless on 3/27/14.
  */
 public class PlayBarFragment extends Fragment {
-  protected                            int         state;
-  @InjectView(R.id.bottom_title)       TextView    bottomTitleView;
-  @InjectView(R.id.bottom_subtitle)    TextView    bottomSubtitleView;
-  @InjectView(R.id.bottom_play)        ImageButton bottomPlayBtn;
-  @InjectView(R.id.bottom_player_list) ImageButton playerListBtn;
-  @InjectView(R.id.prepare_progress)   ProgressBar prepareBar;
-  @InjectView(R.id.position_progress)  ProgressBar positionBar;
-  @InjectView(R.id.top)                View        topView;
-  @InjectView(R.id.bottom)             View        bottomView;
-  @InjectView(R.id.top_title)          TextView    topTitleView;
-  @InjectView(R.id.top_subtitle)       TextView    topSubtitleView;
+  protected                            int                state;
+  @InjectView(R.id.bottom_title)       TextView           bottomTitleView;
+  @InjectView(R.id.bottom_subtitle)    TextView           bottomSubtitleView;
+  @InjectView(R.id.bottom_play)        ImageButton        bottomPlayBtn;
+  @InjectView(R.id.bottom_player_list) ImageButton        playerListBtn;
+  @InjectView(R.id.position_progress)  ProgressBar        positionBar;
+  @InjectView(R.id.top)                View               topView;
+  @InjectView(R.id.bottom)             View               bottomView;
+  @InjectView(R.id.top_title)          TextView           topTitleView;
+  @InjectView(R.id.top_subtitle)       TextView           topSubtitleView;
+  @InjectView(R.id.refresh_layout)     SwipeRefreshLayout refreshLayout;
+
+  @Override
+  public void onActivityCreated(Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+    refreshLayout.setColorScheme(
+        android.R.color.holo_green_light,
+        android.R.color.holo_orange_light,
+        android.R.color.holo_green_light,
+        android.R.color.holo_orange_light
+    );
+  }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -90,19 +102,19 @@ public class PlayBarFragment extends Fragment {
       case Player.STOPPED:
         bottomPlayBtn.setImageResource(R.drawable.ic_play);
         bottomPlayBtn.setEnabled(true);
-        prepareBar.setVisibility(View.GONE);
         positionBar.setVisibility(View.VISIBLE);
+        refreshLayout.setRefreshing(false);
         break;
       case Player.PLAYING:
         bottomPlayBtn.setImageResource(R.drawable.ic_pause);
         bottomPlayBtn.setEnabled(true);
-        prepareBar.setVisibility(View.GONE);
         positionBar.setVisibility(View.VISIBLE);
+        refreshLayout.setRefreshing(false);
         break;
       case Player.PREPARING:
         bottomPlayBtn.setEnabled(false);
-        prepareBar.setVisibility(View.VISIBLE);
         positionBar.setVisibility(View.GONE);
+        refreshLayout.setRefreshing(true);
     }
   }
 

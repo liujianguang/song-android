@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public class LeftFragment extends Fragment implements AdapterView.OnItemClickListener {
 
-  private Map<Integer, BaseFragment> mapFragment = Maps.newHashMap();
+  private Map<Integer, Fragment> mapFragment = Maps.newHashMap();
 
   @Inject MiguIniter miguIniter;
 
@@ -78,7 +78,7 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
   }
 
   private void showFragment(int resId) {
-    BaseFragment fragment = mapFragment.get(resId);
+    Fragment fragment = mapFragment.get(resId);
     if (fragment != null) {
       mainActivity.replaceMain(fragment);
       return;
