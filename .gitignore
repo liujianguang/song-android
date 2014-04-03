@@ -75,3 +75,5 @@ local.properties
 proguard/
 
 TODO
+
+.gradletasknamecache
