@@ -18,7 +18,7 @@ import java.util.List;
  * Date: 13-12-12
  * Time: PM2:30
  */
-public class JustingCategoryFragment extends DataFragment<JustingCategory> implements AdapterView.OnItemClickListener {
+public class JustingCategoryFragment extends ListFragment<JustingCategory> implements AdapterView.OnItemClickListener {
   private static final String JUSTING_URL = "http://justing.oss-cn-hangzhou.aliyuncs.com/Json/justing2.json";
 
   @Override

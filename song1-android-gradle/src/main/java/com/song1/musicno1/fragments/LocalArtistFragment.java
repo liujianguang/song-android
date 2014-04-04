@@ -18,7 +18,7 @@ import java.util.List;
  * Date: 13-9-3
  * Time: PM4:12
  */
-public class LocalArtistFragment extends DataFragment<Artist> implements AdapterView.OnItemClickListener {
+public class LocalArtistFragment extends ListFragment<Artist> implements AdapterView.OnItemClickListener {
   @Inject LocalAudioStore localAudioStore;
 
   @Inject

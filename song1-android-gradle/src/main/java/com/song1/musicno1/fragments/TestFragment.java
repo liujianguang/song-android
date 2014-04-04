@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  * Created by windless on 3/28/14.
  */
-public class TestFragment extends DataFragment<Integer> {
+public class TestFragment extends ListFragment<Integer> {
   @Override
   protected List<Integer> onLoad(int loadPage) {
     setTotalPage(10);

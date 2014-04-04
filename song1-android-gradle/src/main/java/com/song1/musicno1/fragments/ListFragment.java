@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Created by windless on 14-4-3.
  */
-public abstract class DataFragment<T> extends BaseFragment implements LoaderManager.LoaderCallbacks<LoadData<T>>, AbsListView.OnScrollListener {
+public abstract class ListFragment<T> extends BaseFragment implements LoaderManager.LoaderCallbacks<LoadData<T>>, AbsListView.OnScrollListener {
   @InjectView(R.id.loading) View     loadingView;
   @InjectView(R.id.empty)   View     emptyView;
   @InjectView(R.id.list)    ListView listView;
