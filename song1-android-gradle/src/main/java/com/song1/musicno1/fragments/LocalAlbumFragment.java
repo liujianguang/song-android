@@ -15,6 +15,7 @@ import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.adapter.AlbumAdapter;
 import com.song1.musicno1.entity.Album;
+import com.song1.musicno1.fragments.base.BaseFragment;
 import com.song1.musicno1.loader.LocalAlbumLoader;
 
 import javax.inject.Inject;

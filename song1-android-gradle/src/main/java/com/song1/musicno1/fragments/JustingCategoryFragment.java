@@ -10,6 +10,7 @@ import com.song1.musicno1.adapter.DataAdapter;
 import com.song1.musicno1.adapter.JustingCategoryAdapter;
 import com.song1.musicno1.entity.JsonStore;
 import com.song1.musicno1.entity.JustingCategory;
+import com.song1.musicno1.fragments.base.ListFragment;
 
 import java.util.List;
 

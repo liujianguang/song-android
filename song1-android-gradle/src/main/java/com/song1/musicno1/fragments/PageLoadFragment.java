@@ -10,6 +10,7 @@ import android.widget.Button;
 import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.entity.LoadResult;
+import com.song1.musicno1.fragments.base.BaseFragment;
 import com.song1.musicno1.loader.PageLoader;
 
 import java.util.List;

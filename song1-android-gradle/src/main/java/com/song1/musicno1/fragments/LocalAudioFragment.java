@@ -7,6 +7,7 @@ import com.song1.musicno1.adapter.DataAdapter;
 import com.song1.musicno1.adapter.LocalAudioAdapter;
 import com.song1.musicno1.entity.Album;
 import com.song1.musicno1.entity.Artist;
+import com.song1.musicno1.fragments.base.ListFragment;
 import com.song1.musicno1.helpers.List8;
 import com.song1.musicno1.models.LocalAudioStore;
 import com.song1.musicno1.models.play.Audio;

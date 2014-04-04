@@ -1,4 +1,4 @@
-package com.song1.musicno1.fragments;
+package com.song1.musicno1.fragments.base;
 
 import android.app.ActionBar;
 import android.os.Bundle;

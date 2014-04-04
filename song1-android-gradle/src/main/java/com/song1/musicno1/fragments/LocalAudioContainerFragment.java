@@ -15,6 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
+import com.song1.musicno1.fragments.base.BaseFragment;
 
 import javax.inject.Inject;
 import java.lang.reflect.Field;

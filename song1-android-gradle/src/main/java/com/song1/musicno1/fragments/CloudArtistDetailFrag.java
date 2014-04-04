@@ -10,6 +10,7 @@ import butterknife.InjectView;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.CloudArtistPagerAdapter;
 import com.song1.musicno1.entity.Artist;
+import com.song1.musicno1.fragments.base.BaseFragment;
 
 import javax.inject.Inject;
 

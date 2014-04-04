@@ -7,6 +7,7 @@ import android.widget.TextView;
 import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.DataAdapter;
+import com.song1.musicno1.fragments.base.ListFragment;
 
 import java.util.List;
 import java.util.Random;

@@ -13,7 +13,7 @@ import butterknife.OnClick;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.activities.SearchActivity;
-import com.song1.musicno1.fragments.BaseFragment;
+import com.song1.musicno1.fragments.base.BaseFragment;
 
 /**
  * User: windless

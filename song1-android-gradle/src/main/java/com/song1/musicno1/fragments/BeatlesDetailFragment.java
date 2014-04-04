@@ -11,6 +11,7 @@ import butterknife.InjectView;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.MiguAudioAdapter;
 import com.song1.musicno1.entity.BeatlesAudio;
+import com.song1.musicno1.fragments.base.BaseFragment;
 import com.song1.musicno1.helpers.List8;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Players;

@@ -8,6 +8,7 @@ import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.adapter.DataAdapter;
 import com.song1.musicno1.adapter.LocalArtistAdapter;
 import com.song1.musicno1.entity.Artist;
+import com.song1.musicno1.fragments.base.ListFragment;
 import com.song1.musicno1.models.LocalAudioStore;
 
 import javax.inject.Inject;

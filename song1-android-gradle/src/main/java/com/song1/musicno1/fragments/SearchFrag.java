@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.google.common.base.Strings;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.AudioAdapter;
+import com.song1.musicno1.fragments.base.BaseFragment;
 import com.song1.musicno1.loader.MiguMusicLoaders;
 import com.song1.musicno1.models.cmmusic.CMMusicStore;
 import com.song1.musicno1.models.play.Audio;

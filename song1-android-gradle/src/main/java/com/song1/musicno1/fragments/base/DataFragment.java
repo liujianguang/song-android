@@ -1,10 +1,11 @@
-package com.song1.musicno1.fragments;
+package com.song1.musicno1.fragments.base;
 
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import com.song1.musicno1.adapter.DataAdapter;
+import com.song1.musicno1.fragments.base.BaseFragment;
 import com.song1.musicno1.loader.LoadData;
 import de.akquinet.android.androlog.Log;
 

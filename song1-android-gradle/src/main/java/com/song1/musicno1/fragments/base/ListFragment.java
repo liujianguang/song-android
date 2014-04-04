@@ -1,4 +1,4 @@
-package com.song1.musicno1.fragments;
+package com.song1.musicno1.fragments.base;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.song1.musicno1.R;
+import com.song1.musicno1.fragments.base.DataFragment;
 
 /**
  * Created by windless on 14-4-3.

@@ -1,7 +1,5 @@
 package com.song1.musicno1.fragments;
 
-import android.app.DownloadManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -10,13 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 import com.song1.musicno1.App;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.AudioAdapter;
 import com.song1.musicno1.entity.Album;
 import com.song1.musicno1.entity.Artist;
 import com.song1.musicno1.entity.Chart;
+import com.song1.musicno1.fragments.base.BaseFragment;
 import com.song1.musicno1.loader.MiguMusicLoaders;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.ui.XMListView;
