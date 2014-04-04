@@ -2,6 +2,7 @@ package com.song1.musicno1.helpers;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,12 @@ public class List8<E> extends ArrayList<E> {
   public static <E> List8<E> newList(List<E> elements) {
     List8<E> list = new List8<>();
     list.addAll(elements);
+    return list;
+  }
+
+  public static <E> List8<E> newList(E... elements) {
+    List8<E> list = new List8<>();
+    list.addAll(Lists.newArrayList(elements));
     return list;
   }
 

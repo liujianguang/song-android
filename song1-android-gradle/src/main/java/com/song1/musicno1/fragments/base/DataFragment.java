@@ -32,6 +32,10 @@ public abstract class DataFragment<T> extends BaseFragment implements LoaderMana
     return adapter;
   }
 
+  protected int getDataCount() {
+    return adapter.getCount();
+  }
+
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);

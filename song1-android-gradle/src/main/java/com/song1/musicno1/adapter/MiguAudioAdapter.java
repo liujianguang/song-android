@@ -22,7 +22,7 @@ import javax.inject.Inject;
  * Date: 13-9-5
  * Time: PM10:24
  */
-public class MiguAudioAdapter extends YYAdapter<Audio> {
+public class MiguAudioAdapter extends DataAdapter<Audio> {
 
   protected Activity activity;
 

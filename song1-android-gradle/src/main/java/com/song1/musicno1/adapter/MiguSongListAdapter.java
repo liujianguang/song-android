@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso;
  * Date: 13-12-4
  * Time: PM4:29
  */
-public class MiguSongListAdapter extends YYAdapter<SubjectInfo> {
+public class MiguSongListAdapter extends DataAdapter<SubjectInfo> {
   public MiguSongListAdapter(Context context) {
     super(context);
   }
