@@ -86,7 +86,8 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
 
     switch (resId) {
       case R.string.local_source:
-        fragment = new LocalAudioFragment();
+//        fragment = new LocalAudioFragment();
+        fragment = new TestFragment();
         break;
       case R.string.download_music:
         break;

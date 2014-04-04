@@ -1,41 +1,57 @@
 package com.song1.musicno1.fragments;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+import android.widget.TextView;
+import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
-import com.song1.musicno1.models.play.Audio;
-import com.song1.musicno1.models.play.Players;
+import com.song1.musicno1.adapter.DataAdapter;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  * Created by windless on 3/28/14.
  */
-public class TestFragment extends Fragment {
-  private final static String URL = "http://glmusic.oss-cn-hangzhou.aliyuncs.com/music/By2%20-%20%E8%A7%A6%E5%8A%A8%E5%BF%83%EF%BC%8C%E8%A7%A6%E5%8A%A8%E7%88%B1.mp3";
+public class TestFragment extends DataFragment<Integer> {
+  @Override
+  protected List<Integer> onLoad(int loadPage) {
+    setTotalPage(10);
+    List<Integer> list = Lists.newArrayList();
+    for (int i = 0; i < 20; i++) {
+      list.add(loadPage * 100 + i);
+    }
+    try {
+      Thread.sleep(5000);
+    } catch (InterruptedException ignored) {
+    }
+
+    Random random = new Random(System.currentTimeMillis());
+    int num = random.nextInt(2);
+    if (num % 2 == 0) {
+      return list;
+    }
+
+    return null;
+  }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.fragment_test, container, false);
-    ButterKnife.inject(this, view);
-    return view;
+  protected DataAdapter<Integer> newAdapter() {
+    return new Adapter();
   }
 
-  @OnClick(R.id.play)
-  public void play() {
-    Audio audio = new Audio();
-    audio.setTitle("触动心，触动爱");
-    audio.setRemotePlayUrl(URL);
-    audio.setAlbum("");
-    audio.setArtist("By2");
-    audio.setFrom(Audio.OTHER);
-  }
+  class Adapter extends DataAdapter<Integer> {
 
-  @OnClick(R.id.pause)
-  public void pause() {
-    Players.pause();
+    @Override
+    public View getView(int i, View view, ViewGroup viewGroup) {
+      if (view == null) {
+        view = View.inflate(getActivity(), R.layout.item_text, null);
+      }
+      TextView title = (TextView) view.findViewById(R.id.title);
+      title.setText("" + getDataItem(i));
+      return view;
+    }
   }
 }
+
+
