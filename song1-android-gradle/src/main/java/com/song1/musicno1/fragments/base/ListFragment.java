@@ -11,7 +11,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.song1.musicno1.R;
-import com.song1.musicno1.fragments.base.DataFragment;
 
 /**
  * Created by windless on 14-4-3.
@@ -27,7 +26,7 @@ public abstract class ListFragment<T> extends DataFragment<T> implements AbsList
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.fragment_data, container, false);
+    View view = inflater.inflate(R.layout.fragment_list, container, false);
     ButterKnife.inject(this, view);
     footerView = View.inflate(getActivity(), R.layout.footer_data, null);
     footerLoadingView = footerView.findViewById(R.id.footer_loading);
@@ -57,7 +56,7 @@ public abstract class ListFragment<T> extends DataFragment<T> implements AbsList
   }
 
   @Override
-  public void showList() {
+  public void showContent() {
     loadingView.setVisibility(View.GONE);
     emptyView.setVisibility(View.GONE);
     listView.setVisibility(View.VISIBLE);

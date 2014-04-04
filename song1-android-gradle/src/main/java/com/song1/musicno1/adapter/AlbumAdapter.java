@@ -19,7 +19,7 @@ import java.io.File;
  * Date: 13-12-10
  * Time: PM6:18
  */
-public class AlbumAdapter extends YYAdapter<Album> {
+public class AlbumAdapter extends DataAdapter<Album> {
   public AlbumAdapter(Context context) {
     super(context);
   }

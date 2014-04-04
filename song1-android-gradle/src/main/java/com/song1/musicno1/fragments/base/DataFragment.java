@@ -5,7 +5,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import com.song1.musicno1.adapter.DataAdapter;
-import com.song1.musicno1.fragments.base.BaseFragment;
 import com.song1.musicno1.loader.LoadData;
 import de.akquinet.android.androlog.Log;
 
@@ -39,7 +38,7 @@ public abstract class DataFragment<T> extends BaseFragment implements LoaderMana
     adapter = newAdapter();
     adapter.setDataList(loadData.getDataList());
     if (loadData.getDataList().size() > 0) {
-      showList();
+      showContent();
     }
     getLoaderManager().initLoader(0, null, this);
   }
@@ -88,7 +87,7 @@ public abstract class DataFragment<T> extends BaseFragment implements LoaderMana
       if (!data.isEmpty()) {
         adapter.setDataList(loadData.getDataList());
         adapter.notifyDataSetChanged();
-        showList();
+        showContent();
       } else {
         showEmpty();
       }
@@ -129,7 +128,7 @@ public abstract class DataFragment<T> extends BaseFragment implements LoaderMana
     return loadData.isEmpty();
   }
 
-  protected void showList() {
+  protected void showContent() {
   }
 
   protected void showError() {
