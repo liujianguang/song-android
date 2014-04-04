@@ -16,7 +16,7 @@ import com.squareup.picasso.Picasso;
  * Date: 13-12-4
  * Time: PM3:49
  */
-public class RankingListAdapter extends YYAdapter<RankingListInfo> {
+public class RankingListAdapter extends DataAdapter<RankingListInfo> {
 
   public RankingListAdapter(Context context) {
     super(context);

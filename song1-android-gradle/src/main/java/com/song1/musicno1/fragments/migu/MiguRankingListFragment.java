@@ -1,20 +1,15 @@
 package com.song1.musicno1.fragments.migu;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
+import com.song1.musicno1.adapter.DataAdapter;
 import com.song1.musicno1.adapter.RankingListAdapter;
 import com.song1.musicno1.entity.GetRankingListResp;
-import com.song1.musicno1.entity.LoadResult;
 import com.song1.musicno1.entity.RankingListInfo;
-import com.song1.musicno1.fragments.PageLoadFragment;
+import com.song1.musicno1.fragments.base.ListFragment;
 import com.song1.musicno1.models.MiguService;
 import com.song1.musicno1.models.RspException;
 
@@ -26,61 +21,36 @@ import java.util.List;
  * Date: 13-12-4
  * Time: PM3:38
  */
-public class MiguRankingListFragment extends PageLoadFragment<RankingListInfo> implements AdapterView.OnItemClickListener {
-  @InjectView(R.id.ranking_list) ListView listView;
-
-  private RankingListAdapter adapter;
-
-  @Override
-  protected LoadResult<RankingListInfo> getLoadResult(int page) {
-    LoadResult<RankingListInfo> result = new LoadResult<RankingListInfo>();
-    try {
-      GetRankingListResp rsp = MiguService.getInstance().fetchRankingList(adapter.getCount(), 20);
-      result.setDataList(rsp.listPageObject);
-      result.setTotalCount(rsp.recordCount);
-      result.setTotalPage(rsp.pageNum);
-      result.setLoadPage(page);
-    } catch (IOException e) {
-      result.fail();
-    } catch (RspException e) {
-      result.fail();
-    }
-
-    return result;
-  }
-
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    adapter = new RankingListAdapter(getActivity());
-  }
+public class MiguRankingListFragment extends ListFragment<RankingListInfo> implements AdapterView.OnItemClickListener {
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    listView.setAdapter(adapter);
-    listView.setOnItemClickListener(this);
+    getListView().setOnItemClickListener(this);
   }
 
   @Override
-  protected View getContentView(LayoutInflater inflater, ViewGroup viewGroup) {
-    View view = inflater.inflate(R.layout.migu_ranking_list, null);
-    ButterKnife.inject(this, view);
-    return view;
+  protected List<RankingListInfo> onLoad(int loadPage) {
+    try {
+      GetRankingListResp rsp = MiguService.getInstance().fetchRankingList(getDataCount(), 20);
+      setTotalPage(rsp.pageNum);
+      return rsp.listPageObject;
+    } catch (IOException e) {
+      return null;
+    } catch (RspException e) {
+      return null;
+    }
   }
 
   @Override
-  protected void didLoadFailed(LoadResult<RankingListInfo> data) {
+  protected DataAdapter<RankingListInfo> newAdapter() {
+    return new RankingListAdapter(getActivity());
   }
 
-  @Override
-  protected void didLoadFinish(List<RankingListInfo> dataList) {
-    adapter.setDataList(dataList);
-  }
 
   @Override
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    RankingListInfo ranking = adapter.getDataItem(position);
+    RankingListInfo ranking = getDataItem(position);
 
     MiguRankingDetailFragment frag = new MiguRankingDetailFragment();
 
