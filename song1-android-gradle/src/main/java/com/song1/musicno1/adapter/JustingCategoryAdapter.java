@@ -14,7 +14,7 @@ import com.song1.musicno1.entity.JustingCategory;
  * Date: 13-12-12
  * Time: PM2:35
  */
-public class JustingCategoryAdapter extends YYAdapter<JustingCategory> {
+public class JustingCategoryAdapter extends DataAdapter<JustingCategory> {
   public JustingCategoryAdapter(Context context) {
     super(context);
   }

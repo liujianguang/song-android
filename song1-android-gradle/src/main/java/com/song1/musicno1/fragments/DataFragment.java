@@ -31,7 +31,7 @@ public abstract class DataFragment<T> extends BaseFragment implements LoaderMana
   private                   Button   footerRetryBtn;
   private                   View     footerLoadingView;
 
-  DataAdapter<T> adapter;
+  private DataAdapter<T> adapter;
   private LoadData<T> loadData = new LoadData<>();
   protected boolean isLoading;
   private   List<T> currentPageData;
