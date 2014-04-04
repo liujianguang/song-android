@@ -10,4 +10,5 @@
   <color name="green">#7C9B51</color>
   <color name="dark_green">#437012</color>
   <color name="subtitle_text_color">#B1C0A4</color>
+  <color name="button_disabled">#ffb5c0a8</color>
 </resources>

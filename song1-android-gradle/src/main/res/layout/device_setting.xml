@@ -87,6 +87,7 @@
       <EditText
           android:layout_width="@dimen/spinner_width"
           android:layout_height="@dimen/spinner_height"
+          android:inputType="textPassword"
           android:id="@+id/networkPassEditText"/>
     </LinearLayout>
   </LinearLayout>
@@ -153,4 +154,5 @@
         android:layout_weight="1"
         android:text="@string/confirm"/>
   </LinearLayout>
+
 </LinearLayout>

@@ -8,7 +8,7 @@
 
   <style name="buttonStyle" parent="@android:style/Widget.Holo.Light.Button">
     <item name="android:background">@drawable/button</item>
-    <item name="android:textColor">?android:attr/textColor</item>
+    <item name="android:textColor">@color/button</item>
   </style>
 
   <style name="spinnerDropDownItemStyle" parent="android:Widget.Holo.DropDownItem.Spinner">
@@ -82,8 +82,11 @@
     <item name="android:gravity">center_vertical</item>
   </style>
 
-  <style name="slingUpStyle">
+  <style name="slingUpAnimation">
     <item name="android:windowEnterAnimation">@anim/enter</item>
     <item name="android:windowExitAnimation">@anim/exit</item>
+  </style>
+  <style name="dialogAnimation" parent="android:Animation.Dialog">
+    <item name="android:windowExitAnimation">@anim/dialog_exit</item>
   </style>
 </resources>

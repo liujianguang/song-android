@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -21,10 +22,12 @@ import java.util.List;
 /**
  * Created by kate on 14-3-21.
  */
-public class DeviceListDialog extends DialogFragment implements WifiModel.WifiModleListener {
+public class DeviceListDialog extends SpecialDialog implements WifiModel.ScanListener {
 
   @InjectView(R.id.deviceSpinner)
   Spinner spinner;
+  @InjectView(R.id.confirm)
+  Button  confirmButton;
 
   @OnClick(R.id.cancle)
   public void cancleClick() {
@@ -36,14 +39,14 @@ public class DeviceListDialog extends DialogFragment implements WifiModel.WifiMo
     dismiss();
 //    wifiModel.connect(spinner.getSelectedItem().toString(),"12345678");
     Object deviceName = spinner.getSelectedItem();
-    if (deviceName == null){
+    if (deviceName == null) {
       return;
     }
     deviceSettingDialog = new DeviceSettingDialog(deviceName.toString());
     deviceSettingDialog.show(getFragmentManager(), "deviceFragmentDialg");
   }
 
-  DeviceSettingDialog deviceSettingDialog;
+  DeviceSettingDialog  deviceSettingDialog;
   List<Device>         currentNetworkDevicelist;
   List<String>         allNetworkDeviceList;
   ArrayAdapter<String> deviceAdapter;
@@ -53,6 +56,7 @@ public class DeviceListDialog extends DialogFragment implements WifiModel.WifiMo
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.device_list, null);
     ButterKnife.inject(this, view);
+    confirmButton.setEnabled(false);
     return view;
   }
 
@@ -65,7 +69,7 @@ public class DeviceListDialog extends DialogFragment implements WifiModel.WifiMo
     spinner.setAdapter(deviceAdapter);
 
     wifiModel = new WifiModel(getActivity());
-    wifiModel.setListener(this);
+    wifiModel.setScanListener(this);
     wifiModel.scan();
   }
 
@@ -90,6 +94,7 @@ public class DeviceListDialog extends DialogFragment implements WifiModel.WifiMo
         }
       }
       deviceAdapter.notifyDataSetChanged();
+      confirmButton.setEnabled(true);
     }
   }
 
@@ -102,11 +107,6 @@ public class DeviceListDialog extends DialogFragment implements WifiModel.WifiMo
       return true;
     }
     return false;
-  }
-
-  @Override
-  public void connectSucc() {
-
   }
 
   private boolean isExist(String bssid) {

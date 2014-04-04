@@ -20,7 +20,7 @@ public class SlingUpDialog extends DialogFragment {
     int width = dm.widthPixels;
     int height = dm.heightPixels;
     Window window = getDialog().getWindow();
-    window.setWindowAnimations(R.style.slingUpStyle);
+    window.setWindowAnimations(R.style.slingUpAnimation);
     WindowManager.LayoutParams params = window.getAttributes();
     window.setLayout(width, WindowManager.LayoutParams.WRAP_CONTENT);
     window.setGravity(Gravity.BOTTOM);

@@ -28,7 +28,6 @@ import com.song1.musicno1.models.events.upnp.SearchDeviceEvent;
 import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.ui.SlingUpDialog;
 import com.squareup.otto.Subscribe;
-import de.akquinet.android.androlog.Log;
 import org.cybergarage.upnp.std.av.renderer.MediaRenderer;
 
 import java.util.List;
@@ -46,6 +45,10 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
   private                           WifiManager                     wifi;
 
   private Handler handler = new Handler();
+
+  List<String> nameList;
+  List<String> icoNormalList;
+  List<String> icoPressList;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,11 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
 
     networkHelp = new NetworkHelp();
     wifi = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
+
+    nameList = Lists.newArrayList(getResources().getStringArray(R.array.deviceNames));
+    icoNormalList = Lists.newArrayList(getResources().getStringArray(R.array.deviceIcosNormal));
+    icoPressList = Lists.newArrayList(getResources().getStringArray(R.array.deviceIcosPress));
+    System.out.println("nameList : " + nameList);
   }
 
   private void newAdapter() {
@@ -77,15 +85,27 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
             holder.textView.setText(getString(R.string.newDevice));
             return;
           }
+          String[] strArr = player.getName().split("-");
+          String name = strArr[0].trim();
+          int imgNormalResId = R.drawable.kids_room_ic_button_normal;
+          int imgPressResId = R.drawable.kids_room_ic_button_press;
+          int position = nameList.indexOf(name);
+          System.out.println("name position : " + position);
+          if (position != -1){
+            String imgNormalName = icoNormalList.get(position);
+            String imgPressName = icoPressList.get(position);
+            imgNormalResId = getResources().getIdentifier(imgNormalName,"drawable",getActivity().getPackageName());
+            imgPressResId = getResources().getIdentifier(imgPressName,"drawable",getActivity().getPackageName());
+          }
           if (player == selectedPlayer) {
-            holder.imageView.setImageResource(R.drawable.kids_room_ic_butoon_press);
+            holder.imageView.setImageResource(imgPressResId);
 
             holder.textView.setTextColor(Color.RED);
           } else {
-            holder.imageView.setImageResource(R.drawable.kids_room_ic_butoon_normal);
+            holder.imageView.setImageResource(imgNormalResId);
             holder.textView.setTextColor(Color.WHITE);
           }
-          holder.textView.setText(player.getName());
+          holder.textView.setText(name);
         });
   }
 

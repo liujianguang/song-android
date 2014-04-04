@@ -10,8 +10,12 @@
   <string name="setDeviceName">设置设备名称</string>
   <string name="networkPass">输入网络密码</string>
   <string name="connectDeviceMsg">正在连接设备…</string>
+  <string name="deviceConnectSucc">设备连接成功…</string>
+  <string name="deviceConnectTimeout">设备连接超时…</string>
   <string name="setDeviceMsg">正在设置设备…</string>
   <string name="connectWifiMsg">正在连接网络…</string>
+  <string name="WifiConnectSucc">网络连接成功…</string>
+  <string name="WifiConnectTimeout">网络连接超时…</string>
   <string name="not_network">网络未连接</string>
 
   <string name="action_settings">Settings</string>
@@ -180,11 +184,4 @@
   <string name="drawer_open">打开抽屉</string>
   <string name="drawer_close">关闭抽屉</string>
 
-
-  <array name="device_names">
-    <item>客厅</item>
-    <item>卧室</item>
-    <item>儿童房</item>
-    <item>书房</item>
-  </array>
 </resources>

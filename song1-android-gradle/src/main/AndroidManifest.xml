@@ -27,21 +27,15 @@
         android:name="appid"
         android:value="appid:004711975924897866"/>
 
-    <activity android:name=".activities.MainActivity">
+    <activity android:name=".activities.MainActivity"
+        android:screenOrientation="portrait">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
-    <activity
-        android:name=".activities.CurrentNotworkDeviceActivity"
-        android:screenOrientation="portrait"
-        android:theme="@style/SlideUpTheme">
-      <intent-filter>
-        <category android:name="android.intent.category.DEFAULT"/>
-      </intent-filter>
-    </activity>
-    <activity android:name=".activities.SearchActivity">
+    <activity android:name=".activities.SearchActivity"
+              android:screenOrientation="portrait">
       <intent-filter>
         <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>

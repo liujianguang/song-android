@@ -8,6 +8,8 @@ import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.os.Handler;
+import android.os.Message;
 import com.google.common.base.Strings;
 import de.akquinet.android.androlog.Log;
 
@@ -18,38 +20,61 @@ import java.util.List;
  */
 public class WifiModel {
 
+  public static final int CONNECT_SUCC     = 0;
+  public static final int CONNECT_TIME_OUT = 1;
   String ssid;
   String pass;
 
   Context           context;
   WifiManager       wifiManager;
-  WifiModleListener listener;
+  ScanListener    scanListener;
+  ConnectListener connectListener;
   boolean isConnect = false;
 
-  public interface WifiModleListener {
-    public void scanResult(List<ScanResult> scanResultList);
-
-    public void connectSucc();
+  public interface ScanListener{
+    public void scanResult(List<ScanResult> scanResults);
+  }
+  public interface ConnectListener{
+    public void connectResult(String ssid,int state);
   }
 
+  public void setScanListener(ScanListener scanListener){
+    this.scanListener = scanListener;
+  }
+  public void setConnectListener(ConnectListener connectListener){
+    this.connectListener = connectListener;
+  }
+
+
+  Handler           handler      = new Handler() {
+    @Override
+    public void handleMessage(Message msg) {
+      switch (msg.what){
+        case CONNECT_SUCC:
+        case CONNECT_TIME_OUT:
+          if (connectListener != null)
+          {
+            connectListener.connectResult(ssid,msg.what);
+          }
+          break;
+      }
+    }
+  };
   BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
     @Override
     public void onReceive(Context context, Intent intent) {
       String action = intent.getAction();
       Log.d(WifiModel.this, "action : " + action);
       if (WifiManager.SCAN_RESULTS_AVAILABLE_ACTION.equals(action)) {
-        if (listener != null) {
-          listener.scanResult(wifiManager.getScanResults());
+        if (scanListener != null) {
+          scanListener.scanResult(wifiManager.getScanResults());
         }
       } else if (WifiManager.NETWORK_STATE_CHANGED_ACTION.equals(action)) {
         NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
         System.out.println("networkInfo : " + networkInfo.getState());
         if (networkInfo.isConnected()) {
-          isConnect = false;
-          ;
-          if (listener != null) {
-            listener.connectSucc();
-          }
+          handler.removeMessages(CONNECT_TIME_OUT);
+          handler.sendEmptyMessage(CONNECT_SUCC);
         }
       }
     }
@@ -76,23 +101,22 @@ public class WifiModel {
     if (wifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLED) {
       openWifi();
     }
+
+    this.ssid = ssid;
+    this.pass = password;
+
+
     if (wifiManager.getConnectionInfo() != null) {
       if (ssid.equals(wifiManager.getConnectionInfo().getSSID())) {
-        if (listener != null) {
-          listener.connectSucc();
-        }
+        handler.sendEmptyMessage(CONNECT_SUCC);
         return;
       }
     }
-    if (isConnect) {
-      return;
-    }
-    this.ssid = ssid;
-    this.pass = password;
-    isConnect = true;
+
     WifiConfiguration wifiConfiguration = getConfig(ssid, password);
     int id = wifiManager.addNetwork(wifiConfiguration);
     if (id != -1) {
+      handler.sendEmptyMessageDelayed(CONNECT_TIME_OUT,10000);
       wifiManager.enableNetwork(id, true);
     }
   }
@@ -137,14 +161,8 @@ public class WifiModel {
       config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
       config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
       config.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
-
       config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
-
     }
     return config;
-  }
-
-  public void setListener(WifiModleListener listener) {
-    this.listener = listener;
   }
 }
