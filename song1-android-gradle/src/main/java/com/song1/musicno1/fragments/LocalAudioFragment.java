@@ -1,102 +1,69 @@
 package com.song1.musicno1.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerTitleStrip;
-import android.support.v4.view.ViewPager;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import com.google.common.collect.Lists;
-import com.song1.musicno1.R;
+import android.widget.AdapterView;
+import com.song1.musicno1.adapter.DataAdapter;
+import com.song1.musicno1.adapter.LocalAudioAdapter;
+import com.song1.musicno1.entity.Album;
+import com.song1.musicno1.entity.Artist;
+import com.song1.musicno1.helpers.List8;
+import com.song1.musicno1.models.LocalAudioStore;
+import com.song1.musicno1.models.play.Audio;
+import com.song1.musicno1.models.play.Players;
+import com.song1.musicno1.models.play.Playlist;
 
-import java.lang.reflect.Field;
+import javax.inject.Inject;
 import java.util.List;
 
 /**
  * User: windless
- * Date: 14-2-7
- * Time: PM2:01
+ * Date: 13-8-29
+ * Time: PM3:07
  */
-public class LocalAudioFragment extends BaseFragment {
+public class LocalAudioFragment extends DataFragment<Audio> implements AdapterView.OnItemClickListener {
+  @Inject LocalAudioStore localAudioStore;
+  private Album           album;
+  private Artist          artist;
 
-
-  List<Integer>  titles    = Lists.newArrayList(R.string.song, R.string.album, R.string.artist);
-  List<Fragment> fragments = Lists.newArrayList(
-      new LocalAudioFrag(),
-      new LocalAlbumFrag(),
-      new LocalArtistFrag()
-  );
-
-  @InjectView(R.id.pagerTitleStrip) PagerTitleStrip pagerTitleStrip;
-  @InjectView(R.id.pager)           ViewPager       viewPager;
-
-  FragmentAdapter adapter;
+  @Inject
+  public LocalAudioFragment() {
+  }
 
   @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    adapter = new FragmentAdapter(getChildFragmentManager());
+  protected List<Audio> onLoad(int loadPage) {
+    setTotalPage(1);
+    if (album != null) {
+      return localAudioStore.get_audios_by_album(album);
+    } else if (artist != null) {
+      return localAudioStore.audios_by_artist(artist);
+    }
+    return localAudioStore.all_audios();
+  }
+
+  @Override
+  protected DataAdapter<Audio> newAdapter() {
+    return new LocalAudioAdapter(getActivity());
   }
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    setTitle(getString(R.string.local_source));
-    pagerTitleStrip.setGravity(Gravity.CENTER);
-    pagerTitleStrip.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
-
-    viewPager.setAdapter(adapter);
+    getListView().setOnItemClickListener(this);
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.fragment_local_audio, container, false);
-    ButterKnife.inject(this, view);
-    return view;
+  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    Audio audio = getDataItem(position);
+    Playlist playlist = new Playlist(List8.newList(getDataList()), audio);
+    Players.setPlaylist(playlist);
   }
 
-  class FragmentAdapter extends FragmentPagerAdapter {
-
-    public FragmentAdapter(FragmentManager fm) {
-      super(fm);
-    }
-
-    @Override
-    public Fragment getItem(int position) {
-      return fragments.get(position);
-    }
-
-    @Override
-    public int getCount() {
-      return fragments.size();
-    }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-      return getString(titles.get(position));
-    }
+  public void setAlbum(Album album) {
+    this.album = album;
   }
 
-
-  @Override
-  public void onDetach() {
-    super.onDetach();
-    try {
-      Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
-      childFragmentManager.setAccessible(true);
-      childFragmentManager.set(this, null);
-
-    } catch (NoSuchFieldException e) {
-      throw new RuntimeException(e);
-    } catch (IllegalAccessException e) {
-      throw new RuntimeException(e);
-    }
+  public void setArtist(Artist artist) {
+    this.artist = artist;
   }
 }

@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import com.song1.musicno1.activities.MainActivity;
+import com.song1.musicno1.fragments.LocalAudioContainerFragment;
+import com.song1.musicno1.fragments.LocalAudioFragment;
 import com.song1.musicno1.services.HttpService;
 import com.song1.musicno1.services.UpnpService;
 import dagger.Module;
@@ -16,7 +18,10 @@ import dagger.Provides;
     injects = {
         UpnpService.class,
         MainActivity.class,
-        HttpService.class
+        HttpService.class,
+
+        LocalAudioContainerFragment.class,
+        LocalAudioFragment.class
     },
     library = true
 )

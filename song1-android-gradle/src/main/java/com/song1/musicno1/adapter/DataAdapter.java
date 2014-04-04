@@ -1,12 +1,19 @@
 package com.song1.musicno1.adapter;
 
+import android.content.Context;
+
 import java.util.List;
 
 /**
  * Created by windless on 14-4-4.
  */
 public abstract class DataAdapter<T> extends android.widget.BaseAdapter {
-  private List<T> dataList;
+  protected final Context context;
+  private         List<T> dataList;
+
+  public DataAdapter(Context context) {
+    this.context = context;
+  }
 
   @Override
   public int getCount() {

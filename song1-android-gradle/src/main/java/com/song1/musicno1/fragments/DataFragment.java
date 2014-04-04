@@ -1,7 +1,6 @@
 package com.song1.musicno1.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -24,7 +23,7 @@ import java.util.List;
 /**
  * Created by windless on 14-4-3.
  */
-public abstract class DataFragment<T> extends Fragment implements LoaderManager.LoaderCallbacks<LoadData<T>>, AbsListView.OnScrollListener {
+public abstract class DataFragment<T> extends BaseFragment implements LoaderManager.LoaderCallbacks<LoadData<T>>, AbsListView.OnScrollListener {
   @InjectView(R.id.loading) View     loadingView;
   @InjectView(R.id.empty)   View     emptyView;
   @InjectView(R.id.list)    ListView listView;
@@ -49,6 +48,19 @@ public abstract class DataFragment<T> extends Fragment implements LoaderManager.
     listView.addFooterView(footerView);
     return view;
   }
+
+  public ListView getListView() {
+    return listView;
+  }
+
+  public T getDataItem(int pos) {
+    return adapter.getDataItem(pos);
+  }
+
+  public List<T> getDataList() {
+    return adapter.getDataList();
+  }
+
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {

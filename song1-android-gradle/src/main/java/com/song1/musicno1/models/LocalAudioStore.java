@@ -9,6 +9,7 @@ import com.song1.musicno1.entity.Album;
 import com.song1.musicno1.entity.Artist;
 import com.song1.musicno1.models.play.Audio;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class LocalAudioStore {
   private final   ContentResolver contentResolver;
   protected final Context         context;
 
+  @Inject
   public LocalAudioStore(Context context) {
     this.context = context;
     this.contentResolver = context.getContentResolver();

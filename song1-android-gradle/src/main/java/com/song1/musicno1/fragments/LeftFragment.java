@@ -13,6 +13,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.song1.musicno1.App;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.adapter.NavigationAdapter;
@@ -86,8 +87,7 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
 
     switch (resId) {
       case R.string.local_source:
-//        fragment = new LocalAudioFragment();
-        fragment = new TestFragment();
+        fragment = App.get(LocalAudioContainerFragment.class);
         break;
       case R.string.download_music:
         break;

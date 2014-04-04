@@ -10,12 +10,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.song1.musicno1.App;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.adapter.LocalArtistAdapter;
 import com.song1.musicno1.entity.Artist;
 import com.song1.musicno1.loader.LocalArtistLoader;
 
+import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -23,16 +25,20 @@ import java.util.List;
  * Date: 13-9-3
  * Time: PM4:12
  */
-public class LocalArtistFrag extends BaseFragment implements LoaderManager.LoaderCallbacks<List<Artist>>, AdapterView.OnItemClickListener {
+public class LocalArtistFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<List<Artist>>, AdapterView.OnItemClickListener {
   LocalArtistAdapter adapter;
   LocalArtistLoader  loader;
 
   @InjectView(R.id.artist_list) ListView artist_list;
 
+  @Inject
+  public LocalArtistFragment() {
+
+  }
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-//    has_home_button(false);
     adapter = new LocalArtistAdapter(getActivity());
     loader = new LocalArtistLoader(getActivity());
   }
@@ -70,9 +76,9 @@ public class LocalArtistFrag extends BaseFragment implements LoaderManager.Loade
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     Artist artist = (Artist) artist_list.getItemAtPosition(position);
     MainActivity mainActivity = (MainActivity) getActivity();
-    LocalAudioFrag localAudioFrag = new LocalAudioFrag();
-    localAudioFrag.setArtist(artist);
-    localAudioFrag.setTitle(artist.name);
-    mainActivity.push(LocalAudioFrag.class.getName(), localAudioFrag);
+    LocalAudioFragment localAudioFragment = App.get(LocalAudioFragment.class);
+    localAudioFragment.setArtist(artist);
+    localAudioFragment.setTitle(artist.name);
+    mainActivity.push(LocalAudioFragment.class.getName(), localAudioFragment);
   }
 }

@@ -1,5 +1,6 @@
 package com.song1.musicno1.fragments;
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -37,10 +38,14 @@ public class TestFragment extends DataFragment<Integer> {
 
   @Override
   protected DataAdapter<Integer> newAdapter() {
-    return new Adapter();
+    return new Adapter(getActivity());
   }
 
   class Adapter extends DataAdapter<Integer> {
+
+    public Adapter(Context context) {
+      super(context);
+    }
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {

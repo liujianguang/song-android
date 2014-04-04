@@ -10,12 +10,14 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.song1.musicno1.App;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.adapter.AlbumAdapter;
 import com.song1.musicno1.entity.Album;
 import com.song1.musicno1.loader.LocalAlbumLoader;
 
+import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -23,20 +25,20 @@ import java.util.List;
  * Date: 13-9-3
  * Time: PM4:41
  */
-public class LocalAlbumFrag extends BaseFragment implements LoaderManager.LoaderCallbacks<List<Album>>, AdapterView.OnItemClickListener {
+public class LocalAlbumFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<List<Album>>, AdapterView.OnItemClickListener {
   LocalAlbumLoader loader;
   AlbumAdapter     adapter;
 
 
   @InjectView(R.id.album_gridlist) GridView gridView;
 
-  public LocalAlbumFrag() {
+  @Inject
+  public LocalAlbumFragment() {
   }
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-//    has_home_button(false);
     loader = new LocalAlbumLoader(getActivity());
     adapter = new AlbumAdapter(getActivity());
   }
@@ -76,9 +78,9 @@ public class LocalAlbumFrag extends BaseFragment implements LoaderManager.Loader
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     Album album = (Album) gridView.getItemAtPosition(position);
     MainActivity activity = (MainActivity) getActivity();
-    LocalAudioFrag localAudioFrag = new LocalAudioFrag();
-    localAudioFrag.setAlbum(album);
-    localAudioFrag.setTitle(album.title);
-    activity.push(LocalAudioFrag.class.getName(), localAudioFrag);
+    LocalAudioFragment localAudioFragment = App.get(LocalAudioFragment.class);
+    localAudioFragment.setAlbum(album);
+    localAudioFragment.setTitle(album.title);
+    activity.push(LocalAudioFragment.class.getName(), localAudioFragment);
   }
 }
