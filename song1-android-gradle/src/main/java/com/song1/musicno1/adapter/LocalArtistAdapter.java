@@ -3,47 +3,21 @@ package com.song1.musicno1.adapter;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.song1.musicno1.R;
 import com.song1.musicno1.entity.Artist;
-import com.song1.musicno1.helpers.ViewHelper;
-import java.util.List;
 
 /**
  * User: windless
  * Date: 13-9-3
  * Time: PM8:22
  */
-public class LocalArtistAdapter extends BaseAdapter {
-  private final Context context;
-
-  private List<Artist> artists;
+public class LocalArtistAdapter extends DataAdapter<Artist> {
 
   public LocalArtistAdapter(Context context) {
-    this.context = context;
-  }
-
-  public void artists(List<Artist> artists) {
-    this.artists = artists;
-    notifyDataSetChanged();
-  }
-
-  @Override
-  public int getCount() {
-    return artists == null ? 0 : artists.size();
-  }
-
-  @Override
-  public Object getItem(int position) {
-    return artists.get(position);
-  }
-
-  @Override
-  public long getItemId(int position) {
-    return position;
+    super(context);
   }
 
   @Override
@@ -58,9 +32,8 @@ public class LocalArtistAdapter extends BaseAdapter {
       holder = (ViewHolder) view.getTag();
     }
 
-    Artist artist = artists.get(position);
+    Artist artist = getDataItem(position);
 
-//    ViewHelper.set_title(context, holder.title, artist.name);
     holder.title.setText(artist.name);
     return view;
   }

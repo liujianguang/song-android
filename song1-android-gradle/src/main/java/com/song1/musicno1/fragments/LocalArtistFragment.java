@@ -1,21 +1,14 @@
 package com.song1.musicno1.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 import com.song1.musicno1.App;
-import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
+import com.song1.musicno1.adapter.DataAdapter;
 import com.song1.musicno1.adapter.LocalArtistAdapter;
 import com.song1.musicno1.entity.Artist;
-import com.song1.musicno1.loader.LocalArtistLoader;
+import com.song1.musicno1.models.LocalAudioStore;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -25,56 +18,33 @@ import java.util.List;
  * Date: 13-9-3
  * Time: PM4:12
  */
-public class LocalArtistFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<List<Artist>>, AdapterView.OnItemClickListener {
-  LocalArtistAdapter adapter;
-  LocalArtistLoader  loader;
-
-  @InjectView(R.id.artist_list) ListView artist_list;
+public class LocalArtistFragment extends DataFragment<Artist> implements AdapterView.OnItemClickListener {
+  @Inject LocalAudioStore localAudioStore;
 
   @Inject
   public LocalArtistFragment() {
-
-  }
-
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    adapter = new LocalArtistAdapter(getActivity());
-    loader = new LocalArtistLoader(getActivity());
   }
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    artist_list.setAdapter(adapter);
-    artist_list.setOnItemClickListener(this);
-    getLoaderManager().initLoader(0, null, this);
+    getListView().setOnItemClickListener(this);
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.local_artist_frag, container, false);
-    ButterKnife.inject(this, view);
-    return view;
+  protected List<Artist> onLoad(int loadPage) {
+    setTotalPage(1);
+    return localAudioStore.all_artists();
   }
 
   @Override
-  public Loader<List<Artist>> onCreateLoader(int id, Bundle args) {
-    return loader;
-  }
-
-  @Override
-  public void onLoadFinished(Loader<List<Artist>> loader, List<Artist> data) {
-    adapter.artists(data);
-  }
-
-  @Override
-  public void onLoaderReset(Loader<List<Artist>> loader) {
+  protected DataAdapter<Artist> newAdapter() {
+    return new LocalArtistAdapter(getActivity());
   }
 
   @Override
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    Artist artist = (Artist) artist_list.getItemAtPosition(position);
+    Artist artist = getDataItem(position);
     MainActivity mainActivity = (MainActivity) getActivity();
     LocalAudioFragment localAudioFragment = App.get(LocalAudioFragment.class);
     localAudioFragment.setArtist(artist);
