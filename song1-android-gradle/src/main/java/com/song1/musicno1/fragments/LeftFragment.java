@@ -18,7 +18,10 @@ import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.adapter.NavigationAdapter;
 import com.song1.musicno1.dialogs.LoadingDialog;
+import com.song1.musicno1.helpers.MainBus;
+import com.song1.musicno1.models.events.upnp.MediaServerEvent;
 import com.song1.musicno1.models.migu.MiguIniter;
+import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -146,5 +149,23 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
     } else {
       runnable.run();
     }
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    MainBus.register(this);
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    MainBus.unregister(this);
+  }
+
+  @Subscribe
+  public void onMediaServerChanged(MediaServerEvent event) {
+    adapter.setMediaServers(event.getServerList());
+    adapter.notifyDataSetChanged();
   }
 }

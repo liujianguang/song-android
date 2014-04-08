@@ -4,13 +4,17 @@ import android.app.Service;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.song1.musicno1.App;
 import com.song1.musicno1.helpers.List8;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.NetworkHelp;
 import com.song1.musicno1.models.events.upnp.DeviceChangeEvent;
+import com.song1.musicno1.models.events.upnp.MediaServerEvent;
 import com.song1.musicno1.models.events.upnp.SearchDeviceEvent;
 import com.song1.musicno1.models.play.LocalRenderer;
+import com.song1.musicno1.models.play.MediaServerImpl;
 import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.play.RemoteRenderer;
 import com.squareup.otto.Produce;
@@ -24,6 +28,7 @@ import org.cybergarage.upnp.std.av.renderer.MediaRenderer;
 import org.cybergarage.upnp.std.av.server.MediaServer;
 
 import javax.inject.Inject;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -33,15 +38,19 @@ import java.util.concurrent.Executors;
  * Time: PM5:14
  */
 public class UpnpService extends Service implements DeviceChangeListener {
-  protected Player                    localPlayer;
-  @Inject   LocalRenderer             localRenderer;
-  private   MediaController           mediaController;
-  private   NetworkHelp               networkHelp;
-  private   ExecutorService           executorService;
-  private   WifiManager.MulticastLock lock;
-  private   List8<Player>             playerList;
+  @Inject LocalRenderer localRenderer;
+
+  private Player                    localPlayer;
+  private MediaController           mediaController;
+  private NetworkHelp               networkHelp;
+  private ExecutorService           executorService;
+  private WifiManager.MulticastLock lock;
+  private List8<Player>             playerList;
+
+  private Map<String, com.song1.musicno1.models.play.MediaServer> mediaServerMap = Maps.newHashMap();
 
   @Override
+
   public IBinder onBind(Intent intent) {
     return null;
   }
@@ -128,6 +137,13 @@ public class UpnpService extends Service implements DeviceChangeListener {
 
   private void addMediaServer(Device device) {
     Log.d(this, "Device added " + device.getFriendlyName() + " " + device.getDeviceType());
+    mediaServerMap.put(device.getUDN(), new MediaServerImpl(device));
+    MainBus.post(mediaServers());
+  }
+
+  @Produce
+  public MediaServerEvent mediaServers() {
+    return new MediaServerEvent(Lists.newArrayList(mediaServerMap.values()));
   }
 
   private void addMediaRenderer(Device device) {

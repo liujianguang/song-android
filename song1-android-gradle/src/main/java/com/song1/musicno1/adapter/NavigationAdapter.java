@@ -7,9 +7,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
+import com.song1.musicno1.models.play.MediaServer;
 
 import java.util.List;
 
@@ -21,20 +21,15 @@ import java.util.List;
 public class NavigationAdapter extends BaseAdapter {
   private final int VIEW_TYPE_TITLE = 0;
   private final int VIEW_TYPE_ITEM  = 1;
-//  private final NameStore nameStore;
 
-  private List<Object> items;
-  private Context      context;
-  private List<Object> channels;
-//  private List<Device> mediaServers;
+  private   List<Object>      items;
+  private   Context           context;
+  private   List<Object>      channels;
+  protected List<MediaServer> serverList;
 
-    public NavigationAdapter(Context context){
-        this.context = context;
-    }
-//  public NavigationAdapter(Context context, NameStore nameStore) {
-//    this.context = context;
-//    this.nameStore = nameStore;
-//  }
+  public NavigationAdapter(Context context) {
+    this.context = context;
+  }
 
   public void setChannels(List<Object> channels) {
     this.channels = channels;
@@ -44,10 +39,10 @@ public class NavigationAdapter extends BaseAdapter {
   private void update() {
     items = Lists.newArrayList();
     items.addAll(channels);
-//    if (mediaServers != null && mediaServers.size() > 0) {
-//      items.add(context.getString(R.string.shared_device));
-//      items.addAll(mediaServers);
-//    }
+    if (serverList != null && serverList.size() > 0) {
+      items.add(context.getString(R.string.shared_device));
+      items.addAll(serverList);
+    }
     notifyDataSetChanged();
   }
 
@@ -103,14 +98,9 @@ public class NavigationAdapter extends BaseAdapter {
     } else if (item instanceof Integer) {
       Integer stringId = (Integer) item;
       holder.title.setText(stringId);
-    } else {
-//      Device device = (Device) item;
-//      String name = nameStore.getName(device.getSsid());
-//      if (Strings.isNullOrEmpty(name)) {
-//        holder.title.setText(device.getName());
-//      } else {
-//        holder.title.setText(name);
-//      }
+    } else if (item instanceof MediaServer) {
+      MediaServer device = (MediaServer) item;
+      holder.title.setText(device.getName());
     }
     return convertView;
   }
@@ -120,10 +110,10 @@ public class NavigationAdapter extends BaseAdapter {
     return getItemViewType(position) == VIEW_TYPE_ITEM;
   }
 
-//  public void setMediaServers(List<Device> mediaServers) {
-////    this.mediaServers = mediaServers;
-//    update();
-//  }
+  public void setMediaServers(List<MediaServer> serverList) {
+    this.serverList = serverList;
+    update();
+  }
 
   class ViewHolder {
     @InjectView(R.id.title) TextView title;
