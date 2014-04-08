@@ -125,8 +125,6 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
       }
     }
-
-    throw new RuntimeException("Crash");
   }
 
   public void replaceMain(Fragment fragment) {
