@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.crashlytics.android.Crashlytics;
 import com.song1.musicno1.App;
 import com.song1.musicno1.R;
 import com.song1.musicno1.fragments.LeftFragment;
@@ -44,6 +45,8 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Crashlytics.start(this);
+
     Log.init();
     App.inject(this);
 
@@ -79,6 +82,7 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
     drawerLayout.setDrawerListener(actionBarDrawerToggle);
     getActionBar().setDisplayHomeAsUpEnabled(true);
     getActionBar().setHomeButtonEnabled(true);
+
   }
 
   @Override
@@ -122,6 +126,7 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
       }
     }
 
+    throw new RuntimeException("Crash");
   }
 
   public void replaceMain(Fragment fragment) {

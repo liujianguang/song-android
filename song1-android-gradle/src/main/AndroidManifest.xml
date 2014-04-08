@@ -44,5 +44,6 @@
     <service android:name=".services.UpnpService"/>
     <service android:name=".services.PlayService"/>
     <service android:name=".services.HttpService"/>
+    <meta-data android:name="com.crashlytics.ApiKey" android:value="4c0aa8408557455114aa8a1ac5941ffe72488f16"/>
   </application>
 </manifest>
