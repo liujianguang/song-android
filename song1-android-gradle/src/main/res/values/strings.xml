@@ -183,6 +183,7 @@
   <string name="play_mode">播放模式</string>
   <string name="drawer_open">打开抽屉</string>
   <string name="drawer_close">关闭抽屉</string>
+
   <string name="red_heart">我喜欢</string>
   <string name="favorite">收藏</string>
   <string name="new_favorite">新建</string>
@@ -194,4 +195,6 @@
   <string name="add_to_favorite">添加 %1$s 到 %2$s</string>
   <string name="favorite_contains_audio">%1$s 已经添加到 %2$s</string>
 
+  <string name="task_doing">下载中(%s)</string>
+  <string name="task_done">已下载(%s)</string>
 </resources>

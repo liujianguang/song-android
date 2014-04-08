@@ -20,6 +20,7 @@ import com.song1.musicno1.adapter.NavigationAdapter;
 import com.song1.musicno1.dialogs.LoadingDialog;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.events.upnp.MediaServerEvent;
+import com.song1.musicno1.fragments.download.DownLoadManagerFragment;
 import com.song1.musicno1.models.migu.MiguIniter;
 import com.song1.musicno1.models.play.MediaServer;
 import com.squareup.otto.Subscribe;
@@ -71,6 +72,7 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
 //    items.add(R.string.download_music);
     items.add(R.string.favorite);
     items.add(R.string.red_heart);
+    items.add(R.string.download_music);
 
     items.add(getString(R.string.cloud_source));
     items.add(R.string.migu_title);
@@ -96,6 +98,7 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
         fragment = App.get(LocalAudioContainerFragment.class);
         break;
       case R.string.download_music:
+        fragment = new DownLoadManagerFragment();
         break;
       case R.string.favorite:
         fragment = new FavoritesFragment();
