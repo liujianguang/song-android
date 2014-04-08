@@ -128,6 +128,7 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
     ButterKnife.inject(this, getView());
     titleTextView.setText(ssid);
     progressBar.setMax(90);
+    confirm.setEnabled(false);
     deviceNameList = Lists.newArrayList(getResources().getStringArray(R.array.deviceNames));
     deviceNameAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, deviceNameList);
     networkAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, networkList);
@@ -167,6 +168,8 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
       }
 //      deviceAdapter.notifyDataSetChanged();
       networkAdapter.notifyDataSetChanged();
+      confirm.setEnabled(true);
+
     }
   }
 

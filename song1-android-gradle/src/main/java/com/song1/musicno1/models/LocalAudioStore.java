@@ -22,7 +22,6 @@ import static android.provider.MediaStore.MediaColumns.DATA;
 public class LocalAudioStore {
   private final   ContentResolver contentResolver;
   protected final Context         context;
-
   @Inject
   public LocalAudioStore(Context context) {
     this.context = context;
@@ -34,8 +33,8 @@ public class LocalAudioStore {
     Cursor cursor = contentResolver.query(
         EXTERNAL_CONTENT_URI,
         new String[]{TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE},
-        MIME_TYPE + " IN (?,?,?,?)",
-        new String[]{"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac"},
+        MIME_TYPE + " IN (?,?,?,?,?,?)",
+        new String[] {"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac","audio/aac","audio/wma"},
         TITLE
     );
 
@@ -47,8 +46,8 @@ public class LocalAudioStore {
     Cursor cursor = contentResolver.query(
         EXTERNAL_CONTENT_URI,
         new String[]{TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE},
-        MIME_TYPE + " IN (?,?,?,?) AND " + col + "=?",
-        new String[]{"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac", selection},
+        MIME_TYPE + " IN (?,?,?,?,?,?) AND " + col + "=?",
+        new String[]{"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac","audio/aac","audio/wma", selection},
         TITLE
     );
 
@@ -110,8 +109,8 @@ public class LocalAudioStore {
     Cursor cursor = contentResolver.query(
         EXTERNAL_CONTENT_URI,
         new String[]{"count(*) AS count"},
-        MIME_TYPE + " IN (?,?,?,?)",
-        new String[]{"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac"}, null
+        MIME_TYPE + " IN (?,?,?,?,?,?)",
+        new String[]{"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac","audio/aac","audio/wma"}, null
     );
     if (cursor == null) return 0;
 
@@ -123,8 +122,8 @@ public class LocalAudioStore {
     Cursor cursor = contentResolver.query(
         EXTERNAL_CONTENT_URI,
         new String[]{"count(*) AS count"},
-        MIME_TYPE + " IN (?,?,?)",
-        new String[]{"audio/wav", "audio/x-wav", "audio/flac"}, null
+        MIME_TYPE + " IN (?,?,?,?,?)",
+        new String[]{"audio/wav", "audio/x-wav", "audio/flac","audio/aac","audio/wma"}, null
     );
     if (cursor == null) return 0;
     cursor.moveToFirst();
@@ -215,8 +214,8 @@ public class LocalAudioStore {
     Cursor cursor = contentResolver.query(
         EXTERNAL_CONTENT_URI,
         new String[]{TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE},
-        MIME_TYPE + " IN (?,?,?)",
-        new String[]{"audio/wav", "audio/x-wav", "audio/flac"},
+        MIME_TYPE + " IN (?,?,?,?,?)",
+        new String[]{"audio/wav", "audio/x-wav", "audio/flac","audio/aac","audio/wma"},
         TITLE);
     if (cursor == null) {
       return null;

@@ -34,10 +34,11 @@
         android:gravity="center">
 
       <Spinner
-          android:layout_width="@dimen/spinner_width"
-          android:layout_height="@dimen/spinner_height"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
           android:layout_marginRight="50dp"
           android:layout_marginLeft="50dp"
+          android:background="@drawable/dropdown_bg"
           android:id="@+id/deviceSpinner"/>
     </LinearLayout>
 
