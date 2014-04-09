@@ -40,7 +40,7 @@
     <item name="android:textColor">@color/white</item>
     <item name="android:dialogTheme">@style/dialogTheme</item>
     <item name="android:buttonStyle">@style/buttonStyle</item>
-    <item name="android:popupMenuStyle">@style/spinnerDropDownStyle</item>
+    <item name="android:spinnerDropDownItemStyle">@style/spinnerDropDownItemStyle</item>
   </style>
 
   <style name="ListItem">
