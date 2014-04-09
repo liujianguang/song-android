@@ -17,6 +17,7 @@ public class LoadData<T> {
   public LoadData() {
     list = Lists.newArrayList();
     loadPage = 1;
+    totalPage = 1;
   }
 
   public List<T> getDataList() {

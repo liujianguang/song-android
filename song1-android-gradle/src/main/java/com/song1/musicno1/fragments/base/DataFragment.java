@@ -36,6 +36,11 @@ public abstract class DataFragment<T> extends BaseFragment implements LoaderMana
     return adapter.getCount();
   }
 
+  public void reload() {
+    loadData = new LoadData<>();
+    getLoaderManager().restartLoader(0, null, this);
+  }
+
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
@@ -44,6 +49,7 @@ public abstract class DataFragment<T> extends BaseFragment implements LoaderMana
     if (loadData.getDataList().size() > 0) {
       showContent();
     }
+
     getLoaderManager().initLoader(0, null, this);
   }
 

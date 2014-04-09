@@ -2,6 +2,7 @@ package com.song1.musicno1;
 
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.app.Application;
+import com.song1.musicno1.models.Favorite;
 import com.song1.musicno1.modules.AppModule;
 import dagger.ObjectGraph;
 
@@ -24,6 +25,8 @@ public class App extends Application {
     super.onCreate();
     _objectGraph = ObjectGraph.create(new AppModule(this));
     ActiveAndroid.initialize(this);
+
+    Favorite.init();
   }
 
   @Override

@@ -15,10 +15,9 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import com.song1.musicno1.R;
 import com.song1.musicno1.helpers.MainBus;
-import com.song1.musicno1.models.events.play.CurrentPlayerEvent;
-import com.song1.musicno1.models.events.play.CurrentPlayerStateEvent;
-import com.song1.musicno1.models.events.play.UpdateVolumeEvent;
-import com.song1.musicno1.models.events.play.VolumeEvent;
+import com.song1.musicno1.models.FavoriteAudio;
+import com.song1.musicno1.models.events.play.*;
+import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.models.play.Volume;
@@ -28,13 +27,16 @@ import com.viewpagerindicator.CirclePageIndicator;
 /**
  * Created by windless on 3/28/14.
  */
-public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
-  protected int state;
 
+public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
+  protected int   state;
+  protected Audio currentAudio;
+
+  @InjectView(R.id.volume_bar) SeekBar             volumeBar;
   @InjectView(R.id.play)       ImageButton         playBtn;
   @InjectView(R.id.pager)      ViewPager           pager;
   @InjectView(R.id.indicator)  CirclePageIndicator indicator;
-  @InjectView(R.id.volume_bar) SeekBar             volumeBar;
+  @InjectView(R.id.favorite)   ImageButton         favoriteBtn;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,6 +71,11 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
   @Subscribe
   public void currentPlayerChanged(CurrentPlayerEvent event) {
     volumeBar.setEnabled(event.getCurrentPlayer() != null);
+  }
+
+  @Subscribe
+  public void onPositionInfoChanged(PositionEvent event) {
+    setCurrentAudio(event.getAudio());
   }
 
   @Subscribe
@@ -138,8 +145,46 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
 
   @Override
   public void onStopTrackingTouch(SeekBar seekBar) {
-
   }
+
+  public Audio getCurrentAudio() {
+    return currentAudio;
+  }
+
+  public void setCurrentAudio(Audio currentAudio) {
+    if (this.currentAudio != currentAudio) {
+      this.currentAudio = currentAudio;
+      if (currentAudio != null) {
+        if (FavoriteAudio.isFavorite(currentAudio)) {
+          favoriteBtn.setBackgroundResource(R.color.red);
+        } else {
+          favoriteBtn.setBackgroundResource(android.R.color.transparent);
+        }
+      } else {
+      }
+    }
+    favoriteBtn.setEnabled(currentAudio != null);
+  }
+
+  @OnClick(R.id.favorite)
+  public void favorite() {
+    if (currentAudio == null) return;
+
+    if (FavoriteAudio.isFavorite(currentAudio)) {
+      FavoriteAudio.removeFromFavorite(currentAudio);
+      favoriteBtn.setBackgroundResource(android.R.color.transparent);
+    } else {
+      FavoriteAudio.addToFavorite(currentAudio);
+      favoriteBtn.setBackgroundResource(R.color.red);
+    }
+
+    Fragment mainFragment = getFragmentManager().findFragmentById(R.id.main);
+    if (mainFragment instanceof RedheartFragment) {
+      RedheartFragment heartFragment = (RedheartFragment) mainFragment;
+      heartFragment.reload();
+    }
+  }
+
 
   class Adapter extends FragmentPagerAdapter {
 

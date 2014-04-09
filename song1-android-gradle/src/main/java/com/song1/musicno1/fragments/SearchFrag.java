@@ -18,7 +18,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import com.google.common.base.Strings;
 import com.song1.musicno1.R;
-import com.song1.musicno1.adapter.AudioAdapter;
+import com.song1.musicno1.adapter.OldAudioAdapter;
 import com.song1.musicno1.fragments.base.BaseFragment;
 import com.song1.musicno1.loader.MiguMusicLoaders;
 import com.song1.musicno1.models.cmmusic.CMMusicStore;
@@ -32,10 +32,10 @@ import java.util.List;
  * Date: 13-9-9
  * Time: PM11:38
  */
-public class SearchFrag extends BaseFragment implements TextWatcher, LoaderManager.LoaderCallbacks<Object>, AudioAdapter.MoreMenuListener, ListView.OnItemClickListener, XMListView.Listener, View.OnFocusChangeListener, View.OnTouchListener {
+public class SearchFrag extends BaseFragment implements TextWatcher, LoaderManager.LoaderCallbacks<Object>, OldAudioAdapter.MoreMenuListener, ListView.OnItemClickListener, XMListView.Listener, View.OnFocusChangeListener, View.OnTouchListener {
   XMListView       list_view;
   MiguMusicLoaders loaders;
-  AudioAdapter     adapter;
+  OldAudioAdapter  adapter;
   CMMusicStore     music_store;
 
   private EditText edit_view;
@@ -59,7 +59,7 @@ public class SearchFrag extends BaseFragment implements TextWatcher, LoaderManag
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     list_view = new XMListView();
-    adapter = new AudioAdapter(getActivity());
+    adapter = new OldAudioAdapter(getActivity());
     music_store = new CMMusicStore(getActivity());
     loaders = new MiguMusicLoaders(getActivity(), music_store);
   }

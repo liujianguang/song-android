@@ -69,6 +69,8 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
     items.add(getString(R.string.my_music));
     items.add(R.string.local_source);
 //    items.add(R.string.download_music);
+    items.add(R.string.favorite);
+    items.add(R.string.red_heart);
 
     items.add(getString(R.string.cloud_source));
     items.add(R.string.migu_title);
@@ -94,6 +96,12 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
         fragment = App.get(LocalAudioContainerFragment.class);
         break;
       case R.string.download_music:
+        break;
+      case R.string.favorite:
+        fragment = new FavoritesFragment();
+        break;
+      case R.string.red_heart:
+        fragment = new RedheartFragment();
         break;
       case R.string.migu_title:
         initMigu(() -> {

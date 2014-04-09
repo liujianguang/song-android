@@ -3,8 +3,8 @@ package com.song1.musicno1.fragments;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import com.song1.musicno1.adapter.AudioAdapter;
 import com.song1.musicno1.adapter.DataAdapter;
-import com.song1.musicno1.adapter.LocalAudioAdapter;
 import com.song1.musicno1.entity.Album;
 import com.song1.musicno1.entity.Artist;
 import com.song1.musicno1.fragments.base.ListFragment;
@@ -44,7 +44,7 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
 
   @Override
   protected DataAdapter<Audio> newAdapter() {
-    return new LocalAudioAdapter(getActivity());
+    return new AudioAdapter(getActivity());
   }
 
   @Override

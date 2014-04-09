@@ -62,6 +62,8 @@ public abstract class ListFragment<T> extends DataFragment<T> implements AbsList
     listView.setVisibility(View.VISIBLE);
     retryView.setVisibility(View.GONE);
 
+    footerLoadingView.setVisibility(View.VISIBLE);
+
     if (isDataFull()) {
       listView.removeFooterView(footerView);
     }
@@ -85,8 +87,11 @@ public abstract class ListFragment<T> extends DataFragment<T> implements AbsList
     if (isDataEmpty()) {
       loadingView.setVisibility(View.VISIBLE);
       emptyView.setVisibility(View.GONE);
-      listView.setVisibility(View.GONE);
+      listView.setVisibility(View.VISIBLE);
       retryView.setVisibility(View.GONE);
+
+      footerRetryBtn.setVisibility(View.GONE);
+      footerLoadingView.setVisibility(View.GONE);
     } else {
       footerRetryBtn.setVisibility(View.GONE);
       footerLoadingView.setVisibility(View.VISIBLE);

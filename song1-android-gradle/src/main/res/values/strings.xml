@@ -183,5 +183,7 @@
   <string name="play_mode">播放模式</string>
   <string name="drawer_open">打开抽屉</string>
   <string name="drawer_close">关闭抽屉</string>
+  <string name="red_heart">我喜欢</string>
+  <string name="favorite">收藏</string>
 
 </resources>

@@ -10,7 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import com.song1.musicno1.App;
 import com.song1.musicno1.R;
-import com.song1.musicno1.adapter.AudioAdapter;
+import com.song1.musicno1.adapter.OldAudioAdapter;
 import com.song1.musicno1.entity.Album;
 import com.song1.musicno1.entity.Artist;
 import com.song1.musicno1.entity.Chart;
@@ -30,12 +30,12 @@ import java.util.List;
 public class CloudAudiosFrag extends BaseFragment
     implements LoaderManager.LoaderCallbacks<Object>,
     XMListView.Listener,
-    AudioAdapter.MoreMenuListener,
+    OldAudioAdapter.MoreMenuListener,
     ListView.OnItemClickListener {
 
   XMListView       list_view;
   MiguMusicLoaders migu_loaders;
-  AudioAdapter     adapter;
+  OldAudioAdapter  adapter;
 //  @Inject PlayerAction     player_action;
 //  @Inject CMMusicStore     music_store;
 //  @Inject MainBus          bus;
