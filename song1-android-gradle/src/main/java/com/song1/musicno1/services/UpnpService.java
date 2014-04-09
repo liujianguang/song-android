@@ -10,13 +10,11 @@ import com.song1.musicno1.App;
 import com.song1.musicno1.helpers.List8;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.NetworkHelp;
+import com.song1.musicno1.models.events.play.RemoteRenderingControl;
 import com.song1.musicno1.models.events.upnp.DeviceChangeEvent;
 import com.song1.musicno1.models.events.upnp.MediaServerEvent;
 import com.song1.musicno1.models.events.upnp.SearchDeviceEvent;
-import com.song1.musicno1.models.play.LocalRenderer;
-import com.song1.musicno1.models.play.MediaServerImpl;
-import com.song1.musicno1.models.play.Player;
-import com.song1.musicno1.models.play.RemoteRenderer;
+import com.song1.musicno1.models.play.*;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 import de.akquinet.android.androlog.Log;
@@ -61,7 +59,7 @@ public class UpnpService extends Service implements DeviceChangeListener {
     Log.init();
     App.inject(this);
 
-    localPlayer = new Player(this, localRenderer);
+    localPlayer = new Player(this, localRenderer, new LocalRenderingControl(this));
     playerList = List8.newList();
     playerList.add(localPlayer);
 
@@ -148,7 +146,7 @@ public class UpnpService extends Service implements DeviceChangeListener {
 
   private void addMediaRenderer(Device device) {
     Log.d(this, "Device added " + device.getFriendlyName() + " " + device.getDeviceType());
-    playerList.add(new Player(this, new RemoteRenderer(device)));
+    playerList.add(new Player(this, new RemoteRenderer(device), new RemoteRenderingControl(device)));
     MainBus.post(produceDeviceList());
   }
 

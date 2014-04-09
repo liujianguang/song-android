@@ -24,7 +24,8 @@ public class Player {
   private final static int TIMEOUT = 20;
 
   private final int[] PLAY_MODES = new int[]{MODE_NORMAL, MODE_REPEAT_ALL, MODE_REPEAT_ONE, MODE_SHUFFLE};
-  protected final Context context;
+  protected final Context          context;
+  protected final RenderingControl renderingControl;
 
   protected OnPositionChangedListener positionListener;
   protected int                       state;
@@ -68,9 +69,10 @@ public class Player {
     }
   };
 
-  public Player(Context context, Renderer renderer) {
+  public Player(Context context, Renderer renderer, RenderingControl renderingControl) {
     this.renderer = renderer;
     this.context = context;
+    this.renderingControl = renderingControl;
 
     if (renderer instanceof LocalRenderer) {
       LocalRenderer localRenderer = (LocalRenderer) renderer;
@@ -302,6 +304,35 @@ public class Player {
     playMode = (playMode + 1) % PLAY_MODES.length;
   }
 
+  public void setVolume(int volume) {
+    try {
+      renderingControl.setVolume(volume);
+    } catch (RendererException ignored) {
+    }
+  }
+
+  public Volume getVolume() {
+    try {
+      return renderingControl.getVolume();
+    } catch (RendererException e) {
+      return null;
+    }
+  }
+
+  public void volumeUp() {
+    try {
+      renderingControl.volumeUp();
+    } catch (RendererException ignored) {
+    }
+  }
+
+  public void volumeDown() {
+    try {
+      renderingControl.volumeDown();
+    } catch (RendererException ignored) {
+    }
+  }
+
   public interface OnStateChangedListener {
     void onStateChanged(Player player, int state);
   }
@@ -317,4 +348,5 @@ public class Player {
   private interface CheckRunnable {
     boolean check() throws RendererException;
   }
+
 }

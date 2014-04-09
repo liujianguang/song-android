@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import com.google.common.collect.Maps;
-import com.song1.musicno1.fragments.DeviceFragment;
 import com.song1.musicno1.helpers.LatestExecutor;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.events.play.*;
@@ -20,11 +19,12 @@ import java.util.Map;
  * Created by windless on 3/27/14.
  */
 public class PlayService extends Service {
-  protected LatestExecutor   executor;
+  protected LatestExecutor   playExecutor;
   protected Player           currentPlayer;
   protected SetPlaylistEvent waitingEvent;
 
   protected Map<String, Playlist> playlistMap = Maps.newHashMap();
+  protected LatestExecutor volumeExecutor;
 
   @Override
   public IBinder onBind(Intent intent) {
@@ -35,7 +35,8 @@ public class PlayService extends Service {
   public void onCreate() {
     super.onCreate();
     MainBus.register(this);
-    executor = new LatestExecutor();
+    playExecutor = new LatestExecutor();
+    volumeExecutor = new LatestExecutor();
   }
 
   @Override
@@ -69,7 +70,7 @@ public class PlayService extends Service {
   }
 
   private void playNext(Player player) {
-    executor.submit(() -> {
+    playExecutor.submit(() -> {
       Playlist playlist = playlistMap.get(player.getId());
       if (playlist != null) {
         playlist.autoNext(player.getPlayMode());
@@ -97,7 +98,7 @@ public class PlayService extends Service {
 
   @Subscribe
   public void play(PlayEvent event) {
-    executor.submit(() -> {
+    playExecutor.submit(() -> {
       Player player = currentPlayer;
       if (player != null) {
         Playlist playlist = playlistMap.get(player.getId());
@@ -111,7 +112,7 @@ public class PlayService extends Service {
 
   @Subscribe
   public void resume(ResumeEvent event) {
-    executor.submit(() -> {
+    playExecutor.submit(() -> {
       Player player = currentPlayer;
       if (player != null && player.getState() == Player.PAUSED) {
         player.play();
@@ -121,7 +122,7 @@ public class PlayService extends Service {
 
   @Subscribe
   public void pause(PauseEvent event) {
-    executor.submit(() -> {
+    playExecutor.submit(() -> {
       Player player = currentPlayer;
       if (player != null) {
         player.pause();
@@ -131,7 +132,7 @@ public class PlayService extends Service {
 
   @Subscribe
   public void seek(SeekEvent event) {
-    executor.submit(() -> {
+    playExecutor.submit(() -> {
       Player player = currentPlayer;
       if (player != null) {
         player.seek(event.getSeekTo());
@@ -229,11 +230,40 @@ public class PlayService extends Service {
     postEvent(currentPlayerPosition());
     postEvent(currentPlayerState());
     postEvent(currentPlayerPlayMode());
+    updateVolume(null);
   }
 
   private void postEvent(Object event) {
     if (event != null) {
       MainBus.post(event);
+    }
+  }
+
+  @Subscribe
+  public void onUpdateVolumeEvent(UpdateVolumeEvent event) {
+    updateVolume(event);
+  }
+
+  private void updateVolume(UpdateVolumeEvent event) {
+    Player player = currentPlayer;
+    if (player != null) {
+      volumeExecutor.submit(() -> {
+        if (event != null) {
+          if (event.isUp()) {
+            player.volumeUp();
+            MainBus.post(new VolumeEvent(player.getVolume()));
+          } else if (event.isDown()) {
+            player.volumeDown();
+            MainBus.post(new VolumeEvent(player.getVolume()));
+          } else if (event.getVolume() != null) {
+            player.setVolume(event.getVolume().getCurrent());
+          } else {
+            MainBus.post(new VolumeEvent(player.getVolume()));
+          }
+        } else {
+          MainBus.post(new VolumeEvent(player.getVolume()));
+        }
+      });
     }
   }
 }

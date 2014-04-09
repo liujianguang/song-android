@@ -1,6 +1,5 @@
 package com.song1.musicno1.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,26 +9,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.song1.musicno1.R;
 import com.song1.musicno1.helpers.MainBus;
+import com.song1.musicno1.models.events.play.CurrentPlayerEvent;
 import com.song1.musicno1.models.events.play.CurrentPlayerStateEvent;
+import com.song1.musicno1.models.events.play.UpdateVolumeEvent;
+import com.song1.musicno1.models.events.play.VolumeEvent;
 import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.play.Players;
+import com.song1.musicno1.models.play.Volume;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.CirclePageIndicator;
 
 /**
  * Created by windless on 3/28/14.
  */
-public class PlayingFragment extends Fragment {
+public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
   protected int state;
 
-  @InjectView(R.id.play)      ImageButton         playBtn;
-  @InjectView(R.id.pager)     ViewPager           pager;
-  @InjectView(R.id.indicator) CirclePageIndicator indicator;
+  @InjectView(R.id.play)       ImageButton         playBtn;
+  @InjectView(R.id.pager)      ViewPager           pager;
+  @InjectView(R.id.indicator)  CirclePageIndicator indicator;
+  @InjectView(R.id.volume_bar) SeekBar             volumeBar;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,6 +49,9 @@ public class PlayingFragment extends Fragment {
     pager.setAdapter(new Adapter(getChildFragmentManager()));
     pager.setCurrentItem(1);
     indicator.setViewPager(pager);
+
+    volumeBar.setOnSeekBarChangeListener(this);
+    volumeBar.setEnabled(false);
   }
 
   @Override
@@ -56,6 +64,11 @@ public class PlayingFragment extends Fragment {
   public void onResume() {
     super.onResume();
     MainBus.register(this);
+  }
+
+  @Subscribe
+  public void currentPlayerChanged(CurrentPlayerEvent event) {
+    volumeBar.setEnabled(event.getCurrentPlayer() != null);
   }
 
   @Subscribe
@@ -76,6 +89,13 @@ public class PlayingFragment extends Fragment {
     }
   }
 
+  @Subscribe
+  public void onCurrentPlayerVolumeChanged(VolumeEvent event) {
+    Volume volume = event.getVolume();
+    volumeBar.setMax(volume.getMax());
+    volumeBar.setProgress(volume.getCurrent());
+  }
+
   @OnClick(R.id.play)
   public void onPlayClick() {
     switch (state) {
@@ -91,7 +111,7 @@ public class PlayingFragment extends Fragment {
   @OnClick(R.id.player_list)
   public void onPlayerListClick() {
     DeviceFragment deviceFragment = new DeviceFragment();
-    deviceFragment.show(getFragmentManager(),"deviceFragment");
+    deviceFragment.show(getFragmentManager(), "deviceFragment");
   }
 
   @OnClick(R.id.next)
@@ -102,6 +122,23 @@ public class PlayingFragment extends Fragment {
   @OnClick(R.id.previous)
   public void playPrevious() {
     Players.previous();
+  }
+
+  @Override
+  public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
+    if (fromUser) {
+      MainBus.post(new UpdateVolumeEvent(new Volume(i, seekBar.getMax())));
+    }
+  }
+
+  @Override
+  public void onStartTrackingTouch(SeekBar seekBar) {
+
+  }
+
+  @Override
+  public void onStopTrackingTouch(SeekBar seekBar) {
+
   }
 
   class Adapter extends FragmentPagerAdapter {

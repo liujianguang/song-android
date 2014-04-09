@@ -7,6 +7,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import butterknife.ButterKnife;
@@ -18,7 +19,9 @@ import com.song1.musicno1.fragments.LeftFragment;
 import com.song1.musicno1.fragments.PlayBarFragment;
 import com.song1.musicno1.fragments.PlayingFragment;
 import com.song1.musicno1.fragments.TestFragment;
+import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.ViewHelper;
+import com.song1.musicno1.models.events.play.UpdateVolumeEvent;
 import com.song1.musicno1.services.HttpService;
 import com.song1.musicno1.services.PlayService;
 import com.song1.musicno1.services.UpnpService;
@@ -164,6 +167,7 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
   @Override
   public void onPanelExpanded(View panel) {
     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    MainBus.post(new UpdateVolumeEvent());
   }
 
   @Override
@@ -173,5 +177,18 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
 
   public void collapsePlayingPanel() {
     slidingUpPanel.collapsePane();
+  }
+
+  @Override
+  public boolean onKeyDown(int keyCode, KeyEvent event) {
+    switch (keyCode) {
+      case KeyEvent.KEYCODE_VOLUME_DOWN:
+        MainBus.post(new UpdateVolumeEvent(UpdateVolumeEvent.DOWN));
+        return true;
+      case KeyEvent.KEYCODE_VOLUME_UP:
+        MainBus.post(new UpdateVolumeEvent(UpdateVolumeEvent.UP));
+        return true;
+    }
+    return super.onKeyDown(keyCode, event);
   }
 }
