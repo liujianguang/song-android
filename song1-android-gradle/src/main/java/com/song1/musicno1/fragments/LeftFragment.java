@@ -21,6 +21,7 @@ import com.song1.musicno1.dialogs.LoadingDialog;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.events.upnp.MediaServerEvent;
 import com.song1.musicno1.models.migu.MiguIniter;
+import com.song1.musicno1.models.play.MediaServer;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -122,8 +123,11 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
     if (obj instanceof Integer) {
       resId = Integer.parseInt(obj.toString());
       showFragment(resId);
-    } else {
-      return;
+    } else if (obj instanceof MediaServer) {
+      MediaServer mediaServer = (MediaServer) obj;
+      MediaContainerFragment fragment = MediaContainerFragment.newInstance("0", mediaServer.getName());
+      fragment.setMediaServer(mediaServer);
+      mainActivity.replaceMain(fragment);
     }
   }
 

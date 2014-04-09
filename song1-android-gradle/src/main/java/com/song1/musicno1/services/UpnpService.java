@@ -137,7 +137,7 @@ public class UpnpService extends Service implements DeviceChangeListener {
 
   private void addMediaServer(Device device) {
     Log.d(this, "Device added " + device.getFriendlyName() + " " + device.getDeviceType());
-    mediaServerMap.put(device.getUDN(), new MediaServerImpl(device));
+    mediaServerMap.put(device.getUDN(), new MediaServerImpl(mediaController, device));
     MainBus.post(mediaServers());
   }
 
