@@ -72,9 +72,9 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
   @Override
   public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
     if (i == 0) { // 我喜欢
-      RedheartFragment fragment = new RedheartFragment();
+      FavoriteAudioFragment fragment = new FavoriteAudioFragment();
       MainActivity activity = (MainActivity) getActivity();
-      activity.push(RedheartFragment.class.getName(), fragment);
+      activity.push(FavoriteAudioFragment.class.getName(), fragment);
     }
   }
 

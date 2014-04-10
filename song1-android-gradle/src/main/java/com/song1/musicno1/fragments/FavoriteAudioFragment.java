@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Created by windless on 14-4-10.
  */
-public class RedheartFragment extends ListFragment<Audio> implements AdapterView.OnItemClickListener {
+public class FavoriteAudioFragment extends ListFragment<Audio> implements AdapterView.OnItemClickListener {
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);

@@ -155,15 +155,18 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     if (this.currentAudio != currentAudio) {
       this.currentAudio = currentAudio;
       if (currentAudio != null) {
-        if (FavoriteAudio.isFavorite(currentAudio)) {
-          favoriteBtn.setBackgroundResource(R.color.red);
+        if (currentAudio.canFavorite()) {
+          if (FavoriteAudio.isFavorite(currentAudio)) {
+            favoriteBtn.setBackgroundResource(R.color.red);
+          } else {
+            favoriteBtn.setBackgroundResource(android.R.color.transparent);
+          }
         } else {
           favoriteBtn.setBackgroundResource(android.R.color.transparent);
         }
-      } else {
       }
     }
-    favoriteBtn.setEnabled(currentAudio != null);
+    favoriteBtn.setEnabled(currentAudio != null && currentAudio.canFavorite());
   }
 
   @OnClick(R.id.favorite)
@@ -179,8 +182,8 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     }
 
     Fragment mainFragment = getFragmentManager().findFragmentById(R.id.main);
-    if (mainFragment instanceof RedheartFragment) {
-      RedheartFragment heartFragment = (RedheartFragment) mainFragment;
+    if (mainFragment instanceof FavoriteAudioFragment) {
+      FavoriteAudioFragment heartFragment = (FavoriteAudioFragment) mainFragment;
       heartFragment.reload();
     }
   }

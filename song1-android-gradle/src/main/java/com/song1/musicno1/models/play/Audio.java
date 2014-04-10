@@ -71,4 +71,8 @@ public class Audio {
   public void setFrom(int from) {
     this.from = from;
   }
+
+  public boolean canFavorite() {
+    return from == LOCAL || from == MIGU;
+  }
 }

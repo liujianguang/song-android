@@ -101,7 +101,7 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
         fragment = new FavoritesFragment();
         break;
       case R.string.red_heart:
-        fragment = new RedheartFragment();
+        fragment = new FavoriteAudioFragment();
         break;
       case R.string.migu_title:
         initMigu(() -> {
