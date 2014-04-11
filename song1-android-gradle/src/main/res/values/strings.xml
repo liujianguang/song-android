@@ -185,5 +185,7 @@
   <string name="drawer_close">关闭抽屉</string>
   <string name="red_heart">我喜欢</string>
   <string name="favorite">收藏</string>
+  <string name="new_favorite">新建</string>
+  <string name="please_input_favorite_name">请输入新建歌单名称</string>
 
 </resources>

@@ -1,9 +1,7 @@
 package com.song1.musicno1.fragments;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -13,6 +11,7 @@ import com.activeandroid.query.Select;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.adapter.DataAdapter;
+import com.song1.musicno1.dialogs.InputDialog;
 import com.song1.musicno1.fragments.base.DataFragment;
 import com.song1.musicno1.models.Favorite;
 
@@ -37,6 +36,31 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
     setTitle(getString(R.string.favorite));
     listView.setAdapter(getAdapter());
     listView.setOnItemClickListener(this);
+    setHasOptionsMenu(true);
+  }
+
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.favorites, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.add:
+        createFavorite();
+        return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+  private void createFavorite() {
+    InputDialog.openWithTitle(getString(R.string.please_input_favorite_name))
+        .onConfirmed((name) -> {
+          Favorite.create(name);
+          reload();
+        }).show(getFragmentManager(), "");
   }
 
   @Override
@@ -71,11 +95,15 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
 
   @Override
   public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-    if (i == 0) { // 我喜欢
-      FavoriteAudioFragment fragment = new FavoriteAudioFragment();
-      MainActivity activity = (MainActivity) getActivity();
-      activity.push(FavoriteAudioFragment.class.getName(), fragment);
+    FavoriteAudioFragment fragment = new FavoriteAudioFragment();
+    if (i == 0) {
+      fragment.setTitle(getString(R.string.red_heart));
+    } else {
+      fragment.setTitle(getDataItem(i).name);
     }
+    fragment.setFavorite(getDataItem(i));
+    MainActivity activity = (MainActivity) getActivity();
+    activity.push(FavoriteAudioFragment.class.getName(), fragment);
   }
 
   class ViewHolder {

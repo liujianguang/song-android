@@ -23,16 +23,17 @@ import java.util.List;
  * Created by windless on 14-4-10.
  */
 public class FavoriteAudioFragment extends ListFragment<Audio> implements AdapterView.OnItemClickListener {
+  private Favorite favorite;
+
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    setTitle(getString(R.string.red_heart));
     getListView().setOnItemClickListener(this);
   }
 
   @Override
   protected List<Audio> onLoad(int loadPage) {
-    Favorite redHeart = Favorite.load(Favorite.class, 1);
+    Favorite redHeart = Favorite.load(Favorite.class, favorite.getId());
     List8<FavoriteAudio> audios = List8.newList(redHeart.audios());
     return audios.map((favoriteAudio) -> favoriteAudio.toAudio());
   }
@@ -70,6 +71,10 @@ public class FavoriteAudioFragment extends ListFragment<Audio> implements Adapte
   public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
     Playlist playlist = new Playlist(List8.newList(getDataList()), getDataItem(i));
     Players.setPlaylist(playlist);
+  }
+
+  public void setFavorite(Favorite favorite) {
+    this.favorite = favorite;
   }
 
   class ViewHolder {

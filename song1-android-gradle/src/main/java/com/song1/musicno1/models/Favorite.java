@@ -3,6 +3,7 @@ package com.song1.musicno1.models;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Delete;
 
 import java.util.List;
 
@@ -31,5 +32,17 @@ public class Favorite extends Model {
       redHeart.name = "Red Heart";
       redHeart.save();
     }
+  }
+
+
+  public static void create(String name) {
+    Favorite favorite = new Favorite();
+    favorite.name = name;
+    favorite.save();
+  }
+
+  public void destroy() {
+    new Delete().from(FavoriteAudio.class).where("favorite = ?", getId());
+    delete();
   }
 }
