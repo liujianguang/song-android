@@ -4,6 +4,8 @@ import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.ActionMode;
 
 /**
  * User: windless
@@ -33,5 +35,13 @@ public class BaseFragment extends Fragment {
     if (title != null) {
       getActivity().getActionBar().setTitle(title);
     }
+  }
+
+  public ActionBarActivity getActionBarActivity() {
+    return (ActionBarActivity) getActivity();
+  }
+
+  public ActionMode startActionMode(ActionMode.Callback callback) {
+    return getActionBarActivity().startSupportActionMode(callback);
   }
 }

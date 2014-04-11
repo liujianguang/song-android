@@ -36,11 +36,12 @@ import javax.inject.Inject;
  * Time: PM4:40
  */
 public class MainActivity extends ActionBarActivity implements SlidingUpPanelLayout.PanelSlideListener {
-  protected                  PlayBarFragment      playBarFragment;
-  @InjectView(R.id.drawer)   DrawerLayout         drawerLayout;
-  @InjectView(R.id.sling_up) SlidingUpPanelLayout slidingUpPanel;
-  @InjectView(R.id.play_bar) View                 playBarView;
-  @InjectView(R.id.main)     View                 mainView;
+  protected                         PlayBarFragment      playBarFragment;
+  @InjectView(R.id.drawer)          DrawerLayout         drawerLayout;
+  @InjectView(R.id.sling_up)        SlidingUpPanelLayout slidingUpPanel;
+  @InjectView(R.id.play_bar)        View                 playBarView;
+  @InjectView(R.id.main)            View                 mainView;
+  @InjectView(R.id.playing_section) View                 playingSectionView;
 
   @Inject   LeftFragment          leftFragment;
   protected ActionBarDrawerToggle actionBarDrawerToggle;
@@ -190,5 +191,13 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
         return true;
     }
     return super.onKeyDown(keyCode, event);
+  }
+
+  public void hidePlayBar() {
+    playingSectionView.setVisibility(View.GONE);
+  }
+
+  public void showPlayBar() {
+    playingSectionView.setVisibility(View.VISIBLE);
   }
 }

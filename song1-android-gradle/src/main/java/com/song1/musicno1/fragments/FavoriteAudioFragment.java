@@ -12,7 +12,6 @@ import com.song1.musicno1.adapter.DataAdapter;
 import com.song1.musicno1.fragments.base.ListFragment;
 import com.song1.musicno1.helpers.List8;
 import com.song1.musicno1.models.Favorite;
-import com.song1.musicno1.models.FavoriteAudio;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.models.play.Playlist;
@@ -33,9 +32,12 @@ public class FavoriteAudioFragment extends ListFragment<Audio> implements Adapte
 
   @Override
   protected List<Audio> onLoad(int loadPage) {
-    Favorite redHeart = Favorite.load(Favorite.class, favorite.getId());
-    List8<FavoriteAudio> audios = List8.newList(redHeart.audios());
-    return audios.map((favoriteAudio) -> favoriteAudio.toAudio());
+    if (favorite == null) {
+      Favorite redHeart = Favorite.load(Favorite.class, 1);
+      return List8.newList(redHeart.audios()).map((favoriteAudio) -> favoriteAudio.toAudio());
+    } else {
+      return List8.newList(favorite.audios()).map((favoriteAudio) -> favoriteAudio.toAudio());
+    }
   }
 
   @Override

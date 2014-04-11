@@ -187,5 +187,7 @@
   <string name="favorite">收藏</string>
   <string name="new_favorite">新建</string>
   <string name="please_input_favorite_name">请输入新建歌单名称</string>
+  <string name="delete">删除</string>
+  <string name="selected_items">选中 %s 项</string>
 
 </resources>
