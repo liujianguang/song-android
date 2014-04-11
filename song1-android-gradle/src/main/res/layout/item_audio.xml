@@ -39,6 +39,17 @@
       android:layout_height="60dp">
 
     <Button
+        android:id="@+id/add_to"
+        android:text="@string/add_to"
+        android:textSize="@dimen/text_size_small"
+        android:layout_weight="1"
+        android:drawablePadding="-8dp"
+        android:layout_gravity="center_vertical"
+        android:drawableTop="@drawable/ic_wifi"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"/>
+
+    <Button
         android:id="@+id/red_heart"
         android:text="@string/red_heart"
         android:textSize="@dimen/text_size_small"

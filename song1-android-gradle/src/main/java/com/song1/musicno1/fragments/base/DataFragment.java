@@ -38,6 +38,7 @@ public abstract class DataFragment<T> extends BaseFragment implements LoaderMana
 
   public void reload() {
     loadData = new LoadData<>();
+    adapter.getDataList().clear();
     getLoaderManager().restartLoader(0, null, this);
   }
 
@@ -96,11 +97,11 @@ public abstract class DataFragment<T> extends BaseFragment implements LoaderMana
 
       if (!data.isEmpty()) {
         adapter.setDataList(loadData.getDataList());
-        adapter.notifyDataSetChanged();
         showContent();
       } else {
         showEmpty();
       }
+      adapter.notifyDataSetChanged();
     } else {
       showError();
     }

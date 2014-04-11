@@ -189,5 +189,9 @@
   <string name="please_input_favorite_name">请输入新建歌单名称</string>
   <string name="delete">删除</string>
   <string name="selected_items">选中 %s 项</string>
+  <string name="add_to">添加</string>
+  <string name="create_new_favorite">创建新的歌单</string>
+  <string name="add_to_favorite">添加 %1$s 到 %2$s</string>
+  <string name="favorite_contains_audio">%1$s 已经添加到 %2$s</string>
 
 </resources>

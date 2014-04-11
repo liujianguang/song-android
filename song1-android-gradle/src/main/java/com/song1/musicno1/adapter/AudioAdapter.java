@@ -1,6 +1,7 @@
 package com.song1.musicno1.adapter;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -10,6 +11,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.song1.musicno1.R;
+import com.song1.musicno1.dialogs.FavoritesDialog;
 import com.song1.musicno1.models.FavoriteAudio;
 import com.song1.musicno1.models.play.Audio;
 
@@ -35,6 +37,7 @@ public class AudioAdapter extends DataAdapter<Audio> {
     }
     Audio audio = getDataItem(i);
     holder.menuBtn.setTag(audio);
+    holder.addToBtn.setTag(audio);
     holder.redHeartBtn.setTag(audio);
     holder.title.setText(audio.getTitle());
 
@@ -56,6 +59,7 @@ public class AudioAdapter extends DataAdapter<Audio> {
     @InjectView(R.id.menu)      View        menu;
     @InjectView(R.id.menu_btn)  ImageButton menuBtn;
     @InjectView(R.id.red_heart) Button      redHeartBtn;
+    @InjectView(R.id.add_to)    Button      addToBtn;
 
     public ViewHolder(View view) {
       ButterKnife.inject(this, view);
@@ -77,6 +81,21 @@ public class AudioAdapter extends DataAdapter<Audio> {
       Audio audio = (Audio) view.getTag();
       FavoriteAudio.toggleRedHeart(audio);
       notifyDataSetChanged();
+    }
+
+    @OnClick(R.id.add_to)
+    public void addToFavorite(View view) {
+      Audio audio = (Audio) view.getTag();
+      showFavoritesDialog(audio);
+    }
+
+    private void showFavoritesDialog(Audio audio) {
+      if (context instanceof FragmentActivity) {
+        FragmentActivity activity = (FragmentActivity) context;
+        FavoritesDialog favoritesDialog = new FavoritesDialog();
+        favoritesDialog.setAddingAudio(audio);
+        favoritesDialog.show(activity.getSupportFragmentManager(), "");
+      }
     }
   }
 }

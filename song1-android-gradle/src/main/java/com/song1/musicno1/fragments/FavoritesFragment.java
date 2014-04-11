@@ -6,7 +6,6 @@ import android.view.*;
 import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.activeandroid.query.Select;
 import com.google.common.collect.Maps;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
@@ -109,7 +108,8 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
 
   @Override
   protected List<Favorite> onLoad(int loadPage) {
-    return new Select().from(Favorite.class).execute();
+    List<Favorite> all = Favorite.getAll();
+    return all;
   }
 
   @Override
