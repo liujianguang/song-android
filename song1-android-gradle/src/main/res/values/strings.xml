@@ -197,4 +197,6 @@
 
   <string name="task_doing">下载中(%s)</string>
   <string name="task_done">已下载(%s)</string>
+  <string name="not_quit_msg">多留会</string>
+  <string name="quit_msg">下次再来</string>
 </resources>

@@ -29,6 +29,9 @@
     <item name="android:divider">@color/red</item>
   </style>
 
+  <style name="popupMenuStyle" parent="android:Widget.Holo.Light.ListPopupWindow">
+     <item name="android:popupBackground">@color/content_bg_color</item>
+  </style>
   <!-- Base application theme. -->
   <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
     <!-- Customize your theme here. -->
@@ -41,6 +44,7 @@
     <item name="android:dialogTheme">@style/dialogTheme</item>
     <item name="android:buttonStyle">@style/buttonStyle</item>
     <item name="android:spinnerDropDownItemStyle">@style/spinnerDropDownItemStyle</item>
+    <item name="android:popupMenuStyle">@style/popupMenuStyle</item>
   </style>
 
   <style name="ListItem">

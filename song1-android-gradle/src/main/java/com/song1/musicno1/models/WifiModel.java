@@ -116,8 +116,8 @@ public class WifiModel {
     WifiConfiguration wifiConfiguration = getConfig(ssid, password);
     int id = wifiManager.addNetwork(wifiConfiguration);
     if (id != -1) {
-      handler.sendEmptyMessageDelayed(CONNECT_TIME_OUT,10000);
-      wifiManager.enableNetwork(id, true);
+      //handler.sendEmptyMessageDelayed(CONNECT_TIME_OUT,20000);
+      wifiManager.enableNetwork(id, false);
     }
   }
 

@@ -11,6 +11,7 @@
       android:layout_alignParentRight="true"
       android:layout_centerVertical="true"
       android:scaleType="fitEnd"
+      android:src="@drawable/ic_drop_down_normal"
       android:background="@null"
       android:contentDescription="@null"/>
 

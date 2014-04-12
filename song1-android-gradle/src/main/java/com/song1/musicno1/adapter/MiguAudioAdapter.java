@@ -13,7 +13,9 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import com.song1.musicno1.R;
 import com.song1.musicno1.entity.SongInfo;
+import com.song1.musicno1.models.DownLoadManager;
 import com.song1.musicno1.models.play.Audio;
+import com.song1.musicno1.util.ToastUtil;
 
 import javax.inject.Inject;
 
@@ -58,7 +60,7 @@ public class MiguAudioAdapter extends DataAdapter<Audio> {
     @InjectView(R.id.subtitle) TextView    subtitle;
     @InjectView(R.id.more)     ImageButton more;
 
-    private SongInfo info;
+    private Audio audio;
 
     public ViewHolder(View view) {
       ButterKnife.inject(this, view);
@@ -66,7 +68,7 @@ public class MiguAudioAdapter extends DataAdapter<Audio> {
 
     @OnClick(R.id.more)
     public void onMoreClick(View view) {
-      info = (SongInfo) view.getTag();
+      audio = (Audio) view.getTag();
       PopupMenu popupMenu = new PopupMenu(activity, view);
       popupMenu.inflate(R.menu.migu_audio_action);
       popupMenu.setOnMenuItemClickListener(this);
@@ -75,12 +77,12 @@ public class MiguAudioAdapter extends DataAdapter<Audio> {
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-//      switch (item.getItemId()) {
-//        case R.id.add_to_playlist:
-//          playerAction.add_to_playlist(info.toAudio());
-//          break;
-//        case R.id.download:
-//          if (info.toAudio().from == Audio.MIGU) {
+      switch (item.getItemId()) {
+        case R.id.add_to_playlist:
+          //playerAction.add_to_playlist(info.toAudio());
+          break;
+        case R.id.download:
+          if (audio.getFrom() == Audio.MIGU) {
 //            musicStore.download_url(activity, info.toAudio(), new GetDownloadUrlCallback() {
 //              @Override
 //              public void OnUrlGot(String code, String msg, String url) {
@@ -89,10 +91,14 @@ public class MiguAudioAdapter extends DataAdapter<Audio> {
 //                }
 //              }
 //            });
-//          } else {
+          } else {
 //            download(info.toAudio().remote_play_uri, info.musicName);
-//          }
-//      }
+            ToastUtil.show(context,audio.getTitle());
+            DownLoadManager downLoadManager = DownLoadManager.getDownLoadManager(context);
+            DownLoadManager.Task task = downLoadManager.newTask(audio.getTitle(),audio.getRemotePlayUrl());
+            downLoadManager.startTask(task);
+          }
+      }
       return true;
     }
 

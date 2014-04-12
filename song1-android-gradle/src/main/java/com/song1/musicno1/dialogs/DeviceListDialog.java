@@ -102,7 +102,7 @@ public class DeviceListDialog extends SpecialDialog implements WifiModel.ScanLis
     if (ssid.startsWith("yy")){
       return true;
     }
-    if (ssid.startsWith("DOMIG") && ssid.endsWith("ONE"))
+    if (ssid.startsWith("Domigo") && ssid.endsWith("ONE"))
     {
       return true;
     }

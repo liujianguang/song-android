@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/list_item_height"
+              android:minHeight="@dimen/list_item_height"
+              android:descendantFocusability="blocksDescendants">
+
+  <LinearLayout
+      android:layout_width="@dimen/list_item_height"
+      android:layout_height="match_parent"
+      android:gravity="center">
+      <ImageButton
+          android:id="@+id/startButton"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          style="@style/buttonStyle"/>
+  </LinearLayout>
+
+  <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      android:layout_weight="1">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+      <TextView
+          android:id="@+id/fileNameTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="@dimen/list_item_title_text_size"
+          android:singleLine="true"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+      <ProgressBar
+          style="?android:attr/progressBarStyleHorizontal"
+          android:layout_width="match_parent"
+          android:layout_height="2dp"
+          android:id="@+id/progressBar"
+          android:layout_alignParentTop="true"
+          android:background="@color/white"
+          android:progressDrawable="@drawable/progressbar"/>
+
+      <TextView
+          android:id="@+id/sizeTextView"
+          android:layout_below="@id/progressBar"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="@dimen/list_item_subtitle_text_size"/>
+    </RelativeLayout>
+  </LinearLayout>
+
+  <RelativeLayout
+      android:layout_width="@dimen/list_item_height"
+      android:layout_height="match_parent">
+      <ImageButton
+          android:id="@+id/delButton"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:src="@drawable/ic_delete_normal"
+          style="@style/buttonStyle"
+          android:layout_centerInParent="true"/>
+  </RelativeLayout>
+</LinearLayout>

@@ -1,5 +1,6 @@
 package com.song1.musicno1.activities;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import butterknife.InjectView;
 import com.crashlytics.android.Crashlytics;
 import com.song1.musicno1.App;
 import com.song1.musicno1.R;
+import com.song1.musicno1.dialogs.QuitDialog;
 import com.song1.musicno1.fragments.LeftFragment;
 import com.song1.musicno1.fragments.PlayBarFragment;
 import com.song1.musicno1.fragments.PlayingFragment;
@@ -123,11 +125,17 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
       }
     } else {
+      if (getSupportFragmentManager().getBackStackEntryCount() == 0){
+        QuitDialog dialog = new QuitDialog();
+        dialog.show(getSupportFragmentManager(),"quitDialog");
+        return;
+      }
       super.onBackPressed();
       if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
       }
+
     }
   }
 
