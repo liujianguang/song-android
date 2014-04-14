@@ -1,7 +1,6 @@
 package com.song1.musicno1.adapter;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -11,6 +10,7 @@ import butterknife.InjectView;
 import com.google.common.base.Strings;
 import com.song1.musicno1.R;
 import com.song1.musicno1.entity.Album;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
@@ -43,12 +43,14 @@ public class AlbumAdapter extends DataAdapter<Album> {
     }
 
     if (Strings.isNullOrEmpty(album.album_art)) {
-//      Picasso.with(context).load(R.drawable.album_art_default_big).into(holder.image);
-      holder.image.setImageResource(R.drawable.album_art_default_big);
+      Picasso.with(context).load(R.drawable.album_art_default_small).into(holder.image);
     } else {
-//      Picasso.with(context).load(new File(album.album_art)).into(holder.image);
-      holder.image.setImageURI(Uri.fromFile(new File(album.album_art)));
-//      holder.image.setImageResource(R.drawable.album_art_default_big);
+      File file = new File(album.album_art);
+      if (file.exists()) {
+        Picasso.with(context).load(new File(album.album_art)).into(holder.image);
+      } else {
+        Picasso.with(context).load(R.drawable.album_art_default_small).into(holder.image);
+      }
     }
 
     return convertView;

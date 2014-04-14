@@ -74,8 +74,8 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
 
     items.add(getString(R.string.cloud_source));
     items.add(R.string.migu_title);
-    items.add(R.string.beatles_music);
-    items.add(R.string.justing);
+//    items.add(R.string.beatles_music);
+//    items.add(R.string.justing);
 
     adapter.setChannels(items);
     listView.setOnItemClickListener(this);
