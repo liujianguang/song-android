@@ -57,6 +57,7 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
   String ssid;
   DeviceConfig deviceConfig = null;
 
+  boolean firstScan = true;
   Handler handler = new Handler() {
     @Override
     public void handleMessage(Message msg) {
@@ -104,13 +105,13 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
 
   @OnClick(R.id.confirm)
   public void confirmClick() {
-    setEnable();
+    setEnable(false);
     deviceConfig = new DeviceConfig();
     deviceConfig.setFriendlyName(deviceNameSpinner.getSelectedItem().toString());
     deviceConfig.setSsid(ssid);
     deviceConfig.setWifiSsid(networkSpinner.getSelectedItem().toString());
     deviceConfig.setWifiPass(networkPassView.getText().toString());
-    startConnect(deviceConfig.getSsid(), "12345678");
+    startConnect(deviceConfig.getSsid(), null);
   }
 
 
@@ -168,8 +169,10 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
       }
 //      deviceAdapter.notifyDataSetChanged();
       networkAdapter.notifyDataSetChanged();
-      confirm.setEnabled(true);
-
+      if (firstScan){
+        confirm.setEnabled(true);
+        firstScan = false;
+      }
     }
   }
 
@@ -198,16 +201,17 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
         } else {
           handler.sendEmptyMessage(STATUS_CONNECT_WIFI_TIMEOUT);
         }
+        setEnable(true);
         break;
     }
   }
 
-  public void setEnable() {
-    getDialog().setCanceledOnTouchOutside(false);
-    deviceNameSpinner.setEnabled(false);
-    networkSpinner.setEnabled(false);
-    networkPassView.setEnabled(false);
-    confirm.setEnabled(false);
+  public void setEnable(boolean isEnable) {
+    getDialog().setCanceledOnTouchOutside(isEnable);
+    deviceNameSpinner.setEnabled(isEnable);
+    networkSpinner.setEnabled(isEnable);
+    networkPassView.setEnabled(isEnable);
+    confirm.setEnabled(isEnable);
   }
 
   private void startConnect(String ssid, String password) {
@@ -227,7 +231,6 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
 
   private void setDevice() {
     handler.sendEmptyMessage(STATUS_SET_DEVICE);
-
     new Thread(new Runnable() {
       @Override
       public void run() {
@@ -243,7 +246,7 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
     }).start();
   }
   private void waitDeviceSetSucc(){
-    handler.sendEmptyMessageDelayed(STATUS_SET_DEVICE_SUCC, 10000);
+    handler.sendEmptyMessageDelayed(STATUS_SET_DEVICE_SUCC, 12000);
 //    new Thread(new Runnable() {
 //      @Override
 //      public void run() {
@@ -261,7 +264,6 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
 //        }
 //      }
 //    });
-
   }
 
   private void stopConnect() {
