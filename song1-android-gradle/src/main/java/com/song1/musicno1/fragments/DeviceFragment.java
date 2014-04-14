@@ -18,6 +18,7 @@ import butterknife.InjectView;
 import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.BaseAdapter;
+import com.song1.musicno1.constants.Constants;
 import com.song1.musicno1.dialogs.DeviceListDialog;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.NetworkHelp;
@@ -47,8 +48,8 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
   private Handler handler = new Handler();
 
   List<String> nameList;
-  List<String> icoNormalList;
-  List<String> icoPressList;
+  List<Integer> icoNormalList;
+  List<Integer> icoSelectedList;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -69,9 +70,9 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
     networkHelp = new NetworkHelp();
     wifi = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
 
-    nameList = Lists.newArrayList(getResources().getStringArray(R.array.deviceNames));
-    icoNormalList = Lists.newArrayList(getResources().getStringArray(R.array.deviceIcosNormal));
-    icoPressList = Lists.newArrayList(getResources().getStringArray(R.array.deviceIcosPress));
+    nameList = Lists.newArrayList(Constants.DEVICE_NAMES);
+    icoNormalList = Lists.newArrayList(Constants.DEVICE_IOC_NORMAL);
+    icoSelectedList = Lists.newArrayList(Constants.DEVICE_IOC_SELECTED);
     System.out.println("nameList : " + nameList);
   }
 
@@ -87,18 +88,17 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
           }
           String[] strArr = player.getName().split("-");
           String name = strArr[0].trim();
-          int imgNormalResId = R.drawable.kids_room_ic_button_normal;
-          int imgPressResId = R.drawable.kids_room_ic_button_press;
+          int imgNormalResId = R.drawable.systemdefault_ic_butoon_nor;
+          int imgSelectedResId = R.drawable.systemdefault_ic_butoon_press;
           int position = nameList.indexOf(name);
           System.out.println("name position : " + position);
           if (position != -1){
-            String imgNormalName = icoNormalList.get(position);
-            String imgPressName = icoPressList.get(position);
-            imgNormalResId = getResources().getIdentifier(imgNormalName,"drawable",getActivity().getPackageName());
-            imgPressResId = getResources().getIdentifier(imgPressName,"drawable",getActivity().getPackageName());
+            imgNormalResId = icoNormalList.get(position);
+            imgSelectedResId = icoSelectedList.get(position);
           }
+
           if (player == selectedPlayer) {
-            holder.imageView.setImageResource(imgPressResId);
+            holder.imageView.setImageResource(imgSelectedResId);
 
             holder.textView.setTextColor(Color.RED);
           } else {

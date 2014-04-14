@@ -22,7 +22,7 @@ import java.io.InputStreamReader;
 public class JsonStore {
   public <T> T[] getList(String url, Class<T[]> klass) {
     String json = getJson(url);
-
+    System.out.println(json);
     if (json == null) return null;
 
     Gson gson = new Gson();

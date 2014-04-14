@@ -33,11 +33,10 @@ public class LocalAudioStore {
     Cursor cursor = contentResolver.query(
         EXTERNAL_CONTENT_URI,
         new String[]{TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE},
-        MIME_TYPE + " IN (?,?,?,?,?,?)",
-        new String[] {"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac","audio/aac","audio/wma"},
+        MIME_TYPE + " IN (?,?,?,?,?)",
+        new String[] {"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac","audio/x-ms-wma"},
         TITLE
     );
-
     if (cursor == null) return null;
     return parse_audios(cursor);
   }
@@ -46,8 +45,8 @@ public class LocalAudioStore {
     Cursor cursor = contentResolver.query(
         EXTERNAL_CONTENT_URI,
         new String[]{TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE},
-        MIME_TYPE + " IN (?,?,?,?,?,?) AND " + col + "=?",
-        new String[]{"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac","audio/aac","audio/wma", selection},
+        MIME_TYPE + " IN (?,?,?,?,?) AND " + col + "=?",
+        new String[]{"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac","audio/x-ms-wma", selection},
         TITLE
     );
 
@@ -109,8 +108,8 @@ public class LocalAudioStore {
     Cursor cursor = contentResolver.query(
         EXTERNAL_CONTENT_URI,
         new String[]{"count(*) AS count"},
-        MIME_TYPE + " IN (?,?,?,?,?,?)",
-        new String[]{"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac","audio/aac","audio/wma"}, null
+        MIME_TYPE + " IN (?,?,?,?,?)",
+        new String[]{"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac","audio/x-ms-wma"}, null
     );
     if (cursor == null) return 0;
 
@@ -122,8 +121,8 @@ public class LocalAudioStore {
     Cursor cursor = contentResolver.query(
         EXTERNAL_CONTENT_URI,
         new String[]{"count(*) AS count"},
-        MIME_TYPE + " IN (?,?,?,?,?)",
-        new String[]{"audio/wav", "audio/x-wav", "audio/flac","audio/aac","audio/wma"}, null
+        MIME_TYPE + " IN (?,?,?,?)",
+        new String[]{"audio/wav", "audio/x-wav", "audio/flac","audio/x-ms-wma"}, null
     );
     if (cursor == null) return 0;
     cursor.moveToFirst();
@@ -214,8 +213,8 @@ public class LocalAudioStore {
     Cursor cursor = contentResolver.query(
         EXTERNAL_CONTENT_URI,
         new String[]{TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE},
-        MIME_TYPE + " IN (?,?,?,?,?)",
-        new String[]{"audio/wav", "audio/x-wav", "audio/flac","audio/aac","audio/wma"},
+        MIME_TYPE + " IN (?,?,?,?)",
+        new String[]{"audio/wav", "audio/x-wav", "audio/flac","audio/x-ms-wma"},
         TITLE);
     if (cursor == null) {
       return null;

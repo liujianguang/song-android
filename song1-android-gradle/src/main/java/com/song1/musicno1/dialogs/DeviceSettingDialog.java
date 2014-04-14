@@ -14,6 +14,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
+import com.song1.musicno1.constants.Constants;
 import com.song1.musicno1.entity.DeviceConfig;
 import com.song1.musicno1.models.WifiModel;
 import com.song1.musicno1.models.setting.RemoteSetting;
@@ -130,7 +131,7 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
     titleTextView.setText(ssid);
     progressBar.setMax(90);
     confirm.setEnabled(false);
-    deviceNameList = Lists.newArrayList(getResources().getStringArray(R.array.deviceNames));
+    deviceNameList = Lists.newArrayList(Constants.DEVICE_NAMES);
     deviceNameAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, deviceNameList);
     networkAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, networkList);
 
