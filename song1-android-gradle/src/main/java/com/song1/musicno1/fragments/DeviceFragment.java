@@ -70,7 +70,7 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
     networkHelp = new NetworkHelp();
     wifi = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
 
-    nameList = Lists.newArrayList(Constants.DEVICE_NAMES);
+    nameList = Lists.newArrayList(getResources().getStringArray(R.array.deviceNames));
     icoNormalList = Lists.newArrayList(Constants.DEVICE_IOC_NORMAL);
     icoSelectedList = Lists.newArrayList(Constants.DEVICE_IOC_SELECTED);
     System.out.println("nameList : " + nameList);

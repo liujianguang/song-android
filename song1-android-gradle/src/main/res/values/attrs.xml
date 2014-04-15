@@ -1,22 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <array name="deviceNames">
-    <item>客厅</item>
+    <item>浴室</item>
     <item>卧室</item>
-    <item>儿童房</item>
+    <item>走廊</item>
+    <item>餐厅</item>
+    <item>家庭活动</item>
+    <item>车库</item>
+    <item>花园</item>
+    <item>客房</item>
+    <item>健身房</item>
+    <item>门厅</item>
+    <item>厨房</item>
+    <item>客厅</item>
+    <item>主卧室</item>
+    <item>多媒体室</item>
+    <item>办公室</item>
+    <item>本机</item>
+    <item>便携式</item>
+    <item>娱乐室</item>
+    <item>工作室</item>
     <item>书房</item>
-
-  </array>
-  <array name="deviceIcosNormal">
-    <item>livingroom_ic_button_normal</item>
-    <item>bedroom_ic_button_normal</item>
-    <item>kids_room_ic_button_normal</item>
-    <item>study_ic_button_normal</item>
-  </array>
-  <array name="deviceIcosPress">
-    <item>livingroom_ic_button_press</item>
-    <item>bedroom_ic_button_press</item>
-    <item>kids_room_ic_button_press</item>
-    <item>study_ic_button_press</item>
+    <item>游泳池</item>
+    <item>系统默认</item>
+    <item>露台</item>
+    <item>音影室</item>
+    <item>儿童房</item>
   </array>
 </resources>
