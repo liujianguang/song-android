@@ -55,6 +55,21 @@ def getVersionName = { ->
     }
 }
 
+def appendVersionNameVersionCode(variant, defaultConfig) {
+    //check if staging variant
+    if(variant.name == android.buildTypes.staging.name){
+        if(variant.zipAlign) {
+            def file = variant.outputFile
+            def fileName = file.name.replace(".apk", "-" + defaultConfig.versionName + "-" + defaultConfig.versionCode + ".apk")
+            variant.outputFile = new File(file.parent, fileName)
+        }
+
+        def file = variant.packageApplication.outputFile
+        def fileName = file.name.replace(".apk", "-" + defaultConfig.versionName + "-" + defaultConfig.versionCode + ".apk")
+        variant.packageApplication.outputFile = new File(file.parent, fileName)
+    }
+}
+
 android {
     compileSdkVersion 19
     buildToolsVersion '19.0.3'
@@ -72,9 +87,20 @@ android {
     }
     buildTypes {
         release {
-            runProguard true
+            runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            
+            applicationVariants.all { variant ->
+                def file = variant.outputFile
+                variant.outputFile = new File(file.parent, file.name.replace(".apk", "-" + defaultConfig.versionName + ".apk"))
+            }
         }
+    }
+
+    lintOptions {
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
     }
 }
 
