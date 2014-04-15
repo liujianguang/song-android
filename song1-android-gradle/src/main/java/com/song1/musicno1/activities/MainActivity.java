@@ -1,6 +1,5 @@
 package com.song1.musicno1.activities;
 
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -125,9 +124,9 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
       }
     } else {
-      if (getSupportFragmentManager().getBackStackEntryCount() == 0){
+      if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
         QuitDialog dialog = new QuitDialog();
-        dialog.show(getSupportFragmentManager(),"quitDialog");
+        dialog.show(getSupportFragmentManager(), "quitDialog");
         return;
       }
       super.onBackPressed();
