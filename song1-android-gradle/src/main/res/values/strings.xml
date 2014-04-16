@@ -43,7 +43,7 @@
   <string name="download_to_sdc">下载到本地</string>
   <string name="add_to_playlist_success">添加 %s 到播放队列</string>
   <string name="add_to_playlist_failed">添加 %s 到播放队列失败</string>
-  <string name="migu_title">中国移动咪咕音乐</string>
+  <string name="migu_title">咪咕音乐</string>
   <string name="migu_des">移动正版音乐, 彩铃定制</string>
   <string name="beatles_music">甲壳虫音乐</string>
   <string name="chart">榜单</string>
@@ -185,7 +185,7 @@
   <string name="drawer_close">关闭抽屉</string>
 
   <string name="red_heart">我喜欢</string>
-  <string name="favorite">收藏</string>
+  <string name="favorite">自建歌单</string>
   <string name="new_favorite">新建</string>
   <string name="please_input_favorite_name">请输入新建歌单名称</string>
   <string name="delete">删除</string>
@@ -200,4 +200,5 @@
   <string name="not_quit_msg">多留会</string>
   <string name="quit_msg">下次再来</string>
   <string name="current_player_is_occupied">当前设备已被占用</string>
+  <string name="test">测试</string>
 </resources>

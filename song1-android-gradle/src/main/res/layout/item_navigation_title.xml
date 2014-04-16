@@ -2,16 +2,28 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:background="@color/title_bg_color"
-              android:orientation="vertical"
-              android:minHeight="20dp"
+              android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="20dp">
+              android:layout_height="match_parent"
+              android:minHeight="@dimen/menu_title_height"
+              android:gravity="center_vertical">
+
+  <LinearLayout
+      android:layout_width="@dimen/menu_item_height"
+      android:layout_height="match_parent"
+      android:layout_marginLeft="10dp"
+      android:gravity="center">
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+  </LinearLayout>
+
   <TextView
       android:id="@+id/title"
-      android:layout_marginLeft="4dp"
-      android:textColor="#ADB4AD"
-      android:textSize="@dimen/text_size_smaller"
+      android:textSize="@dimen/menu_title_text_size"
       android:gravity="center_vertical"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"/>
+      android:layout_height="wrap_content"
+      />
 </LinearLayout>

@@ -66,20 +66,32 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
     listView.setAdapter(adapter);
 
     List<Object> items = Lists.newArrayList();
+    List<Integer> iconList = Lists.newArrayList();
 
     items.add(getString(R.string.my_music));
     items.add(R.string.local_source);
-//    items.add(R.string.download_music);
+    items.add(R.string.download_music);
     items.add(R.string.favorite);
     items.add(R.string.red_heart);
-    items.add(R.string.download_music);
+
 
     items.add(getString(R.string.cloud_source));
     items.add(R.string.migu_title);
 //    items.add(R.string.beatles_music);
 //    items.add(R.string.justing);
 
+    iconList.add(-1);
+    iconList.add(R.drawable.menu_ic_localmusic);
+    iconList.add(R.drawable.menu_ic_download);
+    iconList.add(R.drawable.menu_ic_sincetheplaylist);
+    iconList.add(R.drawable.menu_ic_like);
+    iconList.add(-1);
+    iconList.add(R.drawable.menu_ic_migu);
+    iconList.add(R.drawable.menu_ic_beatle);
+    iconList.add(R.drawable.menu_ic_justing);
+
     adapter.setChannels(items);
+    adapter.setIcons(iconList);
     listView.setOnItemClickListener(this);
     mainActivity = (MainActivity) getActivity();
 

@@ -4,14 +4,19 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.song1.musicno1.R;
 import com.song1.musicno1.entity.Album;
 import com.song1.musicno1.entity.Artist;
 import com.song1.musicno1.models.play.Audio;
+import com.song1.musicno1.util.FirstLetterUtil;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.provider.BaseColumns._ID;
 import static android.provider.MediaStore.Audio.AudioColumns.*;
@@ -227,6 +232,38 @@ public class LocalAudioStore {
     return audios;
   }
 
+  char[] chars = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+
+
+  public Map<Character,List<Audio>> getAudios(){
+    return doAudioGroup(all_audios());
+  }
+  public Map<Character,List<Audio>> getAudiosByAlbum(Album album){
+    return doAudioGroup(get_audios_by_album(album));
+  }
+  public Map<Character,List<Audio>> getAudisByArtist(Artist artist){
+    return doAudioGroup(audios_by_artist(artist));
+  }
+  private Map<Character,List<Audio>> doAudioGroup(List<Audio> audioList){
+    Map<Character,List<Audio>> audioGroupMap = Maps.newHashMap();
+    for (Audio audio : audioList){
+      String title = audio.getTitle();
+      Character character = FirstLetterUtil.getFirstLetter(title).toUpperCase().charAt(0);
+
+      List<Audio> tempList = audioGroupMap.get(character);
+      if (tempList == null){
+        tempList = Lists.newArrayList();
+        tempList.add(audio);
+        audioGroupMap.put(character,tempList);
+      }else{
+        tempList.add(audio);
+        audioGroupMap.put(character,tempList);
+      }
+    }
+    return audioGroupMap;
+  }
+
+
 //  private List<Audio> getLossLessFromSDCard() {
 //    String sdPath = FileHelper.getSDPath();
 //    List<File> files = FileHelper.listDir(new File(sdPath), new FileFilter() {
@@ -251,4 +288,6 @@ public class LocalAudioStore {
 //    }
 //    return audios;
 //  }
+
+
 }

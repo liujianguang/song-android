@@ -51,7 +51,7 @@
       android:id="@+id/navigation"
       android:background="@color/green"
       android:layout_gravity="left"
-      android:layout_width="match_parent"
+      android:layout_width="@dimen/left_fragment_width"
       android:layout_height="match_parent">
   </FrameLayout>
 </android.support.v4.widget.DrawerLayout>

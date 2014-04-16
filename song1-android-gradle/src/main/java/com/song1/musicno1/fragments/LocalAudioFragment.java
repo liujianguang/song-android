@@ -3,6 +3,7 @@ package com.song1.musicno1.fragments;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import com.google.common.collect.Lists;
 import com.song1.musicno1.adapter.AudioAdapter;
 import com.song1.musicno1.adapter.DataAdapter;
 import com.song1.musicno1.entity.Album;
@@ -16,6 +17,7 @@ import com.song1.musicno1.models.play.Playlist;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: windless
@@ -39,6 +41,8 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
     } else if (artist != null) {
       return localAudioStore.audios_by_artist(artist);
     }
+    Map<Character,List<Audio>> audioMap = localAudioStore.getAudios();
+    System.out.println("***********************" + Lists.newArrayList(audioMap.keySet()));
     return localAudioStore.all_audios();
   }
 
