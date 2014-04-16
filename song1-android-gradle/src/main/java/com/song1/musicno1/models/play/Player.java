@@ -32,7 +32,8 @@ public class Player {
   protected int                       position;
   protected int                       duration;
 
-  protected int playMode = MODE_REPEAT_ALL;
+  protected boolean isOccupied = false;
+  protected int     playMode   = MODE_REPEAT_ALL;
 
   Audio                  currentAudio;
   OnStateChangedListener stateListener;
@@ -41,13 +42,17 @@ public class Player {
   OnCompleteListener     completeListener;
 
   Runnable runnable = () -> {
-    while (!Thread.currentThread().isInterrupted()) {
+    while (!Thread.currentThread().isInterrupted() && state == PLAYING) {
       try {
         PositionInfo positionInfo = renderer.getPositionInfo();
-        if (positionInfo.getDuration() != 0) {
+        if (positionInfo.getDuration() != 0 && !Strings.isNullOrEmpty(positionInfo.getUri())) {
           Log.d(this, "Position: " + positionInfo.getPosition() + "-" + positionInfo.getDuration());
+          Log.d(this, "Current audio uri: " + currentAudio.getRemotePlayUrl());
+          Log.d(this, "Playing audio uri: " + positionInfo.getUri());
           setPosition(positionInfo.getPosition(), positionInfo.getDuration());
+
           if (positionInfo.getPosition() == positionInfo.getDuration()) {
+            // on playing completely
             state = STOPPED;
             if (stateListener != null) {
               stateListener.onStateChanged(this, state);
@@ -55,6 +60,17 @@ public class Player {
             if (completeListener != null) {
               completeListener.onComplete(this);
             }
+            return;
+          }
+
+          if (!currentAudio.getRemotePlayUrl().equals(positionInfo.getUri())) {
+            // this device is occupied by other control point
+            state = STOPPED;
+            isOccupied = true;
+            if (stateListener != null) {
+              stateListener.onStateChanged(this, state);
+            }
+            occupied();
             return;
           }
         }
@@ -68,6 +84,15 @@ public class Player {
       }
     }
   };
+  protected OnOccupiedListener onOccupiedListener;
+
+  public void onOccupied(OnOccupiedListener onOccupiedListener) {
+    this.onOccupiedListener = onOccupiedListener;
+  }
+
+  private void occupied() {
+    if (onOccupiedListener != null) onOccupiedListener.onOccupied(this);
+  }
 
   public Player(Context context, Renderer renderer, RenderingControl renderingControl) {
     this.renderer = renderer;
@@ -82,6 +107,10 @@ public class Player {
         }
       });
     }
+  }
+
+  public boolean isOccupied() {
+    return this.isOccupied;
   }
 
   public int getPlayMode() {
@@ -101,6 +130,7 @@ public class Player {
   }
 
   public void play(Audio audio) {
+    isOccupied = false;
     setState(PREPARING);
 
     if (audio != null) {
@@ -343,6 +373,10 @@ public class Player {
 
   public interface OnCompleteListener {
     void onComplete(Player player);
+  }
+
+  public interface OnOccupiedListener {
+    void onOccupied(Player player);
   }
 
   private interface CheckRunnable {

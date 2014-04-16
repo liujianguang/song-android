@@ -112,6 +112,8 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
       case Player.PAUSED:
         Players.resume();
         break;
+      case Player.STOPPED:
+        Players.play();
     }
   }
 

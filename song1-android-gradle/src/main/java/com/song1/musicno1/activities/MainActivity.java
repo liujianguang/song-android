@@ -1,5 +1,6 @@
 package com.song1.musicno1.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -22,11 +23,13 @@ import com.song1.musicno1.fragments.PlayingFragment;
 import com.song1.musicno1.fragments.TestFragment;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.ViewHelper;
+import com.song1.musicno1.models.events.play.CurrentPlayerOccupiedEvent;
 import com.song1.musicno1.models.events.play.UpdateVolumeEvent;
 import com.song1.musicno1.services.HttpService;
 import com.song1.musicno1.services.PlayService;
 import com.song1.musicno1.services.UpnpService;
 import com.song1.musicno1.vender.SlidingUpPanelLayout;
+import com.squareup.otto.Subscribe;
 import de.akquinet.android.androlog.Log;
 
 import javax.inject.Inject;
@@ -54,6 +57,7 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
 
     Log.init();
     App.inject(this);
+    MainBus.register(this);
 
     setContentView(R.layout.activity_main);
     ButterKnife.inject(this);
@@ -88,6 +92,22 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
     getActionBar().setDisplayHomeAsUpEnabled(true);
     getActionBar().setHomeButtonEnabled(true);
 
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    MainBus.unregister(this);
+  }
+
+  @Subscribe
+  public void onCurrentPlayerOccupied(CurrentPlayerOccupiedEvent event) {
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setMessage(R.string.current_player_is_occupied);
+    builder.setTitle(R.string.notice);
+    builder.setNegativeButton(android.R.string.ok, (dialog, which) -> {
+    });
+    builder.create().show();
   }
 
   @Override

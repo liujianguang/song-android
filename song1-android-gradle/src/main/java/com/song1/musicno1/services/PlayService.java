@@ -63,9 +63,17 @@ public class PlayService extends Service {
 
     event.player.onPlayComplete((player) -> playNext(player));
 
+    event.player.onOccupied((player) -> onPlayerOccupied(player));
+
     if (waitingEvent != null) {
       setPlaylist(waitingEvent);
       waitingEvent = null;
+    }
+  }
+
+  private void onPlayerOccupied(Player player) {
+    if (player == currentPlayer) {
+      postEvent(new CurrentPlayerOccupiedEvent());
     }
   }
 
