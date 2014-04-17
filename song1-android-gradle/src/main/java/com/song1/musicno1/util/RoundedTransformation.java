@@ -3,13 +3,8 @@ package com.song1.musicno1.util;
 /**
  * Created by leovo on 2014/4/16.
  */
-import android.graphics.Bitmap;
+import android.graphics.*;
 import android.graphics.Bitmap.Config;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.RectF;
-import android.graphics.Shader;
 
 // enables hardware accelerated rounded corners
 // original idea here : http://www.curious-creature.org/2012/12/11/android-recipe-1-image-with-rounded-corners/
@@ -26,18 +21,16 @@ public class RoundedTransformation implements com.squareup.picasso.Transformatio
 
   public RoundedTransformation(){
     this.radius = 0;
-    this.margin = 10;
+    this.margin = 5;
   }
   @Override
   public Bitmap transform(final Bitmap source) {
     final Paint paint = new Paint();
     paint.setAntiAlias(true);
     paint.setShader(new BitmapShader(source, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
-
     Bitmap output = Bitmap.createBitmap(source.getWidth(), source.getHeight(), Config.ARGB_8888);
     Canvas canvas = new Canvas(output);
     canvas.drawRoundRect(new RectF(margin, margin, source.getWidth() - margin, source.getHeight() - margin), source.getWidth() /2, source.getWidth()/2, paint);
-
     if (source != output) {
       source.recycle();
     }

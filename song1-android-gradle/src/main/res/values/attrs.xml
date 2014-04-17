@@ -27,4 +27,8 @@
     <item>音影室</item>
     <item>儿童房</item>
   </array>
+  <declare-styleable name="roundImage">
+    <attr name="mBorderThickness" format="dimension" />
+    <attr name="mBorderColor" format="color" />
+  </declare-styleable>
 </resources>
