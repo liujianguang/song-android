@@ -27,6 +27,9 @@ public class FavoriteAudioFragment extends ListFragment<Audio> implements Adapte
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
+    if (favorite != null) {
+      setTitle(favorite.name);
+    }
     getListView().setOnItemClickListener(this);
   }
 

@@ -18,9 +18,10 @@ import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.adapter.NavigationAdapter;
 import com.song1.musicno1.dialogs.LoadingDialog;
+import com.song1.musicno1.fragments.base.BaseFragment;
+import com.song1.musicno1.fragments.download.DownLoadManagerFragment;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.events.upnp.MediaServerEvent;
-import com.song1.musicno1.fragments.download.DownLoadManagerFragment;
 import com.song1.musicno1.models.migu.MiguIniter;
 import com.song1.musicno1.models.play.MediaServer;
 import com.squareup.otto.Subscribe;
@@ -36,7 +37,7 @@ import java.util.Map;
  */
 public class LeftFragment extends Fragment implements AdapterView.OnItemClickListener {
 
-  private Map<Integer, Fragment> mapFragment = Maps.newHashMap();
+  private Map<Integer, BaseFragment> mapFragment = Maps.newHashMap();
 
   @Inject MiguIniter miguIniter;
 
@@ -99,7 +100,7 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
   }
 
   private void showFragment(int resId) {
-    Fragment fragment = mapFragment.get(resId);
+    BaseFragment fragment = mapFragment.get(resId);
     if (fragment != null) {
       mainActivity.replaceMain(fragment);
       return;
@@ -117,6 +118,7 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
         break;
       case R.string.red_heart:
         fragment = new FavoriteAudioFragment();
+        fragment.setTitle(getString(R.string.red_heart));
         break;
       case R.string.migu_title:
         initMigu(() -> {
