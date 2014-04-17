@@ -46,9 +46,6 @@ public class Player {
       try {
         PositionInfo positionInfo = renderer.getPositionInfo();
         if (positionInfo.getDuration() != 0 && !Strings.isNullOrEmpty(positionInfo.getUri())) {
-          Log.d(this, "Position: " + positionInfo.getPosition() + "-" + positionInfo.getDuration());
-          Log.d(this, "Current audio uri: " + currentAudio.getRemotePlayUrl());
-          Log.d(this, "Playing audio uri: " + positionInfo.getUri());
           setPosition(positionInfo.getPosition(), positionInfo.getDuration());
 
           if (positionInfo.getPosition() == positionInfo.getDuration()) {
@@ -359,6 +356,13 @@ public class Player {
   public void volumeDown() {
     try {
       renderingControl.volumeDown();
+    } catch (RendererException ignored) {
+    }
+  }
+
+  public void updateVolume() {
+    try {
+      renderingControl.updateVolume();
     } catch (RendererException ignored) {
     }
   }

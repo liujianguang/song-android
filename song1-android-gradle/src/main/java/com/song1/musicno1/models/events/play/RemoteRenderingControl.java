@@ -3,6 +3,7 @@ package com.song1.musicno1.models.events.play;
 import com.song1.musicno1.models.play.RendererException;
 import com.song1.musicno1.models.play.RenderingControl;
 import com.song1.musicno1.models.play.Volume;
+import de.akquinet.android.androlog.Log;
 import org.cybergarage.upnp.Action;
 import org.cybergarage.upnp.Argument;
 import org.cybergarage.upnp.Device;
@@ -13,13 +14,14 @@ import org.cybergarage.upnp.Service;
  */
 public class RemoteRenderingControl implements RenderingControl {
   protected final Service renderingControl;
+  protected       int     volume;
 
   public RemoteRenderingControl(Device device) {
     renderingControl = device.getService(org.cybergarage.upnp.std.av.renderer.RenderingControl.SERVICE_TYPE);
   }
 
   @Override
-  public Volume getVolume() throws RendererException {
+  public void updateVolume() throws RendererException {
     if (renderingControl == null) throw new RendererException("");
 
     Action action = renderingControl.getAction(org.cybergarage.upnp.std.av.renderer.RenderingControl.GETVOLUME);
@@ -33,7 +35,8 @@ public class RemoteRenderingControl implements RenderingControl {
     Argument argument = action.getArgument(org.cybergarage.upnp.std.av.renderer.RenderingControl.CURRENTVOLUME);
     if (argument == null) throw new RendererException("");
 
-    return new Volume(argument.getIntegerValue(), 100);
+    this.volume = argument.getIntegerValue();
+    Log.d(this, "Update volume: " + volume);
   }
 
   @Override
@@ -48,25 +51,32 @@ public class RemoteRenderingControl implements RenderingControl {
     action.setArgumentValue(org.cybergarage.upnp.std.av.renderer.RenderingControl.DESIREDVOLUME, volume);
 
     if (!action.postControlAction()) throw new RendererException("");
+
+    this.volume = volume;
+    Log.d(this, "Set volume: " + volume);
   }
 
   @Override
   public void volumeUp() throws RendererException {
-    Volume volume = getVolume();
-    int setVolume = volume.getCurrent() + 3;
-    if (setVolume > volume.getMax()) {
-      setVolume = volume.getMax();
+    int setVolume = volume + 3;
+    if (setVolume > 100) {
+      setVolume = 100;
     }
     setVolume(setVolume);
   }
 
   @Override
   public void volumeDown() throws RendererException {
-    Volume volume = getVolume();
-    int setVolume = volume.getCurrent() - 3;
+
+    int setVolume = volume - 3;
     if (setVolume < 0) {
       setVolume = 0;
     }
     setVolume(setVolume);
+  }
+
+  @Override
+  public Volume getVolume() throws RendererException {
+    return new Volume(volume, 100);
   }
 }

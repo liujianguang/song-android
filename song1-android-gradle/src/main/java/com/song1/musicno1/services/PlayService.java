@@ -47,6 +47,10 @@ public class PlayService extends Service {
 
   @Subscribe
   public void selectPlayer(SelectPlayerEvent event) {
+    volumeExecutor.submit(() -> {
+      event.player.updateVolume();
+    });
+
     setCurrentPlayer(event.player);
 
     event.player.onStateChanged((player, state) -> {
@@ -69,6 +73,7 @@ public class PlayService extends Service {
       setPlaylist(waitingEvent);
       waitingEvent = null;
     }
+
   }
 
   private void onPlayerOccupied(Player player) {
@@ -266,9 +271,11 @@ public class PlayService extends Service {
           } else if (event.getVolume() != null) {
             player.setVolume(event.getVolume().getCurrent());
           } else {
+//            player.updateVolume();
             MainBus.post(new VolumeEvent(player.getVolume()));
           }
         } else {
+//          player.updateVolume();
           MainBus.post(new VolumeEvent(player.getVolume()));
         }
       });

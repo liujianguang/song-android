@@ -17,10 +17,7 @@ public class LocalRenderingControl implements RenderingControl {
   }
 
   @Override
-  public Volume getVolume() {
-    int volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-    int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-    return new Volume(volume, max);
+  public void updateVolume() {
   }
 
   @Override
@@ -46,5 +43,12 @@ public class LocalRenderingControl implements RenderingControl {
       setVolume = 0;
     }
     setVolume(setVolume);
+  }
+
+  @Override
+  public Volume getVolume() throws RendererException {
+    int volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+    int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+    return new Volume(volume, max);
   }
 }
