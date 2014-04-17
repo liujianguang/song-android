@@ -48,6 +48,19 @@ public class Player {
         if (positionInfo.getDuration() != 0 && !Strings.isNullOrEmpty(positionInfo.getUri())) {
           setPosition(positionInfo.getPosition(), positionInfo.getDuration());
 
+          if (currentAudio != null &&
+              currentAudio.getRemotePlayUrl() != null &&
+              !currentAudio.getRemotePlayUrl().equals(positionInfo.getUri())) {
+            // this device is occupied by other control point
+            state = STOPPED;
+            isOccupied = true;
+            if (stateListener != null) {
+              stateListener.onStateChanged(this, state);
+            }
+            occupied();
+            return;
+          }
+
           if (positionInfo.getPosition() == positionInfo.getDuration()) {
             // on playing completely
             state = STOPPED;
@@ -57,17 +70,6 @@ public class Player {
             if (completeListener != null) {
               completeListener.onComplete(this);
             }
-            return;
-          }
-
-          if (!currentAudio.getRemotePlayUrl().equals(positionInfo.getUri())) {
-            // this device is occupied by other control point
-            state = STOPPED;
-            isOccupied = true;
-            if (stateListener != null) {
-              stateListener.onStateChanged(this, state);
-            }
-            occupied();
             return;
           }
         }
