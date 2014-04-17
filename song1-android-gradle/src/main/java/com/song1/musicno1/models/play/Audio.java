@@ -10,6 +10,7 @@ public class Audio {
 
   private String id;
   private String title;
+  private String albumId;
   private String album;
   private String artist;
   private int    from;
@@ -74,5 +75,13 @@ public class Audio {
 
   public boolean canFavorite() {
     return from == LOCAL || from == MIGU;
+  }
+
+  public String getAlbumId() {
+    return albumId;
+  }
+
+  public void setAlbumId(String albumId) {
+    this.albumId = albumId;
   }
 }

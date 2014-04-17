@@ -83,7 +83,7 @@ public class LocalAudioStore {
 
       audio.setLocalPlayUri(cursor.getString(cursor.getColumnIndex(DATA)));
       audio.setFrom(Audio.LOCAL);
-//      audio.album_id = cursor.getString(cursor.getColumnIndex(ALBUM_ID));
+      audio.setAlbumId(cursor.getString(cursor.getColumnIndex(ALBUM_ID)));
 
       audios.add(audio);
     }

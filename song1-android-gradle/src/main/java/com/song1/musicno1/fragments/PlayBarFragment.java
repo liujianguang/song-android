@@ -7,21 +7,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import com.google.common.base.Strings;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.helpers.MainBus;
+import com.song1.musicno1.models.LocalAudioStore;
 import com.song1.musicno1.models.events.play.CurrentPlayerStateEvent;
 import com.song1.musicno1.models.events.play.PositionEvent;
 import com.song1.musicno1.models.events.play.SelectPlayerEvent;
 import com.song1.musicno1.models.events.play.ShowDeviceFragmentEvent;
+import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.play.Players;
+import com.song1.musicno1.util.RoundedTransformation;
 import com.squareup.otto.Subscribe;
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 /**
  * Created by windless on 3/27/14.
@@ -38,10 +46,14 @@ public class PlayBarFragment extends Fragment {
   @InjectView(R.id.top_title)          TextView           topTitleView;
   @InjectView(R.id.top_subtitle)       TextView           topSubtitleView;
   @InjectView(R.id.refresh_layout)     SwipeRefreshLayout refreshLayout;
+  @InjectView(R.id.bottom_album_art)   ImageView          albumArtImageView;
+
+  LocalAudioStore localAudioStore;
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
+    localAudioStore = new LocalAudioStore(getActivity());
     refreshLayout.setColorScheme(
         android.R.color.holo_green_light,
         android.R.color.holo_orange_light,
@@ -122,11 +134,13 @@ public class PlayBarFragment extends Fragment {
 
   @Subscribe
   public void onCurrentPositionChanged(PositionEvent event) {
+    Audio audio = event.getAudio();
     if (event.getAudio() == null) {
       bottomTitleView.setText("");
       bottomSubtitleView.setText("");
       topTitleView.setText("");
       topSubtitleView.setText("");
+      Picasso.with(getActivity()).load(R.drawable.ic_device_list_nor).transform(new RoundedTransformation()).into(albumArtImageView);
     } else {
       if (bottomTitleView.getText() == null) {
         bottomTitleView.setText(event.getAudio().getTitle());
@@ -138,6 +152,22 @@ public class PlayBarFragment extends Fragment {
 
       bottomSubtitleView.setText(event.getAudio().getArtist());
       topSubtitleView.setText(event.getAudio().getArtist());
+
+      String albumId = audio.getAlbumId();
+      String albumPath = localAudioStore.find_album_path_by(albumId);
+      System.out.println("albumId : " + albumId);
+      System.out.println("alubmPath : " + albumPath);
+
+      if (Strings.isNullOrEmpty(albumPath)) {
+        Picasso.with(getActivity()).load(R.drawable.ic_device_list_nor).transform(new RoundedTransformation()).into(albumArtImageView);
+      } else {
+        File file = new File(albumPath);
+        if (file.exists()) {
+          Picasso.with(getActivity()).load(file).transform(new RoundedTransformation()).into(albumArtImageView);
+        } else {
+          Picasso.with(getActivity()).load(R.drawable.ic_device_list_nor).transform(new RoundedTransformation()).into(albumArtImageView);
+        }
+      }
     }
 
     positionBar.setMax(event.getDuration());

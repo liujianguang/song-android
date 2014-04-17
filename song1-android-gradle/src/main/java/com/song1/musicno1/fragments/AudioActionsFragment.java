@@ -5,29 +5,39 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import com.google.common.base.Strings;
 import com.song1.musicno1.R;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.TimeHelper;
+import com.song1.musicno1.models.LocalAudioStore;
 import com.song1.musicno1.models.events.play.PlayModeEvent;
 import com.song1.musicno1.models.events.play.PositionEvent;
+import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.play.Players;
+import com.song1.musicno1.util.RoundedTransformation;
 import com.squareup.otto.Subscribe;
+import com.squareup.picasso.Picasso;
 import de.akquinet.android.androlog.Log;
+
+import java.io.File;
 
 /**
  * Created by windless on 3/31/14.
  */
 public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
-  @InjectView(R.id.position)        TextView positionView;
-  @InjectView(R.id.duration)        TextView durationView;
-  @InjectView(R.id.position_seeker) SeekBar  positionSeeker;
-  @InjectView(R.id.actions_section) View     actionsSection;
+  @InjectView(R.id.position)        TextView  positionView;
+  @InjectView(R.id.duration)        TextView  durationView;
+  @InjectView(R.id.position_seeker) SeekBar   positionSeeker;
+  @InjectView(R.id.actions_section) View      actionsSection;
+  @InjectView(R.id.album_art)       ImageView albumArtImageView;
+  LocalAudioStore localAudioStore;
   protected int playMode;
 
   @Override
@@ -40,6 +50,7 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
+    localAudioStore = new LocalAudioStore(getActivity());
     positionSeeker.setEnabled(false);
     positionSeeker.setOnSeekBarChangeListener(this);
   }
@@ -58,10 +69,24 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
 
   @Subscribe
   public void onPositionChanged(PositionEvent event) {
+    Audio audio = event.getAudio();
     if (event.getAudio() == null) {
       actionsSection.setVisibility(View.GONE);
+      Picasso.with(getActivity()).load(R.drawable.default_album_art).transform(new RoundedTransformation()).into(albumArtImageView);
     } else {
       actionsSection.setVisibility(View.VISIBLE);
+      String albumId = audio.getAlbumId();
+      String albumPath = localAudioStore.find_album_path_by(albumId);
+      if (Strings.isNullOrEmpty(albumPath)) {
+        Picasso.with(getActivity()).load(R.drawable.default_album_art).transform(new RoundedTransformation()).into(albumArtImageView);
+      } else {
+        File file = new File(albumPath);
+        if (file.exists()) {
+          Picasso.with(getActivity()).load(file).transform(new RoundedTransformation()).into(albumArtImageView);
+        } else {
+          Picasso.with(getActivity()).load(R.drawable.default_album_art).transform(new RoundedTransformation()).into(albumArtImageView);
+        }
+      }
     }
 
     positionSeeker.setEnabled(event.getAudio() != null);
