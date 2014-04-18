@@ -92,7 +92,11 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
           int imgSelectedResId = R.drawable.systemdefault_ic_butoon_press;
           int position = nameList.indexOf(name);
           System.out.println("name position : " + position);
-          if (position != -1){
+
+          if (player.getName().equals(getString(R.string.this_phone))){
+            imgNormalResId = R.drawable.player_ic_butoon_nor;
+            imgSelectedResId = R.drawable.player_ic_butoon_press;
+          } else if (position != -1){
             imgNormalResId = icoNormalList.get(position);
             imgSelectedResId = icoSelectedList.get(position);
           }
