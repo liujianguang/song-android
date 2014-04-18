@@ -1,9 +1,12 @@
 package com.song1.musicno1.fragments;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import com.google.common.collect.Lists;
+import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.AudioAdapter;
 import com.song1.musicno1.adapter.DataAdapter;
 import com.song1.musicno1.entity.Album;
@@ -36,14 +39,23 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
   @Override
   protected List<Audio> onLoad(int loadPage) {
     setTotalPage(1);
+    List<Audio> audioList;
     if (album != null) {
-      return localAudioStore.get_audios_by_album(album);
+      audioList = localAudioStore.get_audios_by_album(album);
     } else if (artist != null) {
-      return localAudioStore.audios_by_artist(artist);
+      audioList = localAudioStore.audios_by_artist(artist);
+    }else {
+      audioList = localAudioStore.all_audios();
     }
-    Map<Character,List<Audio>> audioMap = localAudioStore.getAudios();
-    System.out.println("***********************" + Lists.newArrayList(audioMap.keySet()));
-    return localAudioStore.all_audios();
+    return audioList;
+  }
+
+  @Override
+  public void showContent() {
+    super.showContent();
+    headerView.setVisibility(View.VISIBLE);
+    LinearLayout headerLayout = (LinearLayout)headerView;
+    headerLayout.addView(LayoutInflater.from(getActivity()).inflate(R.layout.header,null));
   }
 
   @Override
@@ -55,6 +67,8 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     getListView().setOnItemClickListener(this);
+    //getLoaderManager().initLoader(0, null, this);
+
   }
 
   @Override

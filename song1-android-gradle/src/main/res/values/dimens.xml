@@ -11,8 +11,8 @@
   <dimen name="list_item_text_size">17sp</dimen>
   <dimen name="list_item_height">60dp</dimen>
   <dimen name="group_title_text_size">13sp</dimen>
-  <dimen name="list_item_title_text_size">17sp</dimen>
-  <dimen name="list_item_subtitle_text_size">13sp</dimen>
+  <dimen name="list_item_title_text_size">15sp</dimen>
+  <dimen name="list_item_subtitle_text_size">10sp</dimen>
   <dimen name="list_item_top_margin">8dp</dimen>
   <dimen name="album_art_list_item_size">58dp</dimen>
   <dimen name="divider_height">1px</dimen>

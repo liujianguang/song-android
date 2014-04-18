@@ -52,7 +52,7 @@
         android:src="@drawable/default_album_art"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        roundImage:mBorderThickness="20dp"
+        roundImage:mBorderThickness="12dp"
         roundImage:mBorderColor="#ff96af71"
         android:contentDescription="@null"/>
   </LinearLayout>

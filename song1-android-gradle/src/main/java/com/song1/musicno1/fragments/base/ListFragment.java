@@ -16,6 +16,8 @@ import com.song1.musicno1.R;
  * Created by windless on 14-4-3.
  */
 public abstract class ListFragment<T> extends DataFragment<T> implements AbsListView.OnScrollListener {
+  @InjectView(R.id.headerLayout)
+  protected View headerView;
   @InjectView(R.id.loading) View     loadingView;
   @InjectView(R.id.empty)   View     emptyView;
   @InjectView(R.id.list)    ListView listView;
