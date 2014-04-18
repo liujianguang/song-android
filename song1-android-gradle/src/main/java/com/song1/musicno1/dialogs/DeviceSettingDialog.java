@@ -5,9 +5,7 @@ import android.net.wifi.ScanResult;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -167,6 +165,13 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
   }
 
   @Override
+  public void onResume() {
+    super.onResume();
+    Window window = getDialog().getWindow();
+    window.setGravity(Gravity.BOTTOM);
+  }
+
+  @Override
   public void onDestroy() {
     super.onDestroy();
     if (wifiModel != null) {
@@ -307,12 +312,14 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
     }
   }
 
-  private void register(){
+  private void register() {
     MainBus.register(this);
   }
-  private void unregister(){
+
+  private void unregister() {
     MainBus.unregister(this);
   }
+
   @Subscribe
   public void onDeviceChanged(DeviceChangeEvent event) {
 //    currentWifiSSID = wifiModel.getCurrentSSID();
