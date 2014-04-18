@@ -48,7 +48,8 @@ public class Player {
         if (positionInfo.getDuration() != 0 && !Strings.isNullOrEmpty(positionInfo.getUri())) {
           setPosition(positionInfo.getPosition(), positionInfo.getDuration());
 
-          if (currentAudio != null &&
+          if (renderer instanceof RemoteRenderer &&
+              currentAudio != null &&
               currentAudio.getRemotePlayUrl() != null &&
               !currentAudio.getRemotePlayUrl().equals(positionInfo.getUri())) {
             // this device is occupied by other control point
@@ -61,7 +62,8 @@ public class Player {
             return;
           }
 
-          if (positionInfo.getPosition() == positionInfo.getDuration()) {
+          if (renderer instanceof RemoteRenderer &&
+              positionInfo.getPosition() == positionInfo.getDuration()) {
             // on playing completely
             state = STOPPED;
             if (stateListener != null) {
