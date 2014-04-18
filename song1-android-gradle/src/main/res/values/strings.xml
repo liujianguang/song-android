@@ -17,6 +17,7 @@
   <string name="WifiConnectSucc">网络连接成功…</string>
   <string name="WifiConnectTimeout">网络连接超时…</string>
   <string name="not_network">网络未连接</string>
+  <string name="wait_device_set_succ">等待设备连接成功</string>
 
   <string name="action_settings">Settings</string>
   <string name="local_source">本地音乐</string>

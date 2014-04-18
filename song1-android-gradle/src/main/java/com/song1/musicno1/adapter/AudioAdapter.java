@@ -98,6 +98,15 @@ public class AudioAdapter extends DataAdapter<Audio> {
     return view;
   }
 
+  @Override
+  public boolean isEnabled(int position) {
+    Object obj = getDataItem(position);
+    if (obj instanceof AudioGroup){
+      return false;
+    }
+    return true;
+  }
+
   class TitleViewHolder {
     @InjectView(R.id.title)
     TextView title;

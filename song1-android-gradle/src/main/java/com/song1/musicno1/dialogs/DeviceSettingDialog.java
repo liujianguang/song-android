@@ -16,9 +16,15 @@ import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.constants.Constants;
 import com.song1.musicno1.entity.DeviceConfig;
+import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.WifiModel;
+import com.song1.musicno1.models.events.upnp.DeviceChangeEvent;
+import com.song1.musicno1.models.events.upnp.SearchDeviceEvent;
+import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.setting.RemoteSetting;
+import com.squareup.otto.Subscribe;
 import de.akquinet.android.androlog.Log;
+import org.cybergarage.upnp.std.av.renderer.MediaRenderer;
 
 import java.util.List;
 
@@ -28,15 +34,16 @@ import java.util.List;
 public class DeviceSettingDialog extends SpecialDialog implements WifiModel.ConnectListener, WifiModel.ScanListener {
 
 
-  private static final int STATUS_CONNECT_DEVICE         = 1;
+  private static final int STATUS_CONNECT_DEVICE = 1;
 
-  private static final int STATUS_CONNECT_WIFI           = 3;
-  private static final int STATUS_CONNECT_DEVICE_TIMEOUT = 4;
-  private static final int STATUS_CONNECT_WIFI_TIMEOUT   = 5;
-  private static final int STATUS_CONNECT_DEVICE_SUCC    = 6;
-  private static final int STATUS_CONNECT_WIFI_SUCC      = 7;
-  private static final int STATUS_SET_DEVICE             = 8;
-  private static final int STATUS_SET_DEVICE_SUCC        = 9;
+  private static final int STATUS_CONNECT_WIFI            = 3;
+  private static final int STATUS_CONNECT_DEVICE_TIMEOUT  = 4;
+  private static final int STATUS_CONNECT_WIFI_TIMEOUT    = 5;
+  private static final int STATUS_CONNECT_DEVICE_SUCC     = 6;
+  private static final int STATUS_CONNECT_WIFI_SUCC       = 7;
+  private static final int STATUS_SET_DEVICE              = 8;
+  private static final int STATUS_SET_DEVICE_FINISH       = 9;
+  private static final int STATUS_WAIT_DEVICE_SET_SUCCESS = 10;
 
   @InjectView(R.id.titleTextView)       TextView    titleTextView;
   @InjectView(R.id.deviceNameSpinner)   Spinner     deviceNameSpinner;
@@ -55,11 +62,12 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
   Context   context;
   WifiModel wifiModel;
 
-  String ssid;
+  String currentWifiSSID;
+  String deviceSSID;
   DeviceConfig deviceConfig = null;
 
   boolean firstScan = true;
-  Handler handler = new Handler() {
+  Handler handler   = new Handler() {
     @Override
     public void handleMessage(Message msg) {
       switch (msg.what) {
@@ -68,35 +76,40 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
           break;
         case STATUS_CONNECT_DEVICE_SUCC:
           status.setText(getString(R.string.deviceConnectSucc));
+          setDevice();
           break;
         case STATUS_CONNECT_DEVICE_TIMEOUT:
           status.setText(getString(R.string.deviceConnectTimeout));
           break;
         case STATUS_SET_DEVICE:
           status.setText(getString(R.string.setDeviceMsg));
-          progressBar.setProgress(30);
+          progressBar.setProgress(20);
           break;
-        case STATUS_SET_DEVICE_SUCC:
+        case STATUS_SET_DEVICE_FINISH:
           startConnect(deviceConfig.getWifiSsid(), deviceConfig.getWifiPass());
           break;
         case STATUS_CONNECT_WIFI:
           status.setText(getString(R.string.connectWifiMsg));
-          progressBar.setProgress(60);
+          progressBar.setProgress(40);
           break;
         case STATUS_CONNECT_WIFI_SUCC:
           status.setText(getString(R.string.WifiConnectSucc));
-          progressBar.setProgress(90);
-          dismiss();
+          progressBar.setProgress(60);
+          MainBus.post(new SearchDeviceEvent(MediaRenderer.DEVICE_TYPE));
+          status.setText(getString(R.string.wait_device_set_succ));
           break;
         case STATUS_CONNECT_WIFI_TIMEOUT:
           status.setText(getString(R.string.WifiConnectTimeout));
+          break;
+        case STATUS_WAIT_DEVICE_SET_SUCCESS:
+          dismiss();
           break;
       }
     }
   };
 
   public DeviceSettingDialog(String ssid) {
-    this.ssid = ssid;
+    this.deviceSSID = ssid;
   }
 
   @OnClick(R.id.cancle)
@@ -109,7 +122,7 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
     setEnable(false);
     deviceConfig = new DeviceConfig();
     deviceConfig.setFriendlyName(deviceNameSpinner.getSelectedItem().toString());
-    deviceConfig.setSsid(ssid);
+    deviceConfig.setSsid(deviceSSID);
     deviceConfig.setWifiSsid(networkSpinner.getSelectedItem().toString());
     deviceConfig.setWifiPass(networkPassView.getText().toString());
     startConnect(deviceConfig.getSsid(), null);
@@ -128,8 +141,8 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
     super.onActivityCreated(savedInstanceState);
 
     ButterKnife.inject(this, getView());
-    titleTextView.setText(ssid);
-    progressBar.setMax(90);
+    titleTextView.setText(deviceSSID);
+    progressBar.setMax(80);
     confirm.setEnabled(false);
     deviceNameList = Lists.newArrayList(getResources().getStringArray(R.array.deviceNames));
     deviceNameAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, deviceNameList);
@@ -163,18 +176,28 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
   public void scanResult(List<ScanResult> scanResultList) {
     networkList.clear();
     for (ScanResult scanResult : scanResultList) {
-      if (scanResult.SSID.startsWith("yy")) {
-//        deviceList.add(scanResult.SSID);
-      } else {
-        networkList.add(scanResult.SSID);
+      if (isDevice(scanResult.SSID)){
+        continue;
       }
+      networkList.add(scanResult.SSID);
+    }
 //      deviceAdapter.notifyDataSetChanged();
       networkAdapter.notifyDataSetChanged();
-      if (firstScan){
+      if (firstScan) {
         confirm.setEnabled(true);
         firstScan = false;
       }
+  }
+
+  private boolean isDevice(String ssid){
+    if (ssid.startsWith("yy")){
+      return true;
     }
+    if (ssid.startsWith("Domigo") && ssid.endsWith("ONE"))
+    {
+      return true;
+    }
+    return false;
   }
 
   @Override
@@ -183,15 +206,13 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
     if (ssid == null) {
       return;
     }
-    if (handler == null){
+    if (handler == null) {
       return;
     }
     switch (state) {
       case WifiModel.CONNECT_SUCC:
         if (ssid.equals(deviceConfig.getSsid())) {
           handler.sendEmptyMessage(STATUS_CONNECT_DEVICE_SUCC);
-          setDevice();
-          waitDeviceSetSucc();
         } else {
           handler.sendEmptyMessage(STATUS_CONNECT_WIFI_SUCC);
         }
@@ -236,18 +257,19 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
       @Override
       public void run() {
         RemoteSetting remoteSetting = new RemoteSetting("192.168.198.1");
-        System.out.println("mode : " + remoteSetting.getCurrentMode());
-        System.out.println("ssid : " + remoteSetting.getCurrentSSID());
-        System.out.println("name : " + remoteSetting.getDeviceName());
-
+        //System.out.println("mode : " + remoteSetting.getCurrentMode());
+        //System.out.println("ssid : " + remoteSetting.getCurrentSSID());
+        //System.out.println("name : " + remoteSetting.getDeviceName());
         remoteSetting.setDeviceName(deviceConfig.getFriendlyName());
         remoteSetting.setCurrentMode(false);
         remoteSetting.setSsidAndPass(deviceConfig.getWifiSsid(), deviceConfig.getWifiPass());
+        handler.sendEmptyMessage(STATUS_SET_DEVICE_FINISH);
       }
     }).start();
   }
-  private void waitDeviceSetSucc(){
-    handler.sendEmptyMessageDelayed(STATUS_SET_DEVICE_SUCC, 12000);
+
+  private void waitDeviceSetSucc() {
+    //handler.sendEmptyMessageDelayed(STATUS_SET_DEVICE_SUCC, 12000);
 //    new Thread(new Runnable() {
 //      @Override
 //      public void run() {
@@ -268,7 +290,6 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
   }
 
   private void stopConnect() {
-    handler.removeMessages(STATUS_SET_DEVICE_SUCC);
     handler = null;
     this.dismiss();
     try {
@@ -276,6 +297,41 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
     } catch (Exception e) {
       e.printStackTrace();
 
+    }
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    MainBus.register(this);
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    MainBus.unregister(this);
+  }
+
+  @Subscribe
+  public void onDeviceChanged(DeviceChangeEvent event) {
+    currentWifiSSID = wifiModel.getCurrentSSID();
+    if (deviceSSID.equals(currentWifiSSID)){
+      return;
+    }
+    List<Player> players = Lists.newArrayList(event.players);
+    String tempId;
+    if (deviceSSID.startsWith("yy")){
+      tempId = deviceSSID.substring(2,deviceSSID.length());
+    }else {
+      tempId = deviceSSID.substring(deviceSSID.indexOf("-") + 1, deviceSSID.indexOf("ONE"));
+    }
+    for (Player player : players) {
+      String id = player.getId();
+      //System.out.println("id : " + id);
+      //System.out.println("tempId : " + tempId.toLowerCase());
+      if (id.contains(tempId.toLowerCase())){
+        handler.sendEmptyMessage(STATUS_WAIT_DEVICE_SET_SUCCESS);
+      }
     }
   }
 }

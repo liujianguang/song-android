@@ -90,6 +90,13 @@ public class WifiModel {
     context.registerReceiver(wifiReceiver, intentFilter);
   }
 
+  public String getCurrentSSID(){
+    try {
+      return wifiManager.getConnectionInfo().getSSID();
+    }catch (Exception e){
+      return null;
+    }
+  }
   public void scan() {
     wifiManager.startScan();
   }

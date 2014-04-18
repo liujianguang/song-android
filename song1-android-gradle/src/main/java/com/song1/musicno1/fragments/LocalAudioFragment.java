@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.AudioAdapter;
@@ -17,6 +18,7 @@ import com.song1.musicno1.models.LocalAudioStore;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.models.play.Playlist;
+import org.w3c.dom.Text;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -31,6 +33,9 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
   @Inject LocalAudioStore localAudioStore;
   private Album           album;
   private Artist          artist;
+
+  TextView audioTotalTextView;
+  int audioTotal = 0;
 
   @Inject
   public LocalAudioFragment() {
@@ -56,6 +61,9 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
     headerView.setVisibility(View.VISIBLE);
     LinearLayout headerLayout = (LinearLayout)headerView;
     headerLayout.addView(LayoutInflater.from(getActivity()).inflate(R.layout.header,null));
+    TextView audioTotalTextView = (TextView) headerLayout.findViewById(R.id.audioTotal);
+    String str = String.format(getString(R.string.allAudios),audioTotal);
+    audioTotalTextView.setText(str);
   }
 
   @Override
@@ -68,7 +76,7 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
     super.onActivityCreated(savedInstanceState);
     getListView().setOnItemClickListener(this);
     //getLoaderManager().initLoader(0, null, this);
-
+    audioTotal = localAudioStore.audios_count();
   }
 
   @Override
