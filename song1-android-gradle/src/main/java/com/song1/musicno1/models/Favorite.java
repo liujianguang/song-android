@@ -61,7 +61,7 @@ public class Favorite extends Model {
 
   public boolean isContain(Audio audio) {
     List<FavoriteAudio> exist = new Select().from(FavoriteAudio.class)
-        .where("audio_id=? AND from_type=?", audio.getId(), audio.getFrom()).execute();
+        .where("audio_id=? AND from_type=? AND favorite=?", audio.getId(), audio.getFrom(), getId()).execute();
     return exist != null && exist.size() > 0;
   }
 
