@@ -201,4 +201,5 @@
   <string name="quit_msg">下次再来</string>
   <string name="current_player_is_occupied">当前设备已被占用</string>
   <string name="test">测试</string>
+  <string name="confirm_delete">确定要删除吗？</string>
 </resources>

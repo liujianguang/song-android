@@ -1,5 +1,6 @@
 package com.song1.musicno1.fragments;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.view.ActionMode;
 import android.view.*;
@@ -42,13 +43,21 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
     public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
       switch (menuItem.getItemId()) {
         case R.id.delete:
-          ActiveHelper.transition(() -> {
-            for (Favorite favorite : selectedItem.values()) {
-              favorite.destroy();
-            }
-          });
-          actionMode.finish();
-          reload();
+          AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+          builder.setTitle(R.string.notice)
+              .setMessage(R.string.confirm_delete)
+              .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                ActiveHelper.transition(() -> {
+                  for (Favorite favorite : selectedItem.values()) {
+                    favorite.destroy();
+                  }
+                });
+                actionMode.finish();
+                reload();
+                dialog.dismiss();
+              })
+              .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss())
+              .create().show();
           return true;
       }
       return false;
