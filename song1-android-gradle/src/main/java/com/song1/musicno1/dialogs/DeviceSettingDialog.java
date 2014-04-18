@@ -95,6 +95,7 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
         case STATUS_CONNECT_WIFI_SUCC:
           status.setText(getString(R.string.WifiConnectSucc));
           progressBar.setProgress(60);
+          register();
           MainBus.post(new SearchDeviceEvent(MediaRenderer.DEVICE_TYPE));
           status.setText(getString(R.string.wait_device_set_succ));
           break;
@@ -102,6 +103,7 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
           status.setText(getString(R.string.WifiConnectTimeout));
           break;
         case STATUS_WAIT_DEVICE_SET_SUCCESS:
+          unregister();
           dismiss();
           break;
       }
@@ -176,25 +178,29 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
   public void scanResult(List<ScanResult> scanResultList) {
     networkList.clear();
     for (ScanResult scanResult : scanResultList) {
-      if (isDevice(scanResult.SSID)){
+      if (isDevice(scanResult.SSID)) {
         continue;
       }
       networkList.add(scanResult.SSID);
     }
+
 //      deviceAdapter.notifyDataSetChanged();
-      networkAdapter.notifyDataSetChanged();
-      if (firstScan) {
-        confirm.setEnabled(true);
-        firstScan = false;
-      }
+    networkAdapter.notifyDataSetChanged();
+    if (deviceConfig != null && deviceConfig.getWifiSsid() != null) {
+      networkSpinner.setSelection(networkList.indexOf(deviceConfig.getWifiSsid()));
+    }
+
+    if (firstScan) {
+      confirm.setEnabled(true);
+      firstScan = false;
+    }
   }
 
-  private boolean isDevice(String ssid){
-    if (ssid.startsWith("yy")){
+  private boolean isDevice(String ssid) {
+    if (ssid.startsWith("yy")) {
       return true;
     }
-    if (ssid.startsWith("Domigo") && ssid.endsWith("ONE"))
-    {
+    if (ssid.startsWith("Domigo") && ssid.endsWith("ONE")) {
       return true;
     }
     return false;
@@ -300,36 +306,30 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
     }
   }
 
-  @Override
-  public void onResume() {
-    super.onResume();
+  private void register(){
     MainBus.register(this);
   }
-
-  @Override
-  public void onPause() {
-    super.onPause();
+  private void unregister(){
     MainBus.unregister(this);
   }
-
   @Subscribe
   public void onDeviceChanged(DeviceChangeEvent event) {
-    currentWifiSSID = wifiModel.getCurrentSSID();
-    if (deviceSSID.equals(currentWifiSSID)){
-      return;
-    }
+//    currentWifiSSID = wifiModel.getCurrentSSID();
+//    if (deviceSSID.equals(currentWifiSSID)) {
+//      return;
+//    }
     List<Player> players = Lists.newArrayList(event.players);
     String tempId;
-    if (deviceSSID.startsWith("yy")){
-      tempId = deviceSSID.substring(2,deviceSSID.length());
-    }else {
+    if (deviceSSID.startsWith("yy")) {
+      tempId = deviceSSID.substring(2, deviceSSID.length());
+    } else {
       tempId = deviceSSID.substring(deviceSSID.indexOf("-") + 1, deviceSSID.indexOf("ONE"));
     }
     for (Player player : players) {
       String id = player.getId();
       //System.out.println("id : " + id);
       //System.out.println("tempId : " + tempId.toLowerCase());
-      if (id.contains(tempId.toLowerCase())){
+      if (id.contains(tempId.toLowerCase())) {
         handler.sendEmptyMessage(STATUS_WAIT_DEVICE_SET_SUCCESS);
       }
     }
