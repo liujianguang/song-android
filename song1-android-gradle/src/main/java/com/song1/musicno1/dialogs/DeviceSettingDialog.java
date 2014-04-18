@@ -299,6 +299,7 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
     handler = null;
     this.dismiss();
     try {
+      unregister();
       throw new Exception("stop connect!");
     } catch (Exception e) {
       e.printStackTrace();
