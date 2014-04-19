@@ -31,10 +31,10 @@ def getVersionCode = { ->
     try {
         def code = new ByteArrayOutputStream()
         exec {
-            commandLine 'git', 'tag', '--list'
+            commandLine 'git', 'rev-list', 'HEAD', '--count'
             standardOutput = code
         }
-        return code.toString().split("\n").size()
+        return code.toString().trim().toInteger()
     }
     catch (ignored) {
         return -1;
