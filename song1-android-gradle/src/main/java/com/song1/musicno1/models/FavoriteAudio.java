@@ -39,6 +39,9 @@ public class FavoriteAudio extends Model {
   @Column(name = "favorite")
   public Favorite favorite;
 
+  @Column(name = "album_id")
+  public String albumId;
+
   public FavoriteAudio() {
 
   }
@@ -51,6 +54,7 @@ public class FavoriteAudio extends Model {
     from = audio.getFrom();
     remotePlayUrl = audio.getRemotePlayUrl();
     localPlayUri = audio.getLocalPlayUri();
+    albumId = audio.getAlbumId();
   }
 
   public Audio toAudio() {
@@ -61,6 +65,7 @@ public class FavoriteAudio extends Model {
     audio.setArtist(artist);
     audio.setLocalPlayUri(localPlayUri);
     audio.setRemotePlayUrl(remotePlayUrl);
+    audio.setAlbumId(albumId);
     return audio;
   }
 
