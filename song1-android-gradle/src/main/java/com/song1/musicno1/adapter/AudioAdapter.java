@@ -1,6 +1,7 @@
 package com.song1.musicno1.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,20 @@ public class AudioAdapter extends DataAdapter<Audio> {
   }
 
   @Override
+  public List<Audio> getDataList() {
+     List<Audio> newList = Lists.newArrayList();
+     List<Audio> audioList = super.getDataList();
+     for (Audio audio : audioList){
+       if (audio instanceof AudioGroup)
+       {
+         continue;
+       }
+       newList.add(audio);
+     }
+    return newList;
+  }
+
+  @Override
   public View getView(int i, View view, ViewGroup viewGroup) {
     Audio audio = getDataItem(i);
     ViewHolder holder = null;
@@ -92,12 +107,17 @@ public class AudioAdapter extends DataAdapter<Audio> {
     holder.redHeartBtn.setTag(audio);
     holder.title.setText(audio.getTitle());
     holder.art.setText(audio.getArtist() + "-" + audio.getAlbum());
+
+
     if (selectedAudio == audio) {
       holder.menu.setVisibility(View.VISIBLE);
+      Drawable drawableNormal = context.getResources().getDrawable(R.drawable.ic_heart_normal);
+      Drawable drawableChoose = context.getResources().getDrawable(R.drawable.ic_heart_choose);
       if (FavoriteAudio.isFavorite(audio)) {
-        holder.redHeartBtn.setBackgroundResource(R.color.red);
+
+        holder.redHeartBtn.setCompoundDrawablesWithIntrinsicBounds(null,drawableChoose,null,null);
       } else {
-        holder.redHeartBtn.setBackgroundResource(android.R.color.transparent);
+        holder.redHeartBtn.setCompoundDrawablesWithIntrinsicBounds(null,drawableNormal,null,null);
       }
     } else {
       holder.menu.setVisibility(View.GONE);

@@ -67,7 +67,7 @@
         android:layout_weight="1"
         android:drawablePadding="-8dp"
         android:layout_gravity="center_vertical"
-        android:drawableTop="@drawable/ic_wifi"
+        android:drawableTop="@drawable/ic_add_to"
         android:layout_width="0dp"
         android:layout_height="wrap_content"/>
 
@@ -78,7 +78,7 @@
         android:layout_weight="1"
         android:drawablePadding="-8dp"
         android:layout_gravity="center_vertical"
-        android:drawableTop="@drawable/ic_wifi"
+        android:drawableTop="@drawable/ic_heart_normal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"/>
   </LinearLayout>
