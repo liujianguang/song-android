@@ -154,6 +154,8 @@ public class PlayBarFragment extends Fragment {
         topSubtitleView.setText(event.getAudio().getArtist());
 
         String albumPath = localAudioStore.find_album_path_by(audio.getAlbumId());
+        bottomSubtitleView.setText(event.getAudio().getArtist() + " -- " + event.getAudio().getAlbum());
+        topSubtitleView.setText(event.getAudio().getArtist() + " -- " + event.getAudio().getAlbum());
 
 
         if (Strings.isNullOrEmpty(albumPath)) {

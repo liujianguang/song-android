@@ -62,30 +62,34 @@
           roundImage:mBorderColor="@color/white"
           android:contentDescription="@null"/>
 
-      <com.song1.musicno1.views.AlwaysMarqueeTextView
-          android:id="@+id/bottom_title"
-          android:textSize="@dimen/text_size_normal"
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
           android:layout_toRightOf="@id/bottom_album_art"
-          android:layout_width="match_parent"
+          android:orientation="vertical"
           android:gravity="center_vertical"
-          android:singleLine="true"
-          android:ellipsize="marquee"
-          android:marqueeRepeatLimit="marquee_forever"
-          android:focusable="true"
-          android:focusableInTouchMode="true"
-          android:scrollHorizontally="true"
-          android:layout_height="34dp"/>
+          android:layout_marginLeft="10dp">
+          <com.song1.musicno1.views.AlwaysMarqueeTextView
+              android:id="@+id/bottom_title"
+              android:textSize="@dimen/list_item_title_text_size"
+              android:layout_width="match_parent"
+              android:singleLine="true"
+              android:ellipsize="marquee"
+              android:marqueeRepeatLimit="marquee_forever"
+              android:focusable="true"
+              android:focusableInTouchMode="true"
+              android:scrollHorizontally="true"
+              android:layout_height="wrap_content"/>
 
-      <TextView
-          android:id="@+id/bottom_subtitle"
-          android:textColor="@color/subtitle_text_color"
-          android:singleLine="true"
-          android:ellipsize="end"
-          android:textSize="@dimen/text_size_small"
-          android:layout_alignLeft="@id/bottom_title"
-          android:layout_below="@id/bottom_title"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"/>
+          <TextView
+              android:id="@+id/bottom_subtitle"
+              android:textColor="@color/subtitle_text_color"
+              android:singleLine="true"
+              android:ellipsize="end"
+              android:textSize="@dimen/text_size_small"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"/>
+      </LinearLayout>
     </RelativeLayout>
 
     <ProgressBar
@@ -137,7 +141,7 @@
         android:layout_marginLeft="54dp"
         android:layout_marginRight="54dp"
         android:paddingTop="8dp"
-        android:textSize="@dimen/text_size_normal"
+        android:textSize="@dimen/list_item_title_text_size"
         android:gravity="center"
         android:singleLine="true"
         android:ellipsize="marquee"
