@@ -147,25 +147,22 @@ public class PlayBarFragment extends Fragment {
         topTitleView.setText(event.getAudio().getTitle());
       } else if (!bottomTitleView.getText().toString().equals(event.getAudio().getTitle())) {
         bottomTitleView.setText(event.getAudio().getTitle());
+        bottomSubtitleView.setText(event.getAudio().getArtist());
+
         topTitleView.setText(event.getAudio().getTitle());
-      }
+        topSubtitleView.setText(event.getAudio().getArtist());
 
-      bottomSubtitleView.setText(event.getAudio().getArtist());
-      topSubtitleView.setText(event.getAudio().getArtist());
+        String albumPath = localAudioStore.find_album_path_by(audio.getAlbumId());
 
-      String albumId = audio.getAlbumId();
-      String albumPath = localAudioStore.find_album_path_by(albumId);
-      System.out.println("albumId : " + albumId);
-      System.out.println("alubmPath : " + albumPath);
-
-      if (Strings.isNullOrEmpty(albumPath)) {
-        Picasso.with(getActivity()).load(R.drawable.ic_device_list_nor).transform(new RoundedTransformation()).into(albumArtImageView);
-      } else {
-        File file = new File(albumPath);
-        if (file.exists()) {
-          Picasso.with(getActivity()).load(file).transform(new RoundedTransformation()).into(albumArtImageView);
-        } else {
+        if (Strings.isNullOrEmpty(albumPath)) {
           Picasso.with(getActivity()).load(R.drawable.ic_device_list_nor).transform(new RoundedTransformation()).into(albumArtImageView);
+        } else {
+          File file = new File(albumPath);
+          if (file.exists()) {
+            Picasso.with(getActivity()).load(file).transform(new RoundedTransformation()).into(albumArtImageView);
+          } else {
+            Picasso.with(getActivity()).load(R.drawable.ic_device_list_nor).transform(new RoundedTransformation()).into(albumArtImageView);
+          }
         }
       }
     }
