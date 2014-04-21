@@ -45,13 +45,14 @@
 
   <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="0dp"
+      android:layout_weight="1"
       android:gravity="center">
     <com.song1.musicno1.ui.RoundImageView
         android:id="@+id/album_art"
         android:src="@drawable/default_album_art"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         roundImage:mBorderThickness="12dp"
         roundImage:mBorderColor="#ff96af71"
         android:contentDescription="@null"/>
@@ -64,8 +65,7 @@
       android:gravity="center"
       android:orientation="horizontal"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_weight="1">
+      android:layout_height="80dp">
 
     <ImageButton
         android:id="@+id/play_mode"
