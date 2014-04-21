@@ -8,10 +8,13 @@
       android:id="@+id/grid"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:gravity="center"
-      android:columnWidth="120dp"
-      android:padding="1dp"
-      android:numColumns="auto_fit"/>
+      android:scrollbarAlwaysDrawHorizontalTrack="true"
+      android:scrollbarAlwaysDrawVerticalTrack="true"
+      android:padding="5dp"
+      android:numColumns="3"
+      android:stretchMode="columnWidth"
+      android:horizontalSpacing="5dp"
+      android:verticalSpacing="5dp" />
 
   <ProgressBar
       android:id="@+id/loading"
