@@ -46,6 +46,7 @@
     <item name="android:buttonStyle">@style/buttonStyle</item>
     <item name="android:spinnerDropDownItemStyle">@style/spinnerDropDownItemStyle</item>
     <item name="android:popupMenuStyle">@style/popupMenuStyle</item>
+    <item name="android:seekBarStyle">@style/seekBarStyle</item>
   </style>
 
   <style name="ListItem">
@@ -89,5 +90,13 @@
   </style>
   <style name="dialogAnimation" parent="android:Animation.Dialog">
     <item name="android:windowExitAnimation">@anim/dialog_exit</item>
+  </style>
+  <style name="seekBarStyle" parent="android:Widget.Holo.Light.SeekBar">
+    <item name="android:progressDrawable">@drawable/seek_bar</item>
+    <item name="android:minHeight">1.5dp</item>
+    <item name="android:maxHeight">1.5dp</item>
+    <item name="android:paddingLeft">10dp</item>
+    <item name="android:paddingRight">10dp</item>
+    <item name="android:thumb">@drawable/slider</item>
   </style>
 </resources>

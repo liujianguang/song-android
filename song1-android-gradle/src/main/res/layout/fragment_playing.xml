@@ -67,35 +67,32 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
   </LinearLayout>
-
-  <RelativeLayout
-      android:padding="8dp"
+  <LinearLayout
       android:id="@+id/volume_section"
       android:layout_width="match_parent"
-      android:layout_height="50dp">
+      android:layout_height="50dp"
+      android:orientation="horizontal"
+      android:gravity="center_vertical">
 
     <ImageView
         android:id="@+id/volume_min"
         android:src="@drawable/ic_volume_min"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_width="20dp"
-        android:layout_height="20dp"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <SeekBar
+        android:id="@+id/volume_bar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:thumb="@drawable/vol_slider"/>
 
     <ImageView
         android:id="@+id/volume_max"
         android:src="@drawable/ic_volume_max"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:scaleType="center"
-        android:layout_width="20dp"
-        android:layout_height="20dp"/>
-
-    <SeekBar
-        android:id="@+id/volume_bar"
-        android:layout_toLeftOf="@id/volume_max"
-        android:layout_toRightOf="@id/volume_min"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-  </RelativeLayout>
+        android:layout_width="40dp"
+        android:layout_height="40dp"/>
+  </LinearLayout>
 </LinearLayout>
