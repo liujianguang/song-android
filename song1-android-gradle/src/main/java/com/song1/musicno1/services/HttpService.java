@@ -10,13 +10,15 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.widget.Toast;
 import com.song1.musicno1.App;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.helpers.MainBus;
+import com.song1.musicno1.models.events.ExitEvent;
 import com.song1.musicno1.vender.WebServer;
+import com.squareup.otto.Subscribe;
+import de.akquinet.android.androlog.Log;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -70,6 +72,7 @@ public class HttpService extends Service {
     App.inject(this);
 
     MainBus.register(this);
+    Log.init(this);
 
     wifi_lock = wifiManager.createWifiLock("HTTP");
     wifi_lock.acquire();
@@ -84,7 +87,7 @@ public class HttpService extends Service {
         httpServer.start();
         isStarted = true;
       } catch (IOException e) {
-        Log.e("Song1", String.format("启动 HTTP Service 失败, port: %d: %s", port, e.getMessage()));
+        Log.e(this, String.format("启动 HTTP Service 失败, port: %d: %s", port, e.getMessage()));
       }
     }
     if (!isStarted) {
@@ -129,5 +132,14 @@ public class HttpService extends Service {
     _instance = null;
     wifi_lock.release();
     wifi_lock = null;
+
+    NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+    manager.cancel(0);
+    Log.d(this, "Exit HttpService");
+  }
+
+  @Subscribe
+  public void onExit(ExitEvent event) {
+    stopSelf();
   }
 }

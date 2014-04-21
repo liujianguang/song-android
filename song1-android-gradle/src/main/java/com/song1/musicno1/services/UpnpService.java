@@ -10,6 +10,7 @@ import com.song1.musicno1.App;
 import com.song1.musicno1.helpers.List8;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.NetworkHelp;
+import com.song1.musicno1.models.events.ExitEvent;
 import com.song1.musicno1.models.events.play.RemoteRenderingControl;
 import com.song1.musicno1.models.events.upnp.DeviceChangeEvent;
 import com.song1.musicno1.models.events.upnp.MediaServerEvent;
@@ -83,6 +84,8 @@ public class UpnpService extends Service implements DeviceChangeListener {
     MainBus.unregister(this);
     networkHelp.unregister();
     lock.release();
+    stopController();
+    executorService.shutdown();
   }
 
   private void startController() {
@@ -167,6 +170,11 @@ public class UpnpService extends Service implements DeviceChangeListener {
   public void searchDevice(SearchDeviceEvent event) {
     Log.d(this, "Search device");
     executorService.submit(() -> mediaController.search());
+  }
+
+  @Subscribe
+  public void onExit(ExitEvent event) {
+    stopSelf();
   }
 }
 

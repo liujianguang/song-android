@@ -224,11 +224,11 @@ public class Player {
   }
 
   public void stop() {
+    setState(STOPPED);
     try {
       renderer.stop();
     } catch (RendererException ignored) {
     }
-    setState(STOPPED);
   }
 
   public void onStateChanged(OnStateChangedListener listener) {

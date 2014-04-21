@@ -6,12 +6,14 @@ import android.os.IBinder;
 import com.google.common.collect.Maps;
 import com.song1.musicno1.helpers.LatestExecutor;
 import com.song1.musicno1.helpers.MainBus;
+import com.song1.musicno1.models.events.ExitEvent;
 import com.song1.musicno1.models.events.play.*;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.play.Playlist;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
+import de.akquinet.android.androlog.Log;
 
 import java.util.Map;
 
@@ -24,6 +26,7 @@ public class PlayService extends Service {
   protected SetPlaylistEvent waitingEvent;
 
   protected Map<String, Playlist> playlistMap = Maps.newHashMap();
+  protected Map<String, Player>   playerMap   = Maps.newHashMap();
   protected LatestExecutor volumeExecutor;
 
   @Override
@@ -43,10 +46,17 @@ public class PlayService extends Service {
   public void onDestroy() {
     super.onDestroy();
     MainBus.unregister(this);
+    for (Player player : playerMap.values()) {
+      new Thread(() -> player.stop()).start();
+    }
+    playExecutor.shutdown();
+    volumeExecutor.shutdown();
+    Log.d(this, "Exit PlayService");
   }
 
   @Subscribe
   public void selectPlayer(SelectPlayerEvent event) {
+    playerMap.put(event.player.getId(), event.player);
     volumeExecutor.submit(() -> {
       event.player.updateVolume();
     });
@@ -280,5 +290,10 @@ public class PlayService extends Service {
         }
       });
     }
+  }
+
+  @Subscribe
+  public void onExit(ExitEvent event) {
+    stopSelf();
   }
 }

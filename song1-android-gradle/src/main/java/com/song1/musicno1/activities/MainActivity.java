@@ -23,6 +23,7 @@ import com.song1.musicno1.fragments.PlayingFragment;
 import com.song1.musicno1.fragments.TestFragment;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.ViewHelper;
+import com.song1.musicno1.models.events.ExitEvent;
 import com.song1.musicno1.models.events.play.CurrentPlayerOccupiedEvent;
 import com.song1.musicno1.models.events.play.UpdateVolumeEvent;
 import com.song1.musicno1.services.HttpService;
@@ -144,11 +145,6 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
       }
     } else {
-      if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-        QuitDialog dialog = new QuitDialog();
-        dialog.show(getSupportFragmentManager(), "quitDialog");
-        return;
-      }
       super.onBackPressed();
       if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
@@ -226,5 +222,10 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
 
   public void showPlayBar() {
     playingSectionView.setVisibility(View.VISIBLE);
+  }
+
+  @Subscribe
+  public void onExit(ExitEvent event) {
+    finish();
   }
 }

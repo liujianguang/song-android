@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.song1.musicno1.App;
@@ -21,6 +22,7 @@ import com.song1.musicno1.dialogs.LoadingDialog;
 import com.song1.musicno1.fragments.base.BaseFragment;
 import com.song1.musicno1.fragments.download.DownLoadManagerFragment;
 import com.song1.musicno1.helpers.MainBus;
+import com.song1.musicno1.models.events.ExitEvent;
 import com.song1.musicno1.models.events.upnp.MediaServerEvent;
 import com.song1.musicno1.models.migu.MiguIniter;
 import com.song1.musicno1.models.play.MediaServer;
@@ -178,6 +180,11 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
     } else {
       runnable.run();
     }
+  }
+
+  @OnClick(R.id.btn_section)
+  public void exit() {
+    MainBus.post(new ExitEvent());
   }
 
   @Override
