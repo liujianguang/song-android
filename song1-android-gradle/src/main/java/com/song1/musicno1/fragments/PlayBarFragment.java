@@ -141,7 +141,7 @@ public class PlayBarFragment extends Fragment {
       bottomSubtitleView.setText("");
       topTitleView.setText("");
       topSubtitleView.setText("");
-      Picasso.with(getActivity()).load(R.drawable.ic_device_list_nor).transform(new RoundedTransformation()).into(albumArtImageView);
+      Picasso.with(getActivity()).load(R.drawable.default_album_art_small).transform(new RoundedTransformation()).into(albumArtImageView);
     } else {
       if (bottomTitleView.getText() == null) {
         bottomTitleView.setText(event.getAudio().getTitle());
@@ -155,21 +155,21 @@ public class PlayBarFragment extends Fragment {
 
         String albumPath = localAudioStore.find_album_path_by(audio.getAlbumId());
 
+
         if (Strings.isNullOrEmpty(albumPath)) {
-          Picasso.with(getActivity()).load(R.drawable.ic_device_list_nor).transform(new RoundedTransformation()).into(albumArtImageView);
+          Picasso.with(getActivity()).load(R.drawable.default_album_art_small).transform(new RoundedTransformation()).into(albumArtImageView);
         } else {
           File file = new File(albumPath);
           if (file.exists()) {
             Picasso.with(getActivity()).load(file).transform(new RoundedTransformation()).into(albumArtImageView);
           } else {
-            Picasso.with(getActivity()).load(R.drawable.ic_device_list_nor).transform(new RoundedTransformation()).into(albumArtImageView);
+            Picasso.with(getActivity()).load(R.drawable.default_album_art_small).transform(new RoundedTransformation()).into(albumArtImageView);
           }
         }
       }
+      positionBar.setMax(event.getDuration());
+      positionBar.setProgress(event.getPosition());
     }
-
-    positionBar.setMax(event.getDuration());
-    positionBar.setProgress(event.getPosition());
   }
 
   public void showBottom() {

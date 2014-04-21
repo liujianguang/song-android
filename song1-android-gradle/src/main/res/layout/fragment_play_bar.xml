@@ -53,7 +53,7 @@
       <com.song1.musicno1.ui.RoundImageView
           android:id="@+id/bottom_album_art"
           android:background="@android:color/transparent"
-          android:src="@drawable/ic_device_list"
+          android:src="@drawable/default_album_art_small"
           android:layout_centerVertical="true"
           android:layout_marginLeft="4dp"
           android:layout_width="54dp"
