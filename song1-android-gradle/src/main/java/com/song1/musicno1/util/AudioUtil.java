@@ -21,7 +21,10 @@ public class AudioUtil {
     for (Audio audio : audioList){
       String title = audio.getTitle();
       Character character = FirstLetterUtil.getFirstLetter(title).toUpperCase().charAt(0);
-
+      //System.out.println((int)character);
+      if (character < 'A' || character > 'Z'){
+        character = '#';
+      }
       List<Audio> tempList = audioGroupMap.get(character);
       if (tempList == null){
         tempList = Lists.newArrayList();

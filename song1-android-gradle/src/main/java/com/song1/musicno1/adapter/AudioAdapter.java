@@ -48,11 +48,17 @@ public class AudioAdapter extends DataAdapter<Audio> {
 
     allAudioList.clear();
     for (Character key : allKeyList) {
+      if (key == '#'){
+        continue;
+      }
       List<Audio> list = audioListMap.get(key);
       allAudioList.add(new AudioGroup(key.toString()));
       allAudioList.addAll(list);
     }
-
+    if (audioListMap.get('#') != null) {
+      allAudioList.add(new AudioGroup("#"));
+      allAudioList.addAll(audioListMap.get('#'));
+    }
     return allAudioList;
   }
 
@@ -123,7 +129,7 @@ public class AudioAdapter extends DataAdapter<Audio> {
     @InjectView(R.id.menu_btn)  ImageButton menuBtn;
     @InjectView(R.id.red_heart) Button      redHeartBtn;
     @InjectView(R.id.add_to)    Button      addToBtn;
-    @InjectView(R.id.tune)      ImageView   tuneImg;
+    //@InjectView(R.id.tune)      ImageView   tuneImg;
     @InjectView(R.id.art)       TextView    art;
 
     public ViewHolder(View view) {
