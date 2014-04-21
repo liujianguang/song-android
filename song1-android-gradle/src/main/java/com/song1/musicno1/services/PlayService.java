@@ -2,6 +2,7 @@ package com.song1.musicno1.services;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
 import com.google.common.collect.Maps;
 import com.song1.musicno1.helpers.LatestExecutor;
@@ -24,10 +25,16 @@ public class PlayService extends Service {
   protected LatestExecutor   playExecutor;
   protected Player           currentPlayer;
   protected SetPlaylistEvent waitingEvent;
+  protected LatestExecutor   volumeExecutor;
 
   protected Map<String, Playlist> playlistMap = Maps.newHashMap();
   protected Map<String, Player>   playerMap   = Maps.newHashMap();
-  protected LatestExecutor volumeExecutor;
+  protected Handler               handler     = new Handler();
+
+  protected final int[] TIMER_VALUES = new int[]{0, 15, 30, 45, 60, 120};
+
+  protected Runnable timerRunnable;
+  protected int      timerValue;
 
   @Override
   public IBinder onBind(Intent intent) {
@@ -46,9 +53,7 @@ public class PlayService extends Service {
   public void onDestroy() {
     super.onDestroy();
     MainBus.unregister(this);
-    for (Player player : playerMap.values()) {
-      new Thread(() -> player.stop()).start();
-    }
+    stopAllPlayers();
     playExecutor.shutdown();
     volumeExecutor.shutdown();
     Log.d(this, "Exit PlayService");
@@ -289,6 +294,41 @@ public class PlayService extends Service {
           MainBus.post(new VolumeEvent(player.getVolume()));
         }
       });
+    }
+  }
+
+  @Subscribe
+  public void startTimer(StartTimerEvent event) {
+    timerValue = TIMER_VALUES[event.getMinutes()] * 60;
+    if (event.getMinutes() == 0) {
+      if (timerRunnable != null) {
+        handler.removeCallbacks(timerRunnable);
+        timerRunnable = null;
+      }
+    } else {
+      if (timerRunnable == null) {
+        timerRunnable = new Runnable() {
+          @Override
+          public void run() {
+            timerValue--;
+            if (timerValue == 0) {
+              handler.removeCallbacks(this);
+              timerRunnable = null;
+              stopAllPlayers();
+            } else {
+              handler.postDelayed(this, 1000);
+            }
+            MainBus.post(new TimerEvent(timerValue));
+          }
+        };
+        handler.post(timerRunnable);
+      }
+    }
+  }
+
+  private void stopAllPlayers() {
+    for (Player player : playerMap.values()) {
+      new Thread(() -> player.stop()).start();
     }
   }
 

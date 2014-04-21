@@ -225,6 +225,7 @@ public class Player {
 
   public void stop() {
     setState(STOPPED);
+    setPosition(0, 0);
     try {
       renderer.stop();
     } catch (RendererException ignored) {

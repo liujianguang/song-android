@@ -58,7 +58,7 @@
           android:layout_marginLeft="4dp"
           android:layout_width="54dp"
           android:layout_height="54dp"
-          roundImage:mBorderThickness = "2dp"
+          roundImage:mBorderThickness="2dp"
           roundImage:mBorderColor="@color/white"
           android:contentDescription="@null"/>
 
@@ -112,6 +112,26 @@
         android:layout_height="54dp"
         android:contentDescription="@null"/>
 
+    <ImageButton
+        android:id="@+id/timer"
+        android:background="@null"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_timer"
+        android:layout_width="54dp"
+        android:layout_height="54dp"/>
+
+    <TextView
+        android:id="@+id/timer_time"
+        android:layout_marginTop="42dp"
+        android:layout_alignLeft="@id/timer"
+        android:layout_alignRight="@id/timer"
+        android:textSize="@dimen/text_size_smaller"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
     <com.song1.musicno1.views.AlwaysMarqueeTextView
         android:id="@+id/top_title"
         android:layout_marginLeft="54dp"
@@ -125,6 +145,8 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:scrollHorizontally="true"
+        android:layout_toRightOf="@id/top_slide_down"
+        android:layout_toLeftOf="@id/timer"
         android:layout_width="match_parent"
         android:layout_height="34dp"/>
 
@@ -137,6 +159,8 @@
         android:gravity="center"
         android:singleLine="true"
         android:ellipsize="end"
+        android:layout_toRightOf="@id/top_slide_down"
+        android:layout_toLeftOf="@id/timer"
         android:layout_below="@id/top_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

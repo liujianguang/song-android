@@ -1,5 +1,6 @@
 package com.song1.musicno1.fragments;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -17,11 +18,9 @@ import com.google.common.base.Strings;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.helpers.MainBus;
+import com.song1.musicno1.helpers.TimeHelper;
 import com.song1.musicno1.models.LocalAudioStore;
-import com.song1.musicno1.models.events.play.CurrentPlayerStateEvent;
-import com.song1.musicno1.models.events.play.PositionEvent;
-import com.song1.musicno1.models.events.play.SelectPlayerEvent;
-import com.song1.musicno1.models.events.play.ShowDeviceFragmentEvent;
+import com.song1.musicno1.models.events.play.*;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.play.Players;
@@ -47,8 +46,10 @@ public class PlayBarFragment extends Fragment {
   @InjectView(R.id.top_subtitle)       TextView           topSubtitleView;
   @InjectView(R.id.refresh_layout)     SwipeRefreshLayout refreshLayout;
   @InjectView(R.id.bottom_album_art)   ImageView          albumArtImageView;
+  @InjectView(R.id.timer_time)         TextView           timerTextView;
 
   LocalAudioStore localAudioStore;
+  protected int timerValueIndex;
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
@@ -187,8 +188,31 @@ public class PlayBarFragment extends Fragment {
     activity.collapsePlayingPanel();
   }
 
+  @OnClick(R.id.timer)
+  public void showTimerDialog() {
+    new AlertDialog.Builder(getActivity())
+        .setSingleChoiceItems(getResources().getStringArray(R.array.timer_values), timerValueIndex, (dialog, which) -> {
+          dialog.dismiss();
+          timerValueIndex = which;
+          MainBus.post(new StartTimerEvent(timerValueIndex));
+          if (timerValueIndex == 0) {
+            timerTextView.setVisibility(View.GONE);
+          }
+        }).show();
+  }
+
   @Subscribe
   public void onShowDeviceFragment(ShowDeviceFragmentEvent event) {
     showPlayerList();
+  }
+
+  @Subscribe
+  public void timerCountDown(TimerEvent event) {
+    if (event.getTimerValue() == 0) {
+      timerTextView.setVisibility(View.GONE);
+    } else {
+      timerTextView.setVisibility(View.VISIBLE);
+    }
+    timerTextView.setText(TimeHelper.secondToString(event.getTimerValue()));
   }
 }
