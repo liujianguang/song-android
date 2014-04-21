@@ -10,14 +10,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.BaseAdapter;
+import com.song1.musicno1.entity.AudioGroup;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.events.play.CurrentPlaylistEvent;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.models.play.Playlist;
 import com.squareup.otto.Subscribe;
+
+import java.util.List;
 
 /**
  * Created by windless on 4/1/14.
@@ -65,7 +69,17 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemClic
   @Subscribe
   public void playlistChanged(CurrentPlaylistEvent event) {
     playlist = event.getPlaylist();
-    adapter.setList(event.getPlaylist().getAudios());
+    if (playlist.getAudios() == null){
+      return;
+    }
+    List<Audio> list = Lists.newArrayList();
+    for (Audio audio :playlist.getAudios()){
+       if (audio instanceof AudioGroup){
+          continue;
+       }
+      list.add(audio);
+    }
+    adapter.setList(list);
     adapter.notifyDataSetChanged();
   }
 

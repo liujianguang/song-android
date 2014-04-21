@@ -46,6 +46,7 @@ public class AudioAdapter extends DataAdapter<Audio> {
     List<Character> allKeyList = Lists.newArrayList(audioListMap.keySet());
     Collections.sort(allKeyList);
 
+    allAudioList.clear();
     for (Character key : allKeyList) {
       List<Audio> list = audioListMap.get(key);
       allAudioList.add(new AudioGroup(key.toString()));
