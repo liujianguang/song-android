@@ -16,7 +16,6 @@ import butterknife.InjectView;
 import com.crashlytics.android.Crashlytics;
 import com.song1.musicno1.App;
 import com.song1.musicno1.R;
-import com.song1.musicno1.dialogs.QuitDialog;
 import com.song1.musicno1.fragments.LeftFragment;
 import com.song1.musicno1.fragments.PlayBarFragment;
 import com.song1.musicno1.fragments.PlayingFragment;
@@ -90,8 +89,8 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
         R.string.drawer_close
     );
     drawerLayout.setDrawerListener(actionBarDrawerToggle);
-    getActionBar().setDisplayHomeAsUpEnabled(true);
-    getActionBar().setHomeButtonEnabled(true);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    getSupportActionBar().setHomeButtonEnabled(true);
 
   }
 
