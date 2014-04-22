@@ -7,12 +7,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.google.common.base.Strings;
 import com.song1.musicno1.R;
 import com.song1.musicno1.entity.Album;
-import com.squareup.picasso.Picasso;
-
-import java.io.File;
+import com.song1.musicno1.helpers.AlbumArtHelper;
 
 /**
  * User: windless
@@ -42,17 +39,7 @@ public class AlbumAdapter extends DataAdapter<Album> {
       holder.title.setText(album.title);
     }
 
-    if (Strings.isNullOrEmpty(album.album_art)) {
-      Picasso.with(context).load(R.drawable.album_art_default_small).into(holder.image);
-    } else {
-      File file = new File(album.album_art);
-      if (file.exists()) {
-        Picasso.with(context).load(new File(album.album_art)).into(holder.image);
-      } else {
-        Picasso.with(context).load(R.drawable.album_art_default_small).into(holder.image);
-      }
-    }
-
+    AlbumArtHelper.loadAlbumArt(context, album.album_art, holder.image, R.drawable.album_art_default_small);
     return convertView;
   }
 

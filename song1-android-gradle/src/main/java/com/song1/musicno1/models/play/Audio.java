@@ -1,5 +1,8 @@
 package com.song1.musicno1.models.play;
 
+import com.google.common.base.Strings;
+import com.song1.musicno1.models.LocalAudioStore;
+
 /**
  * Created by windless on 3/27/14.
  */
@@ -16,6 +19,7 @@ public class Audio {
   private int    from;
   private String remotePlayUrl;
   private String localPlayUri;
+  private String albumArt;
 
   public String getRemotePlayUrl() {
     return remotePlayUrl;
@@ -79,6 +83,17 @@ public class Audio {
 
   public String getAlbumId() {
     return albumId;
+  }
+
+  public String getAlbumArt(LocalAudioStore store) {
+    if (from == LOCAL && Strings.isNullOrEmpty(albumArt)) {
+      albumArt = store.find_album_path_by(albumId);
+    }
+    return albumArt;
+  }
+
+  public void setAlbumArt(String albumArt) {
+    this.albumArt = albumArt;
   }
 
   public void setAlbumId(String albumId) {

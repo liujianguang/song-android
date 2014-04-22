@@ -13,6 +13,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import com.google.common.base.Strings;
 import com.song1.musicno1.R;
+import com.song1.musicno1.helpers.AlbumArtHelper;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.TimeHelper;
 import com.song1.musicno1.models.LocalAudioStore;
@@ -75,18 +76,12 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
       Picasso.with(getActivity()).load(R.drawable.default_album_art).transform(new RoundedTransformation()).into(albumArtImageView);
     } else {
       actionsSection.setVisibility(View.VISIBLE);
-      String albumId = audio.getAlbumId();
-      String albumPath = localAudioStore.find_album_path_by(albumId);
-      if (Strings.isNullOrEmpty(albumPath)) {
-        Picasso.with(getActivity()).load(R.drawable.default_album_art).transform(new RoundedTransformation()).into(albumArtImageView);
-      } else {
-        File file = new File(albumPath);
-        if (file.exists()) {
-          Picasso.with(getActivity()).load(file).transform(new RoundedTransformation()).into(albumArtImageView);
-        } else {
-          Picasso.with(getActivity()).load(R.drawable.default_album_art).transform(new RoundedTransformation()).into(albumArtImageView);
-        }
-      }
+      AlbumArtHelper.loadAlbumArtRounded(
+          getActivity(),
+          audio.getAlbumArt(localAudioStore),
+          albumArtImageView,
+          R.drawable.default_album_art
+          );
     }
 
     positionSeeker.setEnabled(event.getAudio() != null);
