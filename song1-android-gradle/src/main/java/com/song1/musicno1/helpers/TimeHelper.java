@@ -25,7 +25,7 @@ public class TimeHelper {
   }
 
   public static String secondToString(int seconds) {
-    return String.format("%d:%02d", seconds / 60, seconds % 60);
+    return String.format("%02d:%02d", seconds / 60, seconds % 60);
   }
 
   public static int str2milli(String str) {

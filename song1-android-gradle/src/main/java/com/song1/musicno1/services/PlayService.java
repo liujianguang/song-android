@@ -31,8 +31,6 @@ public class PlayService extends Service {
   protected Map<String, Player>   playerMap   = Maps.newHashMap();
   protected Handler               handler     = new Handler();
 
-  protected final int[] TIMER_VALUES = new int[]{0, 15, 30, 45, 60, 120};
-
   protected Runnable timerRunnable;
   protected int      timerValue;
 
@@ -299,26 +297,27 @@ public class PlayService extends Service {
 
   @Subscribe
   public void startTimer(StartTimerEvent event) {
-    timerValue = TIMER_VALUES[event.getMinutes()] * 60;
-    if (event.getMinutes() == 0) {
+    timerValue = event.getSeconds();
+    if (event.getSeconds() == 0) {
       if (timerRunnable != null) {
         handler.removeCallbacks(timerRunnable);
         timerRunnable = null;
       }
+      MainBus.post(new TimerEvent(timerValue));
     } else {
       if (timerRunnable == null) {
         timerRunnable = new Runnable() {
           @Override
           public void run() {
-            timerValue--;
             if (timerValue == 0) {
               handler.removeCallbacks(this);
               timerRunnable = null;
-              stopAllPlayers();
+              MainBus.post(new ExitEvent());
             } else {
               handler.postDelayed(this, 1000);
             }
             MainBus.post(new TimerEvent(timerValue));
+            timerValue--;
           }
         };
         handler.post(timerRunnable);

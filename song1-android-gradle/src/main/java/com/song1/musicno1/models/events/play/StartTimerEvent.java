@@ -10,7 +10,7 @@ public class StartTimerEvent {
     this.minutes = minutes;
   }
 
-  public int getMinutes() {
+  public int getSeconds() {
     return minutes;
   }
 }

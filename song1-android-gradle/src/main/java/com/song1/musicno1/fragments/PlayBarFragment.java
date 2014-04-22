@@ -1,6 +1,5 @@
 package com.song1.musicno1.fragments;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,9 +13,9 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import com.google.common.base.Strings;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
+import com.song1.musicno1.dialogs.TimerDialog;
 import com.song1.musicno1.helpers.AlbumArtHelper;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.TimeHelper;
@@ -28,8 +27,6 @@ import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.util.RoundedTransformation;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
-
-import java.io.File;
 
 /**
  * Created by windless on 3/27/14.
@@ -50,7 +47,7 @@ public class PlayBarFragment extends Fragment {
   @InjectView(R.id.timer_time)         TextView           timerTextView;
 
   LocalAudioStore localAudioStore;
-  protected int timerValueIndex;
+  protected int timerValue;
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
@@ -186,15 +183,7 @@ public class PlayBarFragment extends Fragment {
 
   @OnClick(R.id.timer)
   public void showTimerDialog() {
-    new AlertDialog.Builder(getActivity())
-        .setSingleChoiceItems(getResources().getStringArray(R.array.timer_values), timerValueIndex, (dialog, which) -> {
-          dialog.dismiss();
-          timerValueIndex = which;
-          MainBus.post(new StartTimerEvent(timerValueIndex));
-          if (timerValueIndex == 0) {
-            timerTextView.setVisibility(View.GONE);
-          }
-        }).show();
+    TimerDialog.newInstance(timerValue).show(getFragmentManager(), "");
   }
 
   @Subscribe
@@ -204,6 +193,7 @@ public class PlayBarFragment extends Fragment {
 
   @Subscribe
   public void timerCountDown(TimerEvent event) {
+    timerValue = event.getTimerValue();
     if (event.getTimerValue() == 0) {
       timerTextView.setVisibility(View.GONE);
     } else {

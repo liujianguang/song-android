@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+  <TextView
+      android:id="@+id/title"
+      android:text="@string/setting_timer"
+      android:textColor="@color/white"
+      android:gravity="center"
+      android:textSize="@dimen/title_text_size"
+      android:background="@color/dark_green"
+      android:layout_width="match_parent"
+      android:layout_height="50dp"/>
+
+  <LinearLayout
+      android:orientation="vertical"
+      android:layout_width="300dp"
+      android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/time"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_bigger"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingBottom="20dp"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+      <TextView
+          android:text="@string/zero_minutes"
+          android:gravity="center"
+          android:textSize="@dimen/text_size_smaller"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+      <SeekBar
+          android:id="@+id/time_seeker"
+          android:layout_weight="1"
+          android:thumb="@drawable/vol_slider"
+          android:layout_width="0dp"
+          android:progress="60"
+          android:max="7200"
+          android:layout_height="wrap_content"/>
+
+      <TextView
+          android:text="@string/max_minutes"
+          android:textSize="@dimen/text_size_smaller"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+  </LinearLayout>
+
+  <View
+      android:background="@color/dark_green"
+      android:layout_width="match_parent"
+      android:layout_height="1dp"/>
+
+  <LinearLayout
+      android:orientation="horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="60dp">
+
+    <Button
+        android:id="@+id/stop"
+        android:text="@string/stop_timer"
+        android:textColor="@color/white"
+        android:background="@drawable/button"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"/>
+
+    <View
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/dark_green"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"/>
+
+    <Button
+        android:id="@+id/ok"
+        android:text="@android:string/ok"
+        android:textColor="@color/white"
+        android:background="@drawable/button"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"/>
+  </LinearLayout>
+</LinearLayout>
