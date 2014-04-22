@@ -68,6 +68,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
   </LinearLayout>
+
   <LinearLayout
       android:id="@+id/volume_section"
       android:layout_width="match_parent"
@@ -75,12 +76,15 @@
       android:orientation="horizontal"
       android:gravity="center_vertical">
 
-    <ImageView
+    <ImageButton
         android:id="@+id/volume_min"
         android:src="@drawable/vol_min"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginLeft="15dp"/>
+        android:scaleType="fitCenter"
+        android:background="@null"
+        android:padding="6dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="@null"/>
 
     <SeekBar
         android:id="@+id/volume_bar"
@@ -91,11 +95,14 @@
         android:paddingRight="15dp"
         android:thumb="@drawable/vol_slider"/>
 
-    <ImageView
+    <ImageButton
         android:id="@+id/volume_max"
         android:src="@drawable/vol_max"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginRight="15dp"/>
+        android:scaleType="fitCenter"
+        android:background="@null"
+        android:padding="6dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="@null"/>
   </LinearLayout>
 </LinearLayout>

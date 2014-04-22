@@ -11,7 +11,8 @@ public class UpdateVolumeEvent {
 
   protected Volume volume;
 
-  private int upOrDown = -1;
+  private int     upOrDown  = -1;
+  private boolean showToast = false;
 
   public UpdateVolumeEvent() {
 
@@ -19,6 +20,11 @@ public class UpdateVolumeEvent {
 
   public UpdateVolumeEvent(int upOrDown) {
     this.upOrDown = upOrDown;
+  }
+
+  public UpdateVolumeEvent(int upOrDown, boolean showToast) {
+    this.upOrDown = upOrDown;
+    this.showToast = showToast;
   }
 
   public boolean isUp() {
@@ -35,5 +41,9 @@ public class UpdateVolumeEvent {
 
   public Volume getVolume() {
     return volume;
+  }
+
+  public boolean isShowToast() {
+    return showToast;
   }
 }

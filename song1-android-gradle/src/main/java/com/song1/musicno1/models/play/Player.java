@@ -358,6 +358,13 @@ public class Player {
     }
   }
 
+  public void volume(boolean showToast) {
+    try {
+      renderingControl.volumeUp();
+    } catch (RendererException ignored) {
+    }
+  }
+
   public void volumeDown() {
     try {
       renderingControl.volumeDown();

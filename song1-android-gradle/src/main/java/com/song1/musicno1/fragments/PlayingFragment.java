@@ -190,6 +190,16 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     }
   }
 
+  @OnClick(R.id.volume_min)
+  public void volumeDown() {
+    MainBus.post(new UpdateVolumeEvent(UpdateVolumeEvent.DOWN, false));
+  }
+
+  @OnClick(R.id.volume_max)
+  public void volumeUp() {
+    MainBus.post(new UpdateVolumeEvent(UpdateVolumeEvent.UP, false));
+  }
+
 
   class Adapter extends FragmentPagerAdapter {
 
