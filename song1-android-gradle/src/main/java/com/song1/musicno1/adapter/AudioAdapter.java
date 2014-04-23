@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -18,109 +17,83 @@ import com.song1.musicno1.dialogs.FavoritesDialog;
 import com.song1.musicno1.entity.AudioGroup;
 import com.song1.musicno1.models.FavoriteAudio;
 import com.song1.musicno1.models.play.Audio;
-import com.song1.musicno1.util.AudioUtil;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by windless on 14-4-10.
  */
 public class AudioAdapter extends DataAdapter<Audio> {
+  private final static int GROUP = 0;
+  private final static int AUDIO = 1;
+
   protected Audio selectedAudio;
-
-
-  List<Audio> allAudioList = Lists.newArrayList();
 
   public AudioAdapter(Context context) {
     super(context);
   }
 
   @Override
-  public void setDataList(List<Audio> dataList) {
-    super.setDataList(doGroup(dataList));
-  }
-
-  private List<Audio> doGroup(List<Audio> dataList) {
-    Map<Character, List<Audio>> audioListMap = AudioUtil.doAudioGroup(dataList);
-    List<Character> allKeyList = Lists.newArrayList(audioListMap.keySet());
-    Collections.sort(allKeyList);
-
-    allAudioList.clear();
-    for (Character key : allKeyList) {
-      if (key == '#'){
+  public List<Audio> getDataList() {
+    List<Audio> newList = Lists.newArrayList();
+    List<Audio> audioList = super.getDataList();
+    for (Audio audio : audioList) {
+      if (audio instanceof AudioGroup) {
         continue;
       }
-      List<Audio> list = audioListMap.get(key);
-      allAudioList.add(new AudioGroup(key.toString()));
-      allAudioList.addAll(list);
+      newList.add(audio);
     }
-    if (audioListMap.get('#') != null) {
-      allAudioList.add(new AudioGroup("#"));
-      allAudioList.addAll(audioListMap.get('#'));
-    }
-    return allAudioList;
-  }
-
-  @Override
-  public List<Audio> getDataList() {
-     List<Audio> newList = Lists.newArrayList();
-     List<Audio> audioList = super.getDataList();
-     for (Audio audio : audioList){
-       if (audio instanceof AudioGroup)
-       {
-         continue;
-       }
-       newList.add(audio);
-     }
     return newList;
   }
 
   @Override
+  public int getViewTypeCount() {
+    return 2;
+  }
+
+  @Override
+  public int getItemViewType(int position) {
+    return getDataItem(position) instanceof AudioGroup ? GROUP : AUDIO;
+  }
+
+  @Override
   public View getView(int i, View view, ViewGroup viewGroup) {
-    Audio audio = getDataItem(i);
-    ViewHolder holder = null;
-    TitleViewHolder titleViewHolder = null;
-
-    if (audio instanceof AudioGroup) {
-      if (view == null || (view.getTag() instanceof ViewHolder)) {
+    if (view == null) {
+      if (getItemViewType(i) == GROUP) {
         view = View.inflate(context, R.layout.audio_group_title, null);
-        titleViewHolder = new TitleViewHolder(view);
-        view.setTag(titleViewHolder);
+        view.setTag(new TitleViewHolder(view));
       } else {
-        titleViewHolder = (TitleViewHolder) view.getTag();
+        view = View.inflate(context, R.layout.item_audio, null);
+        view.setTag(new ViewHolder(view));
       }
-      AudioGroup audioGroup = (AudioGroup) audio;
-      titleViewHolder.title.setText(audioGroup.getName());
-      return view;
     }
-    if (view == null || (view.getTag() instanceof TitleViewHolder)) {
-      view = View.inflate(context, R.layout.item_audio, null);
-      holder = new ViewHolder(view);
-      view.setTag(holder);
+
+    Audio audio = getDataItem(i);
+
+    if (view.getTag() instanceof TitleViewHolder) {
+      TitleViewHolder holder = (TitleViewHolder) view.getTag();
+      holder.title.setText(audio.getTitle());
     } else {
-      holder = (ViewHolder) view.getTag();
-    }
-    holder.menuBtn.setTag(audio);
-    holder.addToBtn.setTag(audio);
-    holder.redHeartBtn.setTag(audio);
-    holder.title.setText(audio.getTitle());
-    holder.art.setText(audio.getArtist() + "-" + audio.getAlbum());
+      ViewHolder holder = (ViewHolder) view.getTag();
+      holder.menuBtn.setTag(audio);
+      holder.addToBtn.setTag(audio);
+      holder.redHeartBtn.setTag(audio);
+      holder.title.setText(audio.getTitle());
+      holder.art.setText(audio.getArtist() + "-" + audio.getAlbum());
 
+      if (selectedAudio == audio) {
+        holder.menu.setVisibility(View.VISIBLE);
+        Drawable drawableNormal = context.getResources().getDrawable(R.drawable.ic_heart_normal);
+        Drawable drawableChoose = context.getResources().getDrawable(R.drawable.ic_heart_choose);
+        if (FavoriteAudio.isFavorite(audio)) {
 
-    if (selectedAudio == audio) {
-      holder.menu.setVisibility(View.VISIBLE);
-      Drawable drawableNormal = context.getResources().getDrawable(R.drawable.ic_heart_normal);
-      Drawable drawableChoose = context.getResources().getDrawable(R.drawable.ic_heart_choose);
-      if (FavoriteAudio.isFavorite(audio)) {
-
-        holder.redHeartBtn.setCompoundDrawablesWithIntrinsicBounds(null,drawableChoose,null,null);
+          holder.redHeartBtn.setCompoundDrawablesWithIntrinsicBounds(null, drawableChoose, null, null);
+        } else {
+          holder.redHeartBtn.setCompoundDrawablesWithIntrinsicBounds(null, drawableNormal, null, null);
+        }
       } else {
-        holder.redHeartBtn.setCompoundDrawablesWithIntrinsicBounds(null,drawableNormal,null,null);
+        holder.menu.setVisibility(View.GONE);
       }
-    } else {
-      holder.menu.setVisibility(View.GONE);
     }
     return view;
   }
@@ -128,7 +101,7 @@ public class AudioAdapter extends DataAdapter<Audio> {
   @Override
   public boolean isEnabled(int position) {
     Object obj = getDataItem(position);
-    if (obj instanceof AudioGroup){
+    if (obj instanceof AudioGroup) {
       return false;
     }
     return true;

@@ -4,19 +4,15 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.song1.musicno1.R;
 import com.song1.musicno1.entity.Album;
 import com.song1.musicno1.entity.Artist;
 import com.song1.musicno1.models.play.Audio;
-import com.song1.musicno1.util.FirstLetterUtil;
+import com.song1.musicno1.util.AudioUtil;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static android.provider.BaseColumns._ID;
 import static android.provider.MediaStore.Audio.AudioColumns.*;
@@ -27,19 +23,20 @@ import static android.provider.MediaStore.MediaColumns.DATA;
 public class LocalAudioStore {
   private final   ContentResolver contentResolver;
   protected final Context         context;
+
   @Inject
   public LocalAudioStore(Context context) {
     this.context = context;
     this.contentResolver = context.getContentResolver();
   }
 
-  public List<Audio> all_audios() {
+  public List<Audio> getAll() {
 
     Cursor cursor = contentResolver.query(
         EXTERNAL_CONTENT_URI,
         new String[]{TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE},
         MIME_TYPE + " IN (?,?,?,?,?)",
-        new String[] {"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac","audio/x-ms-wma"},
+        new String[]{"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac", "audio/x-ms-wma"},
         TITLE
     );
     if (cursor == null) return null;
@@ -51,12 +48,17 @@ public class LocalAudioStore {
         EXTERNAL_CONTENT_URI,
         new String[]{TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE},
         MIME_TYPE + " IN (?,?,?,?,?) AND " + col + "=?",
-        new String[]{"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac","audio/x-ms-wma", selection},
+        new String[]{"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac", "audio/x-ms-wma", selection},
         TITLE
     );
 
     if (cursor == null) return null;
     return parse_audios(cursor);
+  }
+
+  public List<Audio> getAudiosWithIndex() {
+    List<Audio> audios = getAll();
+    return AudioUtil.doAudioGroup(audios);
   }
 
   public List<Audio> parse_audios(Cursor cursor) {
@@ -114,7 +116,7 @@ public class LocalAudioStore {
         EXTERNAL_CONTENT_URI,
         new String[]{"count(*) AS count"},
         MIME_TYPE + " IN (?,?,?,?,?)",
-        new String[]{"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac","audio/x-ms-wma"}, null
+        new String[]{"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac", "audio/x-ms-wma"}, null
     );
     if (cursor == null) return 0;
 
@@ -127,7 +129,7 @@ public class LocalAudioStore {
         EXTERNAL_CONTENT_URI,
         new String[]{"count(*) AS count"},
         MIME_TYPE + " IN (?,?,?,?)",
-        new String[]{"audio/wav", "audio/x-wav", "audio/flac","audio/x-ms-wma"}, null
+        new String[]{"audio/wav", "audio/x-wav", "audio/flac", "audio/x-ms-wma"}, null
     );
     if (cursor == null) return 0;
     cursor.moveToFirst();
@@ -219,7 +221,7 @@ public class LocalAudioStore {
         EXTERNAL_CONTENT_URI,
         new String[]{TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE},
         MIME_TYPE + " IN (?,?,?,?)",
-        new String[]{"audio/wav", "audio/x-wav", "audio/flac","audio/x-ms-wma"},
+        new String[]{"audio/wav", "audio/x-wav", "audio/flac", "audio/x-ms-wma"},
         TITLE);
     if (cursor == null) {
       return null;
