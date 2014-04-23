@@ -138,7 +138,7 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
     }
 
     if (fragment != null) {
-      //mapFragment.put(resId, fragment);
+      mapFragment.put(resId, fragment);
       mainActivity.replaceMain(fragment);
     }
   }
