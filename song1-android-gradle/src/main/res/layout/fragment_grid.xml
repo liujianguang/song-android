@@ -11,10 +11,11 @@
       android:scrollbarAlwaysDrawHorizontalTrack="true"
       android:scrollbarAlwaysDrawVerticalTrack="true"
       android:padding="5dp"
-      android:numColumns="3"
+      android:minWidth="130dp"
+      android:numColumns="auto_fit"
       android:stretchMode="columnWidth"
       android:horizontalSpacing="5dp"
-      android:verticalSpacing="5dp" />
+      android:verticalSpacing="5dp"/>
 
   <ProgressBar
       android:id="@+id/loading"

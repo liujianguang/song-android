@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
+import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.AudioAdapter;
 import com.song1.musicno1.adapter.DataAdapter;
@@ -44,11 +45,14 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
     List<Audio> audioList;
     if (album != null) {
       audioList = localAudioStore.get_audios_by_album(album);
+      audioTotal = audioList.size();
     } else if (artist != null) {
       audioList = localAudioStore.audios_by_artist(artist);
+      audioTotal = audioList.size();
     } else {
       audioList = localAudioStore.getAudiosWithIndex();
       audioTotal = localAudioStore.audios_count();
+//      audioList = Lists.newArrayList();
     }
 
     return audioList;
