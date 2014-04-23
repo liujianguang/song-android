@@ -69,26 +69,27 @@
           android:orientation="vertical"
           android:gravity="center_vertical"
           android:layout_marginLeft="10dp">
-          <com.song1.musicno1.views.AlwaysMarqueeTextView
-              android:id="@+id/bottom_title"
-              android:textSize="@dimen/list_item_title_text_size"
-              android:layout_width="match_parent"
-              android:singleLine="true"
-              android:ellipsize="marquee"
-              android:marqueeRepeatLimit="marquee_forever"
-              android:focusable="true"
-              android:focusableInTouchMode="true"
-              android:scrollHorizontally="true"
-              android:layout_height="wrap_content"/>
 
-          <TextView
-              android:id="@+id/bottom_subtitle"
-              android:textColor="@color/subtitle_text_color"
-              android:singleLine="true"
-              android:ellipsize="end"
-              android:textSize="@dimen/text_size_small"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"/>
+        <com.song1.musicno1.views.AlwaysMarqueeTextView
+            android:id="@+id/bottom_title"
+            android:textSize="@dimen/list_item_title_text_size"
+            android:layout_width="match_parent"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:scrollHorizontally="true"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/bottom_subtitle"
+            android:textColor="@color/subtitle_text_color"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textSize="@dimen/text_size_small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
       </LinearLayout>
     </RelativeLayout>
 
@@ -138,8 +139,6 @@
 
     <com.song1.musicno1.views.AlwaysMarqueeTextView
         android:id="@+id/top_title"
-        android:layout_marginLeft="54dp"
-        android:layout_marginRight="54dp"
         android:paddingTop="8dp"
         android:textSize="@dimen/list_item_title_text_size"
         android:gravity="center"
@@ -158,8 +157,6 @@
         android:id="@+id/top_subtitle"
         android:textSize="@dimen/text_size_small"
         android:textColor="@color/subtitle_text_color"
-        android:layout_marginLeft="54dp"
-        android:layout_marginRight="54dp"
         android:gravity="center"
         android:singleLine="true"
         android:ellipsize="end"
