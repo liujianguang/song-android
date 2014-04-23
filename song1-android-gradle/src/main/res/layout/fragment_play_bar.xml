@@ -56,8 +56,8 @@
           android:src="@drawable/default_album_art_small"
           android:layout_centerVertical="true"
           android:layout_marginLeft="4dp"
-          android:layout_width="54dp"
-          android:layout_height="54dp"
+          android:layout_width="50dp"
+          android:layout_height="50dp"
           roundImage:mBorderThickness="2dp"
           roundImage:mBorderColor="@color/white"
           android:contentDescription="@null"/>
