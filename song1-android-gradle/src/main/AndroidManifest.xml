@@ -2,7 +2,6 @@
           package="com.song1.musicno1">
 
 
-
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
@@ -17,7 +16,7 @@
       android:allowBackup="true"
       android:name=".App"
       android:label="@string/app_name"
-      android:icon="@drawable/ic_launcher"
+      android:icon="@drawable/song1"
       android:theme="@style/AppTheme">
     <meta-data
         android:name="AA_DB_NAME"
@@ -29,15 +28,17 @@
         android:name="appid"
         android:value="appid:004711975924897866"/>
 
-    <activity android:name=".activities.MainActivity"
+    <activity
+        android:name=".activities.MainActivity"
         android:screenOrientation="portrait">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
-    <activity android:name=".activities.SearchActivity"
-              android:screenOrientation="portrait">
+    <activity
+        android:name=".activities.SearchActivity"
+        android:screenOrientation="portrait">
       <intent-filter>
         <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>
@@ -46,6 +47,9 @@
     <service android:name=".services.UpnpService"/>
     <service android:name=".services.PlayService"/>
     <service android:name=".services.HttpService"/>
-    <meta-data android:name="com.crashlytics.ApiKey" android:value="4c0aa8408557455114aa8a1ac5941ffe72488f16"/>
+
+    <meta-data
+        android:name="com.crashlytics.ApiKey"
+        android:value="4c0aa8408557455114aa8a1ac5941ffe72488f16"/>
   </application>
 </manifest>
