@@ -72,7 +72,7 @@ public class HttpService extends Service {
     App.inject(this);
 
     MainBus.register(this);
-    Log.init(this);
+    Log.init();
 
     wifi_lock = wifiManager.createWifiLock("HTTP");
     wifi_lock.acquire();

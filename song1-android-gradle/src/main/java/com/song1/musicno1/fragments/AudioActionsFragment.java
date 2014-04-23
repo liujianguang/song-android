@@ -5,18 +5,21 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import com.google.common.base.Strings;
+import com.nineoldandroids.animation.ObjectAnimator;
+import com.nineoldandroids.animation.ValueAnimator;
 import com.song1.musicno1.R;
 import com.song1.musicno1.helpers.AlbumArtHelper;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.TimeHelper;
 import com.song1.musicno1.models.LocalAudioStore;
+import com.song1.musicno1.models.events.play.CurrentPlayerStateEvent;
 import com.song1.musicno1.models.events.play.PlayModeEvent;
 import com.song1.musicno1.models.events.play.PositionEvent;
 import com.song1.musicno1.models.play.Audio;
@@ -26,8 +29,6 @@ import com.song1.musicno1.util.RoundedTransformation;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import de.akquinet.android.androlog.Log;
-
-import java.io.File;
 
 /**
  * Created by windless on 3/31/14.
@@ -39,7 +40,10 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
   @InjectView(R.id.actions_section) View      actionsSection;
   @InjectView(R.id.album_art)       ImageView albumArtImageView;
   LocalAudioStore localAudioStore;
-  protected int playMode;
+  protected int            playMode;
+  private   ObjectAnimator rotation;
+
+  private float rotationStart = 0;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,6 +58,18 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
     localAudioStore = new LocalAudioStore(getActivity());
     positionSeeker.setEnabled(false);
     positionSeeker.setOnSeekBarChangeListener(this);
+
+    newRotationAnimator();
+  }
+
+  private void newRotationAnimator() {
+    rotation = ObjectAnimator.ofFloat(albumArtImageView, "rotation", rotationStart, 360f + rotationStart);
+    rotation.setRepeatCount(ValueAnimator.INFINITE);
+    rotation.setRepeatMode(ValueAnimator.RESTART);
+    rotation.setInterpolator(new LinearInterpolator());
+    rotation.setDuration(30000);
+    rotation.addUpdateListener(animation -> rotationStart = (float) animation.getAnimatedValue()
+    );
   }
 
   @Override
@@ -72,16 +88,14 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
   public void onPositionChanged(PositionEvent event) {
     Audio audio = event.getAudio();
     if (event.getAudio() == null) {
-      actionsSection.setVisibility(View.GONE);
       Picasso.with(getActivity()).load(R.drawable.default_album_art).transform(new RoundedTransformation()).into(albumArtImageView);
     } else {
-      actionsSection.setVisibility(View.VISIBLE);
       AlbumArtHelper.loadAlbumArtRounded(
           getActivity(),
           audio.getAlbumArt(localAudioStore),
           albumArtImageView,
           R.drawable.default_album_art
-          );
+      );
     }
 
     positionSeeker.setEnabled(event.getAudio() != null);
@@ -100,6 +114,25 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
       case Player.MODE_REPEAT_ALL:
       case Player.MODE_REPEAT_ONE:
       case Player.MODE_SHUFFLE:
+    }
+  }
+
+  @Subscribe
+  public void onPlayStateChanged(CurrentPlayerStateEvent event) {
+    if (event.state == Player.PLAYING) {
+      newRotationAnimator();
+      rotation.start();
+    } else {
+      rotation.cancel();
+    }
+  }
+
+  @OnClick(R.id.album_art)
+  public void toggleActionsView() {
+    if (actionsSection.getVisibility() == View.GONE) {
+      actionsSection.setVisibility(View.VISIBLE);
+    } else {
+      actionsSection.setVisibility(View.GONE);
     }
   }
 
