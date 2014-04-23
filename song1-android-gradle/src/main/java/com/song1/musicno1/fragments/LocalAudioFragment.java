@@ -1,9 +1,7 @@
 package com.song1.musicno1.fragments;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import com.song1.musicno1.R;
@@ -20,6 +18,7 @@ import com.song1.musicno1.models.play.Playlist;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Random;
 
 /**
  * User: windless
@@ -58,8 +57,14 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
   @Override
   public void showContent() {
     super.showContent();
-    if (getListView().getHeaderViewsCount() == 0) {
+    if (!isDataEmpty() && getListView().getHeaderViewsCount() == 0) {
       View headerView = View.inflate(getActivity(), R.layout.header_local_audio, null);
+      headerView.setOnClickListener((view) -> {
+        List<Audio> dataList = getDataList();
+        Random random = new Random();
+        int randomIndex = random.nextInt(dataList.size());
+        Players.setPlaylist(new Playlist(List8.newList(dataList), dataList.get(randomIndex)));
+      });
       getListView().addHeaderView(headerView);
       audioTotalTextView = (TextView) headerView.findViewById(R.id.audioTotal);
     }
