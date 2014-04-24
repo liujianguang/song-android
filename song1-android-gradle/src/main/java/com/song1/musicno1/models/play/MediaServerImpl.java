@@ -25,7 +25,11 @@ public class MediaServerImpl implements MediaServer {
   public String getName() {
     String friendlyName = device.getFriendlyName();
     int index = friendlyName.indexOf(" - 192.168");
-    return friendlyName.substring(0, index);
+    if (index > 0) {
+      return friendlyName.substring(0, index);
+    } else {
+      return friendlyName;
+    }
   }
 
   @Override
