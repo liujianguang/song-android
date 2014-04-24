@@ -71,6 +71,7 @@ public class DownLoadManagerFragment extends BaseFragment implements DownLoadMan
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     Log.d(this, "onActivityCreated...");
+    setTitle(getString(R.string.download_music));
     taskDoingFragment = new TaskDoingFragment();
     taskDoneFragment = new TaskDoneFragment();
     doingTitle = getString(R.string.task_doing);
