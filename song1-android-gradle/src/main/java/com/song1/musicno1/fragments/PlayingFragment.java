@@ -32,11 +32,12 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
   protected int   state;
   protected Audio currentAudio;
 
-  @InjectView(R.id.volume_bar) SeekBar             volumeBar;
-  @InjectView(R.id.play)       ImageButton         playBtn;
-  @InjectView(R.id.pager)      ViewPager           pager;
-  @InjectView(R.id.indicator)  CirclePageIndicator indicator;
-  @InjectView(R.id.favorite)   ImageButton         favoriteBtn;
+  @InjectView(R.id.volume_bar)  SeekBar             volumeBar;
+  @InjectView(R.id.play)        ImageButton         playBtn;
+  @InjectView(R.id.pager)       ViewPager           pager;
+  @InjectView(R.id.indicator)   CirclePageIndicator indicator;
+  @InjectView(R.id.favorite)    ImageButton         favoriteBtn;
+  @InjectView(R.id.player_list) ImageButton         playerListBtn;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,6 +71,7 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
 
   @Subscribe
   public void currentPlayerChanged(CurrentPlayerEvent event) {
+    playerListBtn.setImageResource(R.drawable.ic_device_list_large_press);
     volumeBar.setEnabled(event.getCurrentPlayer() != null);
   }
 
@@ -159,12 +161,12 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
       if (currentAudio != null) {
         if (currentAudio.canFavorite()) {
           if (FavoriteAudio.isFavorite(currentAudio)) {
-            favoriteBtn.setBackgroundResource(R.color.red);
+            favoriteBtn.setImageResource(R.drawable.ic_red_heat_selected);
           } else {
-            favoriteBtn.setBackgroundResource(android.R.color.transparent);
+            favoriteBtn.setImageResource(R.drawable.ic_red_heat_nor);
           }
         } else {
-          favoriteBtn.setBackgroundResource(android.R.color.transparent);
+          favoriteBtn.setImageResource(R.drawable.ic_red_heat_nor);
         }
       }
     }
@@ -177,10 +179,10 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
 
     if (FavoriteAudio.isFavorite(currentAudio)) {
       FavoriteAudio.removeFromFavorite(currentAudio);
-      favoriteBtn.setBackgroundResource(android.R.color.transparent);
+      favoriteBtn.setImageResource(R.drawable.ic_red_heat_nor);
     } else {
       FavoriteAudio.addToFavorite(currentAudio);
-      favoriteBtn.setBackgroundResource(R.color.red);
+      favoriteBtn.setImageResource(R.drawable.ic_red_heat_selected);
     }
 
     Fragment mainFragment = getFragmentManager().findFragmentById(R.id.main);

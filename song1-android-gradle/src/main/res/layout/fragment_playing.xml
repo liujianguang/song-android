@@ -26,47 +26,50 @@
       android:orientation="horizontal"
       android:layout_width="match_parent"
       android:gravity="center_vertical"
-      android:layout_height="60dp">
+      android:layout_height="70dp">
 
     <ImageButton
         android:id="@+id/favorite"
         android:layout_weight="1"
-        android:src="@drawable/ic_favorite_nor"
+        android:src="@drawable/ic_red_heat_nor"
         android:background="@null"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_width="70dp"
+        android:layout_height="70dp"/>
 
     <ImageButton
         android:id="@+id/previous"
+        android:scaleType="fitCenter"
         android:layout_weight="1"
-        android:src="@drawable/ic_previous_nor"
+        android:src="@drawable/ic_previous"
         android:background="@null"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_width="70dp"
+        android:layout_height="70dp"/>
 
     <ImageButton
         android:id="@+id/play"
+        android:scaleType="fitCenter"
         android:layout_weight="1"
         android:src="@drawable/ic_play_large"
         android:background="@null"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_width="70dp"
+        android:layout_height="70dp"/>
 
     <ImageButton
         android:id="@+id/next"
-        android:src="@drawable/ic_next_nor"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_next"
         android:layout_weight="1"
         android:background="@null"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_width="70dp"
+        android:layout_height="70dp"/>
 
     <ImageButton
         android:id="@+id/player_list"
-        android:src="@drawable/ic_playing_playlist_nor"
+        android:src="@drawable/ic_device_list_large_nor"
         android:layout_weight="1"
         android:background="@null"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_width="70dp"
+        android:layout_height="70dp"/>
   </LinearLayout>
 
   <LinearLayout
