@@ -101,10 +101,8 @@ public class PlayBarFragment extends Fragment {
   }
 
   @Subscribe
-  public void onPlayerSelected(SelectPlayerEvent event) {
-    if (event.player != null) {
-      playerListBtn.setImageResource(R.drawable.ic_player_selected);
-    }
+  public void onPlayerSelected(CurrentPlayerEvent event) {
+    playerListBtn.setImageResource(R.drawable.ic_player_selected);
   }
 
   @Subscribe

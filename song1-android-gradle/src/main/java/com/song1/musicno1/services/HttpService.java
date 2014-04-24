@@ -105,7 +105,7 @@ public class HttpService extends Service {
 
 //    RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.remote_view_play);
 
-    builder.setSmallIcon(R.drawable.ic_launcher)
+    builder.setSmallIcon(R.drawable.song1)
         .setAutoCancel(false)
         .setContentText(getString(R.string.song1_working))
         .setContentTitle(getString(R.string.song1))
