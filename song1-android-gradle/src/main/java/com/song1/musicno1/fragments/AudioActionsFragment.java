@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import com.song1.musicno1.helpers.AlbumArtHelper;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.TimeHelper;
 import com.song1.musicno1.models.LocalAudioStore;
+import com.song1.musicno1.models.events.play.CurrentPlayerEvent;
 import com.song1.musicno1.models.events.play.CurrentPlayerStateEvent;
 import com.song1.musicno1.models.events.play.PlayModeEvent;
 import com.song1.musicno1.models.events.play.PositionEvent;
@@ -34,14 +36,15 @@ import de.akquinet.android.androlog.Log;
  * Created by windless on 3/31/14.
  */
 public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
-  @InjectView(R.id.position)        TextView  positionView;
-  @InjectView(R.id.duration)        TextView  durationView;
-  @InjectView(R.id.position_seeker) SeekBar   positionSeeker;
-  @InjectView(R.id.actions_section) View      actionsSection;
-  @InjectView(R.id.album_art)       ImageView albumArtImageView;
-  LocalAudioStore localAudioStore;
-  protected int            playMode;
-  private   ObjectAnimator rotation;
+  @InjectView(R.id.position)        TextView    positionView;
+  @InjectView(R.id.duration)        TextView    durationView;
+  @InjectView(R.id.position_seeker) SeekBar     positionSeeker;
+  @InjectView(R.id.actions_section) View        actionsSection;
+  @InjectView(R.id.album_art)       ImageView   albumArtImageView;
+  @InjectView(R.id.play_mode)       ImageButton playModeBtn;
+
+  private LocalAudioStore localAudioStore;
+  private ObjectAnimator  rotation;
 
   private float rotationStart = 0;
 
@@ -107,13 +110,22 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
 
   @Subscribe
   public void onPlayModeChanged(PlayModeEvent event) {
-    playMode = event.getPlayMode();
-    Log.d(this, "Play mode changed: " + playMode);
+    updatePlayModeBtn(event.getPlayMode());
+  }
+
+  private void updatePlayModeBtn(int playMode) {
     switch (playMode) {
       case Player.MODE_NORMAL:
+        playModeBtn.setImageResource(R.drawable.ic_play_mode_normal);
+        break;
       case Player.MODE_REPEAT_ALL:
+        playModeBtn.setImageResource(R.drawable.ic_play_mode_repeat_all);
+        break;
       case Player.MODE_REPEAT_ONE:
+        playModeBtn.setImageResource(R.drawable.ic_play_mode_repeat_one);
+        break;
       case Player.MODE_SHUFFLE:
+        playModeBtn.setImageResource(R.drawable.ic_play_mode_random);
     }
   }
 
@@ -125,6 +137,11 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
     } else {
       rotation.cancel();
     }
+  }
+
+  @Subscribe
+  public void onCurrentPlayerChanged(CurrentPlayerEvent event) {
+    updatePlayModeBtn(event.getCurrentPlayer().getPlayMode());
   }
 
   @OnClick(R.id.album_art)
