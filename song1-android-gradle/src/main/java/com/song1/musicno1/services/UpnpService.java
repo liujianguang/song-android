@@ -30,6 +30,7 @@ import javax.inject.Inject;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 
 /**
  * User: windless
@@ -89,36 +90,48 @@ public class UpnpService extends Service implements DeviceChangeListener {
   }
 
   private void startController() {
-    executorService.submit((Runnable) () -> {
-      if (mediaController == null) {
-        mediaController = new MediaController();
-        mediaController.addDeviceChangeListener(this);
-      }
-
-      while (true) {
-        try {
-          if (mediaController.start()) {
-            Log.d(this, "Start control point..");
-            mediaController.search();
-            break;
-          }
-        } catch (Exception e) {
-          Log.d(this, "Start control point exception", e);
+    try {
+      executorService.submit((Runnable) () -> {
+        if (mediaController == null) {
+          mediaController = new MediaController();
+          mediaController.addDeviceChangeListener(this);
         }
-      }
-    });
+
+        while (!Thread.currentThread().isInterrupted()) {
+          try {
+            if (mediaController.start()) {
+              Log.d(this, "Start control point..");
+              mediaController.search();
+              break;
+            }
+          } catch (Exception e) {
+            Log.d(this, "Start control point exception", e);
+            try {
+              Thread.sleep(100);
+            } catch (InterruptedException e1) {
+              return;
+            }
+          }
+        }
+        Log.d(this, "Start control point progress stopped.");
+      });
+    } catch (RejectedExecutionException ignored) {
+    }
   }
 
   private void stopController() {
-    executorService.submit(() -> {
-      if (mediaController != null) {
-        mediaController.removeDeviceChangeListener(this);
-        mediaController.stop();
-        removeAllDevice(mediaController.getDeviceList());
-        mediaController = null;
-        Log.d(this, "Stop control point...");
-      }
-    });
+    try {
+      executorService.submit(() -> {
+        if (mediaController != null) {
+          mediaController.removeDeviceChangeListener(this);
+          mediaController.stop();
+          removeAllDevice(mediaController.getDeviceList());
+          mediaController = null;
+          Log.d(this, "Stop control point...");
+        }
+      });
+    } catch (RejectedExecutionException ignored) {
+    }
   }
 
   private void removeAllDevice(DeviceList deviceList) {
