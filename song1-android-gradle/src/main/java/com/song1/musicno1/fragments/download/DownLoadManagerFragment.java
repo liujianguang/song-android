@@ -23,6 +23,7 @@ import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.fragments.base.BaseFragment;
 import com.song1.musicno1.models.DownLoadManager;
+import com.song1.musicno1.ui.ArrowView;
 import de.akquinet.android.androlog.Log;
 
 import java.lang.reflect.Field;
@@ -37,6 +38,8 @@ public class DownLoadManagerFragment extends BaseFragment implements DownLoadMan
   Button         taskDoingButton;
   @InjectView(R.id.taskDoneButton)
   Button         taskDoneButton;
+  @InjectView(R.id.arrow)
+  ArrowView arrowView;
   @InjectView(R.id.container)
   RelativeLayout container;
 
@@ -79,7 +82,8 @@ public class DownLoadManagerFragment extends BaseFragment implements DownLoadMan
 
     downLoadManager = DownLoadManager.getDownLoadManager(getActivity());
     downLoadManager.registerDownLoadListener(this);
-    show(taskDoingButton);
+    arrowView.setFristPoint(taskDoingButton);
+    getFragmentManager().beginTransaction().replace(R.id.container, taskDoingFragment).commit();
     changeTitle();
   }
 
@@ -90,9 +94,10 @@ public class DownLoadManagerFragment extends BaseFragment implements DownLoadMan
   }
 
   private void show(Button button) {
-    taskDoingButton.setBackgroundColor(Color.TRANSPARENT);
-    taskDoneButton.setBackgroundColor(Color.TRANSPARENT);
-    button.setBackgroundColor(getResources().getColor(R.color.content_bg_color));
+    taskDoingButton.setTextColor(Color.BLACK);
+    taskDoneButton.setTextColor(Color.BLACK);
+    button.setTextColor(Color.WHITE);
+    arrowView.move(button);
     Fragment fragment;
     if (button.getId() == R.id.taskDoingButton) {
       fragment = taskDoingFragment;
@@ -120,4 +125,5 @@ public class DownLoadManagerFragment extends BaseFragment implements DownLoadMan
   public void delTask(DownLoadManager.Task task) {
     changeTitle();
   }
+
 }

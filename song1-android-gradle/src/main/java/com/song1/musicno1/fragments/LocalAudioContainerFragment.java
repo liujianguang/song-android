@@ -1,5 +1,6 @@
 package com.song1.musicno1.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,11 +12,14 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.fragments.base.BaseFragment;
+import com.song1.musicno1.ui.ArrowView;
 
 import javax.inject.Inject;
 import java.lang.reflect.Field;
@@ -26,7 +30,7 @@ import java.util.List;
  * Date: 14-2-7
  * Time: PM2:01
  */
-public class LocalAudioContainerFragment extends BaseFragment {
+public class LocalAudioContainerFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
   List<Integer> titles = Lists.newArrayList(R.string.song, R.string.album, R.string.artist);
 
   List<Fragment> fragments;
@@ -35,9 +39,24 @@ public class LocalAudioContainerFragment extends BaseFragment {
   @Inject LocalAlbumFragment  localAlbumFragment;
   @Inject LocalArtistFragment localArtistFragment;
 
-  @InjectView(R.id.pagerTitleStrip) PagerTitleStrip pagerTitleStrip;
-  @InjectView(R.id.pager)           ViewPager       viewPager;
+  @InjectView(R.id.songButton)   Button    songButotn;
+  @InjectView(R.id.artistButton) Button    artistButton;
+  @InjectView(R.id.albumButton)  Button    albumButton;
+  @InjectView(R.id.arrow)        ArrowView arrowView;
+  @InjectView(R.id.pager)        ViewPager viewPager;
 
+  @OnClick(R.id.songButton)
+  public void onSongButtonClick(){
+    viewPager.setCurrentItem(0);
+  }
+  @OnClick(R.id.artistButton)
+  public void onArtistButtonClick(){
+    viewPager.setCurrentItem(1);
+  }
+  @OnClick(R.id.albumButton)
+  public void onAlbumButton(){
+    viewPager.setCurrentItem(2);
+  }
   FragmentAdapter adapter;
 
   @Inject
@@ -59,10 +78,10 @@ public class LocalAudioContainerFragment extends BaseFragment {
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     setTitle(getString(R.string.local_source));
-    pagerTitleStrip.setGravity(Gravity.CENTER);
-    pagerTitleStrip.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
-
     viewPager.setAdapter(adapter);
+    viewPager.setOnPageChangeListener(this);
+    viewPager.setCurrentItem(0);
+    //onPageSelected(0);
   }
 
   @Override
@@ -70,6 +89,45 @@ public class LocalAudioContainerFragment extends BaseFragment {
     View view = inflater.inflate(R.layout.fragment_local_audio, container, false);
     ButterKnife.inject(this, view);
     return view;
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    arrowView.setFristPoint(songButotn);
+  }
+
+  @Override
+  public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+  }
+
+  @Override
+  public void onPageSelected(int position) {
+    Button button = null;
+     switch (position){
+       case 0:
+         button = songButotn;
+         break;
+       case 1:
+         button = artistButton;
+         break;
+       case 2:
+         button = albumButton;
+         break;
+     }
+    if (button != null) {
+      songButotn.setTextColor(Color.BLACK);
+      artistButton.setTextColor(Color.BLACK);
+      albumButton.setTextColor(Color.BLACK);
+      button.setTextColor(Color.WHITE);
+      arrowView.move(button);
+    }
+  }
+
+  @Override
+  public void onPageScrollStateChanged(int state) {
+
   }
 
   class FragmentAdapter extends FragmentPagerAdapter {

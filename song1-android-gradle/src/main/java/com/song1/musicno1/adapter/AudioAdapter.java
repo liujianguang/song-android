@@ -91,7 +91,7 @@ public class AudioAdapter extends DataAdapter<Audio> {
         } else {
           holder.redHeartBtn.setCompoundDrawablesWithIntrinsicBounds(null, drawableNormal, null, null);
         }
-      } else {
+      }else{
         holder.menu.setVisibility(View.GONE);
       }
     }

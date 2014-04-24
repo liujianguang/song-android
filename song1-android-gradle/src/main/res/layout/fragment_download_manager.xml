@@ -15,6 +15,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:textSize="15dp"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="7dp"
         android:text="@string/task_doing"/>
 
     <Button
@@ -22,8 +25,18 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:textSize="15dp"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="7dp"
         android:text="@string/task_done"/>
   </LinearLayout>
+  <com.song1.musicno1.ui.ArrowView
+      android:id="@+id/arrow"
+      android:layout_width="match_parent"
+      android:layout_height="7dp"
+      android:padding="0dp"
+      android:layout_margin="0dp"
+      android:background="@color/title_bg_color"/>
 
   <RelativeLayout
       android:id="@+id/container"
