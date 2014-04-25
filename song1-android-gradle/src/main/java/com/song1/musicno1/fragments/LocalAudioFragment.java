@@ -2,19 +2,23 @@ package com.song1.musicno1.fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.Loader;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.AudioAdapter;
 import com.song1.musicno1.adapter.DataAdapter;
 import com.song1.musicno1.entity.Album;
 import com.song1.musicno1.entity.Artist;
+import com.song1.musicno1.entity.AudioGroup;
 import com.song1.musicno1.fragments.base.ListFragment;
 import com.song1.musicno1.helpers.List8;
+import com.song1.musicno1.loader.LoadData;
 import com.song1.musicno1.models.LocalAudioStore;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Players;
@@ -23,6 +27,7 @@ import com.song1.musicno1.util.ToastUtil;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -39,6 +44,9 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
 
   AudioAdapter audioAdapter;
   int audioTotal = 0;
+
+  Map<String, Button> mapNumberButton = Maps.newHashMap();
+  Button currentNumberButton;
 
   @Inject
   public LocalAudioFragment() {
@@ -59,8 +67,18 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
       audioList = localAudioStore.getAudiosWithIndex();
       audioTotal = localAudioStore.audios_count();
 //      audioList = Lists.newArrayList();
+//      for (Audio audio :audioList){
+//        System.out.println("*************" + audio.getTitle());
+//      }
     }
     return audioList;
+  }
+
+  @Override
+  public void onLoadFinished(Loader<LoadData<Audio>> loader, LoadData<Audio> data) {
+    super.onLoadFinished(loader, data);
+    String firstGroupName = audioAdapter.getFirstGroupName();
+    setCurrentNumberButton(firstGroupName);
   }
 
   @Override
@@ -89,7 +107,8 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
     view.addView(createNumberNegative());
     return view;
   }
-  private View createNumberNegative(){
+
+  private View createNumberNegative() {
     List<String> chars = Lists.newArrayList(getResources().getStringArray(R.array.chars));
     chars.add("#");
     LinearLayout linearLayout = new LinearLayout(getActivity());
@@ -100,9 +119,9 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
     linearLayout.setLayoutParams(layoutParams);
     linearLayout.setOrientation(LinearLayout.VERTICAL);
     linearLayout.setGravity(Gravity.CENTER);
-    for (String ch : chars){
+    for (String ch : chars) {
       Button button = new Button(getActivity());
-      button.setLayoutParams(new ViewGroup.LayoutParams(24,22));
+      button.setLayoutParams(new ViewGroup.LayoutParams(24, 22));
       button.setText(ch);
       button.setTextSize(11);
       button.setTextColor(getResources().getColor(R.color.number_color));
@@ -110,10 +129,20 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
       button.setOnClickListener(numberButtonClickListener);
       button.setTag(chars.indexOf(ch));
       linearLayout.addView(button);
+      mapNumberButton.put(ch,button);
     }
     return linearLayout;
   }
 
+  private void setCurrentNumberButton(String number){
+    if (number != null){
+      if (currentNumberButton != null){
+        currentNumberButton.setBackgroundColor(Color.TRANSPARENT);
+      }
+      currentNumberButton = mapNumberButton.get(number);
+      currentNumberButton.setBackgroundColor(getResources().getColor(R.color.title_bg_color));
+    }
+  }
   @Override
   protected DataAdapter<Audio> newAdapter() {
     audioAdapter = new AudioAdapter(getActivity());
@@ -144,12 +173,24 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
   private View.OnClickListener numberButtonClickListener = new View.OnClickListener() {
     @Override
     public void onClick(View view) {
-      Button button = (Button)view;
+      Button button = (Button) view;
       //ToastUtil.show(getActivity(),button.getText().toString());
       Integer position = audioAdapter.getGroupPositionByName(button.getText().toString());
-      if (position != null){
+      if (position != null) {
         getListView().setSelection(position);
       }
     }
   };
+
+  @Override
+  public void onScroll(AbsListView absListView, int firstVisibleItem,
+                       int visibleItemCount, int totalItemCount) {
+    if (audioAdapter.getCount() == 0){
+      return;
+    }
+    Audio audio = audioAdapter.getDataItem(firstVisibleItem);
+    if (audio instanceof AudioGroup){
+      setCurrentNumberButton(audio.getTitle());
+    }
+  }
 }

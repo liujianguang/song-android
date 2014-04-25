@@ -36,13 +36,17 @@ public class AudioAdapter extends DataAdapter<Audio> {
   }
 
   private Map<String, Integer> mapGroupPosition = Maps.newHashMap();
-
+  private String firstGroupName = null;
   @Override
   public void setDataList(List<Audio> dataList) {
     super.setDataList(dataList);
     for (Audio audio : dataList) {
+      //System.out.println("--------------------" + audio.getTitle());
       if (audio instanceof AudioGroup) {
         mapGroupPosition.put(audio.getTitle(),dataList.indexOf(audio));
+        if (firstGroupName == null){
+          firstGroupName = audio.getTitle();
+        }
       }
     }
   }
@@ -60,6 +64,9 @@ public class AudioAdapter extends DataAdapter<Audio> {
     return newList;
   }
 
+  public String  getFirstGroupName(){
+    return firstGroupName;
+  }
   public Integer getGroupPositionByName(String name) {
     return mapGroupPosition.get(name);
   }
