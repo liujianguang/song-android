@@ -15,9 +15,9 @@ public class FirstLetterUtil {
   // GB2312码汉字区间十进制表示
   private static int[] table = new int[27];
   // 对应首字母区间表
-  private static char[] initialtable = {'a', 'b', 'c', 'd', 'e', 'f', 'g',
+  public static char[] initialtable = {'a', 'b', 'c', 'd', 'e', 'f', 'g',
       'h', 'h', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-      't', 't', 'w', 'x', 'y', 'z',};
+      't', 't', 'w', 'x', 'y', 'z'};
 
   // 初始化
   static {

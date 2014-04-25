@@ -1,9 +1,12 @@
 package com.song1.musicno1.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.TextView;
+import android.view.ViewGroup;
+import android.widget.*;
 import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.AudioAdapter;
@@ -16,6 +19,7 @@ import com.song1.musicno1.models.LocalAudioStore;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.models.play.Playlist;
+import com.song1.musicno1.util.ToastUtil;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -26,12 +30,14 @@ import java.util.Random;
  * Date: 13-8-29
  * Time: PM3:07
  */
-public class LocalAudioFragment extends ListFragment<Audio> implements AdapterView.OnItemClickListener {
+public class LocalAudioFragment extends ListFragment<Audio> implements AdapterView.OnItemClickListener{
   @Inject LocalAudioStore localAudioStore;
   private Album           album;
   private Artist          artist;
   private TextView        audioTotalTextView;
+  private ListView        listView;
 
+  AudioAdapter audioAdapter;
   int audioTotal = 0;
 
   @Inject
@@ -54,7 +60,6 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
       audioTotal = localAudioStore.audios_count();
 //      audioList = Lists.newArrayList();
     }
-
     return audioList;
   }
 
@@ -77,9 +82,42 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
     audioTotalTextView.setText(str);
   }
 
+
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    RelativeLayout view = (RelativeLayout) super.onCreateView(inflater, container, savedInstanceState);
+    view.addView(createNumberNegative());
+    return view;
+  }
+  private View createNumberNegative(){
+    List<String> chars = Lists.newArrayList(getResources().getStringArray(R.array.chars));
+    chars.add("#");
+    LinearLayout linearLayout = new LinearLayout(getActivity());
+    linearLayout.setBackgroundColor(Color.GRAY);
+    linearLayout.getBackground().setAlpha(120);
+    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(24, ViewGroup.LayoutParams.MATCH_PARENT);
+    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+    linearLayout.setLayoutParams(layoutParams);
+    linearLayout.setOrientation(LinearLayout.VERTICAL);
+    linearLayout.setGravity(Gravity.CENTER);
+    for (String ch : chars){
+      Button button = new Button(getActivity());
+      button.setLayoutParams(new ViewGroup.LayoutParams(24,22));
+      button.setText(ch);
+      button.setTextSize(11);
+      button.setTextColor(getResources().getColor(R.color.number_color));
+      button.setGravity(Gravity.CENTER);
+      button.setOnClickListener(numberButtonClickListener);
+      button.setTag(chars.indexOf(ch));
+      linearLayout.addView(button);
+    }
+    return linearLayout;
+  }
+
   @Override
   protected DataAdapter<Audio> newAdapter() {
-    return new AudioAdapter(getActivity());
+    audioAdapter = new AudioAdapter(getActivity());
+    return audioAdapter;
   }
 
   @Override
@@ -102,4 +140,16 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
   public void setArtist(Artist artist) {
     this.artist = artist;
   }
+
+  private View.OnClickListener numberButtonClickListener = new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+      Button button = (Button)view;
+      //ToastUtil.show(getActivity(),button.getText().toString());
+      Integer position = audioAdapter.getGroupPositionByName(button.getText().toString());
+      if (position != null){
+        getListView().setSelection(position);
+      }
+    }
+  };
 }

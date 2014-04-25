@@ -1,7 +1,7 @@
 <resources>
   <string name="app_name">音乐1号</string>
   <string name="cancle">取 消</string>
-  <string name="confirm">确定</string>
+  <string name="confirm">确 定</string>
   <!-- Device -->
   <string name="currentNetworkDevice">当前网络设备</string>
   <string name="newDevice">添加新设备</string>
@@ -218,5 +218,34 @@
     <item>45分钟</item>
     <item>60分钟</item>
     <item>120分钟</item>
+  </array>
+
+  <array name="chars">
+    <item>A</item>
+    <item>B</item>
+    <item>C</item>
+    <item>D</item>
+    <item>E</item>
+    <item>F</item>
+    <item>G</item>
+    <item>H</item>
+    <item>I</item>
+    <item>J</item>
+    <item>K</item>
+    <item>L</item>
+    <item>M</item>
+    <item>N</item>
+    <item>O</item>
+    <item>P</item>
+    <item>Q</item>
+    <item>R</item>
+    <item>S</item>
+    <item>T</item>
+    <item>U</item>
+    <item>V</item>
+    <item>W</item>
+    <item>X</item>
+    <item>Y</item>
+    <item>Z</item>
   </array>
 </resources>

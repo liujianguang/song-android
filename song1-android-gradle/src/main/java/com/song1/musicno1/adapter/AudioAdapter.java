@@ -12,6 +12,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.song1.musicno1.R;
 import com.song1.musicno1.dialogs.FavoritesDialog;
 import com.song1.musicno1.entity.AudioGroup;
@@ -19,6 +20,7 @@ import com.song1.musicno1.models.FavoriteAudio;
 import com.song1.musicno1.models.play.Audio;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by windless on 14-4-10.
@@ -33,6 +35,18 @@ public class AudioAdapter extends DataAdapter<Audio> {
     super(context);
   }
 
+  private Map<String, Integer> mapGroupPosition = Maps.newHashMap();
+
+  @Override
+  public void setDataList(List<Audio> dataList) {
+    super.setDataList(dataList);
+    for (Audio audio : dataList) {
+      if (audio instanceof AudioGroup) {
+        mapGroupPosition.put(audio.getTitle(),dataList.indexOf(audio));
+      }
+    }
+  }
+
   @Override
   public List<Audio> getDataList() {
     List<Audio> newList = Lists.newArrayList();
@@ -44,6 +58,10 @@ public class AudioAdapter extends DataAdapter<Audio> {
       newList.add(audio);
     }
     return newList;
+  }
+
+  public Integer getGroupPositionByName(String name) {
+    return mapGroupPosition.get(name);
   }
 
   @Override

@@ -13,4 +13,5 @@
   <color name="button_disabled">#ffb5c0a8</color>
   <color name="dark_button">#344320</color>
   <color name="seek_bar_bg">#ff7A8171</color>
+  <color name="number_color">#ffdbeacd</color>
 </resources>

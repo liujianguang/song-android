@@ -80,8 +80,7 @@ public class LocalAudioContainerFragment extends BaseFragment implements ViewPag
     setTitle(getString(R.string.local_source));
     viewPager.setAdapter(adapter);
     viewPager.setOnPageChangeListener(this);
-    viewPager.setCurrentItem(0);
-    //onPageSelected(0);
+    arrowView.setFristPoint(songButotn);
   }
 
   @Override
@@ -94,7 +93,6 @@ public class LocalAudioContainerFragment extends BaseFragment implements ViewPag
   @Override
   public void onResume() {
     super.onResume();
-    arrowView.setFristPoint(songButotn);
   }
 
   @Override

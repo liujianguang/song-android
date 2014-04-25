@@ -31,8 +31,8 @@ public class ArrowView extends TextView {
   View firstView;
   float topX        = 50;
   int   topY        = 0;
-  int   w           = 16;
-  int   h           = 10;
+  int   w           = 12;
+  int   h           = 6;
   int   borderWidth = 2;
 
   protected void onDraw(Canvas canvas) {
@@ -43,43 +43,69 @@ public class ArrowView extends TextView {
       topX = firstView.getWidth() / 2 + firstView.getX();
       firstView = null;
     }
-    //canvas.drawColor(getResources().getColor(R.color.title_color));
-    Paint paint = new Paint(); /*去锯齿*/
-    paint.setAntiAlias(true); /*设置paint的颜色*/
-    paint.setColor(Color.WHITE); /*设置paint的 style 为STROKE：空心*/
-    paint.setStyle(Paint.Style.STROKE); /*设置paint的外框宽度*/
-    paint.setStrokeWidth(borderWidth); /*画一个空心三角形*/
-    Path path = new Path();
-
-    path.moveTo(topX, topY);
-    path.lineTo(topX - (w / 2), topY + h);
-    path.moveTo(topX, topY);
-    path.lineTo(topX + (w / 2), topY + h);
-    path.close();
-    //canvas.drawColor(getResources().getColor(R.color.content_color));
-    canvas.drawPath(path, paint); /*设置paint 的style为 FILL：实心*/
-
-    paint.setStrokeWidth(1);
-    paint.setStyle(Paint.Style.FILL); /*设置paint的颜色*/
-    paint.setColor(getResources().getColor(R.color.green)); /*画一个实心三角形*/
-    Path path2 = new Path();
-
-    path2.moveTo(topX, topY + borderWidth / 2);
-    path2.lineTo(topX - (w / 2) + borderWidth / 2, topY + h + borderWidth);
-    path2.moveTo(topX, topY + borderWidth / 2);
-    path2.lineTo(topX + (w / 2) - borderWidth / 2, topY + h + borderWidth);
-    path2.lineTo(topX - (w / 2) + borderWidth / 2, topY + h + borderWidth);
-    path2.close();
-    canvas.drawPath(path2, paint);
-
     int width = getWidth();
     int height = getHeight();
 
+    //canvas.drawLine(topX + (w / 2), topY + h, width, topY + h, linePaint);
+
+    Path path2 = new Path();
+    path2.moveTo(topX - (w / 2), topY + h + 3);
+    path2.lineTo(topX, topY);
+    path2.lineTo(topX + (w / 2), topY + h + 2);
+    canvas.clipPath(path2,Region.Op.DIFFERENCE);
+    canvas.drawColor(getResources().getColor(R.color.title_bg_color));
+
+
+    Path path = new Path();
     Paint linePaint = new Paint();
-    linePaint.setStrokeWidth(borderWidth / 2);
+    linePaint.setStyle(Paint.Style.STROKE);
+    linePaint.setStrokeWidth(1);
     linePaint.setColor(Color.WHITE);
-    canvas.drawLine(0, topY + h, topX - (w / 2), topY + h, linePaint);
-    canvas.drawLine(topX + (w / 2), topY + h, width, topY + h, linePaint);
+    path.moveTo(0, topY + h);
+    path.lineTo(topX - (w / 2), topY + h);
+//    path.close();
+    path.lineTo(topX,topY);
+    path.lineTo(topX + (w / 2) ,topY + h);
+    path.lineTo(width, topY + h);
+    canvas.drawPath(path,linePaint);
+
+    //canvas.drawColor(getResources().getColor(R.color.title_color));
+//    Paint paint = new Paint(); /*去锯齿*/
+//    paint.setAntiAlias(true); /*设置paint的颜色*/
+//    paint.setColor(Color.WHITE); /*设置paint的 style 为STROKE：空心*/
+//    paint.setStyle(Paint.Style.STROKE); /*设置paint的外框宽度*/
+//    paint.setStrokeWidth(borderWidth); /*画一个空心三角形*/
+//    Path path = new Path();
+//
+//    path.moveTo(topX, topY);
+//    path.lineTo(topX - (w / 2), topY + h);
+//    path.moveTo(topX, topY);
+//    path.lineTo(topX + (w / 2), topY + h);
+//    path.close();
+//    //canvas.drawColor(getResources().getColor(R.color.content_color));
+//    canvas.drawPath(path, paint); /*设置paint 的style为 FILL：实心*/
+//
+//    paint.setStrokeWidth(1);
+//    paint.setStyle(Paint.Style.FILL); /*设置paint的颜色*/
+//    paint.setColor(getResources().getColor(R.color.green)); /*画一个实心三角形*/
+//    Path path2 = new Path();
+//
+//    path2.moveTo(topX, topY + borderWidth / 2);
+//    path2.lineTo(topX - (w / 2) + borderWidth / 2, topY + h + borderWidth);
+//    path2.moveTo(topX, topY + borderWidth / 2);
+//    path2.lineTo(topX + (w / 2) - borderWidth / 2, topY + h + borderWidth);
+//    path2.lineTo(topX - (w / 2) + borderWidth / 2, topY + h + borderWidth);
+//    path2.close();
+//    canvas.drawPath(path2, paint);
+//
+//    int width = getWidth();
+//    int height = getHeight();
+//
+//    Paint linePaint = new Paint();
+//    linePaint.setStrokeWidth(borderWidth / 2);
+//    linePaint.setColor(Color.WHITE);
+//    canvas.drawLine(0, topY + h, topX - (w / 2), topY + h, linePaint);
+//    canvas.drawLine(topX + (w / 2), topY + h, width, topY + h, linePaint);
   }
 
   public void setFristPoint(View view) {

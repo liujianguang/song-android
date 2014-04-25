@@ -17,14 +17,14 @@ import com.song1.musicno1.R;
  */
 public abstract class ListFragment<T> extends DataFragment<T> implements AbsListView.OnScrollListener {
   @InjectView(R.id.headerLayout)
-  protected View headerView;
-  @InjectView(R.id.loading) View     loadingView;
-  @InjectView(R.id.empty)   View     emptyView;
-  @InjectView(R.id.list)    ListView listView;
-  @InjectView(R.id.retry)   View     retryView;
-  private                   Button   footerRetryBtn;
-  private                   View     footerLoadingView;
-  private                   View     footerView;
+  protected                           View     headerView;
+  @InjectView(R.id.loading) protected View     loadingView;
+  @InjectView(R.id.empty) protected   View     emptyView;
+  @InjectView(R.id.list) protected    ListView listView;
+  @InjectView(R.id.retry) protected   View     retryView;
+  protected                           Button   footerRetryBtn;
+  protected                           View     footerLoadingView;
+  protected                           View     footerView;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
