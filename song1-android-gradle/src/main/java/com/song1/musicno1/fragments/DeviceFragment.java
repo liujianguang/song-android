@@ -122,6 +122,7 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
             holder.textView.setTextColor(Color.WHITE);
           }
           holder.textView.setText(name);
+          holder.deviceNumView.setVisibility(View.GONE);
         });
   }
 
