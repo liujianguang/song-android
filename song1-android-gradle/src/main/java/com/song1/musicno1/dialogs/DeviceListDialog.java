@@ -15,6 +15,7 @@ import butterknife.OnClick;
 import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.models.WifiModel;
+import com.song1.musicno1.util.DeviceUtil;
 import org.cybergarage.upnp.Device;
 
 import java.util.List;
@@ -84,18 +85,20 @@ public class DeviceListDialog extends SpecialDialog implements WifiModel.ScanLis
   @Override
   public void scanResult(List<ScanResult> scanResultList) {
     allNetworkDeviceList.clear();
-    for (ScanResult scanResult : scanResultList) {
-//      System.out.println(scanResult.SSID);
-      if (isDevice(scanResult.SSID)) {
-        System.out.println(scanResult.SSID);
-        System.out.println(scanResult.BSSID);
-        if (!isExist(scanResult.BSSID)) {
-          allNetworkDeviceList.add(scanResult.SSID);
-        }
-      }
-      deviceAdapter.notifyDataSetChanged();
-      confirmButton.setEnabled(true);
-    }
+    List<String> ssidList = DeviceUtil.filterScanResultList(scanResultList);
+//    for (ScanResult scanResult : scanResultList) {
+////      System.out.println(scanResult.SSID);
+//      if (isDevice(scanResult.SSID)) {
+//        System.out.println(scanResult.SSID);
+//        System.out.println(scanResult.BSSID);
+//        if (!isExist(scanResult.BSSID)) {
+//          allNetworkDeviceList.add(scanResult.SSID);
+//        }
+//      }
+//    }
+    allNetworkDeviceList.addAll(ssidList);
+    deviceAdapter.notifyDataSetChanged();
+    confirmButton.setEnabled(true);
   }
 
   private boolean isDevice(String ssid){

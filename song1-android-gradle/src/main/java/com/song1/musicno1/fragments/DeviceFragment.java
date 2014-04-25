@@ -2,6 +2,7 @@ package com.song1.musicno1.fragments;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -22,12 +23,14 @@ import com.song1.musicno1.constants.Constants;
 import com.song1.musicno1.dialogs.DeviceListDialog;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.NetworkHelp;
+import com.song1.musicno1.models.WifiModel;
 import com.song1.musicno1.models.events.play.CurrentPlayerEvent;
 import com.song1.musicno1.models.events.play.SelectPlayerEvent;
 import com.song1.musicno1.models.events.upnp.DeviceChangeEvent;
 import com.song1.musicno1.models.events.upnp.SearchDeviceEvent;
 import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.ui.SlingUpDialog;
+import com.song1.musicno1.util.DeviceUtil;
 import com.squareup.otto.Subscribe;
 import org.cybergarage.upnp.std.av.renderer.MediaRenderer;
 
@@ -36,7 +39,7 @@ import java.util.List;
 /**
  * Created by kate on 14-3-17.
  */
-public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemClickListener {
+public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemClickListener, WifiModel.ScanListener {
 
   protected                         NetworkHelp                     networkHelp;
   protected                         Player                          selectedPlayer;
@@ -50,6 +53,9 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
   List<String> nameList;
   List<Integer> icoNormalList;
   List<Integer> icoSelectedList;
+
+  WifiModel wifiModel;
+  int newDeviceCount = 0;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -74,6 +80,10 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
     icoNormalList = Lists.newArrayList(Constants.DEVICE_IOC_NORMAL);
     icoSelectedList = Lists.newArrayList(Constants.DEVICE_IOC_SELECTED);
     System.out.println("nameList : " + nameList);
+
+    wifiModel = new WifiModel(getActivity());
+    wifiModel.setScanListener(this);
+    wifiModel.scan();
   }
 
   private void newAdapter() {
@@ -84,6 +94,8 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
             holder.imageView.setImageResource(R.drawable.addnewdevice_ic_butoon_normal);
             holder.textView.setTextColor(Color.WHITE);
             holder.textView.setText(getString(R.string.newDevice));
+            holder.deviceNumView.setText(newDeviceCount + "");
+            holder.deviceNumView.setVisibility(View.VISIBLE);
             return;
           }
           String[] strArr = player.getName().split("-");
@@ -136,6 +148,7 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
   @Override
   public void onDestroy() {
     super.onDestroy();
+    wifiModel.stop();
   }
 
   @Override
@@ -173,9 +186,17 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
     adapter.notifyDataSetChanged();
   }
 
+  @Override
+  public void scanResult(List<ScanResult> scanResults) {
+    List<String> ssidList = DeviceUtil.filterScanResultList(scanResults);
+    newDeviceCount = ssidList.size();
+    adapter.notifyDataSetChanged();
+  }
+
   class ViewHolder extends BaseAdapter.ViewHolder {
     @InjectView(R.id.text)  TextView  textView;
     @InjectView(R.id.image) ImageView imageView;
+    @InjectView(R.id.deviceNumView) TextView deviceNumView;
 
     @Override
     public void inject(View view) {
