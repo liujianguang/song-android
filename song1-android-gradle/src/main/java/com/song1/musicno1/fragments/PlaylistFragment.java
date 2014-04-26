@@ -69,15 +69,15 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemClic
   @Subscribe
   public void playlistChanged(CurrentPlaylistEvent event) {
     playlist = event.getPlaylist();
-    if (playlist.getAudios() == null){
-      return;
-    }
+
     List<Audio> list = Lists.newArrayList();
-    for (Audio audio :playlist.getAudios()){
-       if (audio instanceof AudioGroup){
+    if (playlist.getAudios() != null) {
+      for (Audio audio :playlist.getAudios()){
+        if (audio instanceof AudioGroup){
           continue;
-       }
-      list.add(audio);
+        }
+        list.add(audio);
+      }
     }
     adapter.setList(list);
     adapter.notifyDataSetChanged();
