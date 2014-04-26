@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -181,12 +182,12 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
   public void favorite() {
     if (currentAudio == null) return;
 
-    if (FavoriteAudio.isFavorite(currentAudio)) {
-      FavoriteAudio.removeFromFavorite(currentAudio);
-      favoriteBtn.setImageResource(R.drawable.ic_red_heat_nor);
-    } else {
-      FavoriteAudio.addToFavorite(currentAudio);
+    if (FavoriteAudio.toggleRedHeart(currentAudio)) {
       favoriteBtn.setImageResource(R.drawable.ic_red_heat_selected);
+      Toast.makeText(getActivity(), R.string.added_to_red_heart, Toast.LENGTH_SHORT).show();
+    } else {
+      favoriteBtn.setImageResource(R.drawable.ic_red_heat_nor);
+      Toast.makeText(getActivity(), R.string.removed_frome_red_heart, Toast.LENGTH_SHORT).show();
     }
 
     Fragment mainFragment = getFragmentManager().findFragmentById(R.id.main);

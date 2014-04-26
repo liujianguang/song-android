@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -168,7 +169,11 @@ public class AudioAdapter extends DataAdapter<Audio> {
     @OnClick(R.id.red_heart)
     public void onRedHeartClick(View view) {
       Audio audio = (Audio) view.getTag();
-      FavoriteAudio.toggleRedHeart(audio);
+      if (FavoriteAudio.toggleRedHeart(audio)) {
+        Toast.makeText(context, R.string.added_to_red_heart, Toast.LENGTH_SHORT).show();
+      } else {
+        Toast.makeText(context, R.string.removed_frome_red_heart, Toast.LENGTH_SHORT).show();
+      }
       notifyDataSetChanged();
     }
 
