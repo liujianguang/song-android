@@ -102,7 +102,11 @@ public class PlayBarFragment extends Fragment {
 
   @Subscribe
   public void onPlayerSelected(CurrentPlayerEvent event) {
-    playerListBtn.setImageResource(R.drawable.ic_player_selected);
+    if (event.getCurrentPlayer() != null && !event.getCurrentPlayer().getId().equals("0")) {
+      playerListBtn.setImageResource(R.drawable.ic_player_selected);
+    } else {
+      playerListBtn.setImageResource(R.drawable.ic_device_list_nor);
+    }
   }
 
   @Subscribe

@@ -71,7 +71,11 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
 
   @Subscribe
   public void currentPlayerChanged(CurrentPlayerEvent event) {
-    playerListBtn.setImageResource(R.drawable.ic_device_list_large_press);
+    if (event.getCurrentPlayer() != null && !event.getCurrentPlayer().getId().equals("0")) {
+      playerListBtn.setImageResource(R.drawable.ic_device_list_large_press);
+    } else {
+      playerListBtn.setImageResource(R.drawable.ic_device_list_large_nor);
+    }
     volumeBar.setEnabled(event.getCurrentPlayer() != null);
   }
 
