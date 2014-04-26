@@ -132,6 +132,9 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
   @Subscribe
   public void onPlayStateChanged(CurrentPlayerStateEvent event) {
     if (event.state == Player.PLAYING) {
+      if (rotation != null) {
+        rotation.cancel();
+      }
       newRotationAnimator();
       rotation.start();
     } else {
