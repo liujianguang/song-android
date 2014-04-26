@@ -77,7 +77,11 @@ public class BaseAdapter<E, H extends BaseAdapter.ViewHolder> extends android.wi
     }
 
     E element = getElement(i);
-    setDataProc.call(i, element, holder);
+    try {
+      setDataProc.call(i, element, holder);
+    } catch (IllegalStateException ignored) {
+      // 处理退出应用后 not attached to Activity 的问题
+    }
     return view;
   }
 
