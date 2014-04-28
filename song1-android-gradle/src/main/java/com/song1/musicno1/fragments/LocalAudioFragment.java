@@ -18,6 +18,7 @@ import com.song1.musicno1.entity.Artist;
 import com.song1.musicno1.entity.AudioGroup;
 import com.song1.musicno1.fragments.base.ListFragment;
 import com.song1.musicno1.helpers.List8;
+import com.song1.musicno1.helpers.ViewHelper;
 import com.song1.musicno1.loader.LoadData;
 import com.song1.musicno1.models.LocalAudioStore;
 import com.song1.musicno1.models.play.Audio;
@@ -121,18 +122,20 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
     LinearLayout linearLayout = new LinearLayout(getActivity());
     linearLayout.setBackgroundColor(Color.GRAY);
     linearLayout.getBackground().setAlpha(120);
-    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(24, ViewGroup.LayoutParams.MATCH_PARENT);
+
+    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.MATCH_PARENT);
     layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
     linearLayout.setLayoutParams(layoutParams);
     linearLayout.setOrientation(LinearLayout.VERTICAL);
     linearLayout.setGravity(Gravity.CENTER);
+    linearLayout.setPadding(0,10,0,0);
     for (String ch : chars) {
       Button button = new Button(getActivity());
-      button.setLayoutParams(new ViewGroup.LayoutParams(24, 22));
+      button.setLayoutParams(new LinearLayout.LayoutParams(ViewHelper.dp2pixels(getActivity(), 18f), 0,1));
       button.setText(ch);
-      button.setTextSize(11);
+      button.setTextSize(ViewHelper.dp2pixels(getActivity(),5f));
       button.setTextColor(getResources().getColor(R.color.number_color));
-      button.setGravity(Gravity.CENTER);
+      button.setGravity(Gravity.CENTER | Gravity.CENTER_VERTICAL);
       button.setOnClickListener(numberButtonClickListener);
       button.setTag(chars.indexOf(ch));
       linearLayout.addView(button);
