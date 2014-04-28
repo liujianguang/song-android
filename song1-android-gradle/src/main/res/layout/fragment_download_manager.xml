@@ -51,7 +51,7 @@
       <com.song1.musicno1.ui.ArrowView
           android:id="@+id/arrow"
           android:layout_width="match_parent"
-          android:layout_height="4.8dp"
+          android:layout_height="6.5dp"
           android:padding="0dp"
           android:layout_margin="0dp"
           android:background="@android:color/transparent"/>

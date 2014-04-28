@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.TextView;
 import com.song1.musicno1.R;
+import com.song1.musicno1.helpers.ViewHelper;
 import org.w3c.dom.Text;
 
 /**
@@ -15,17 +16,23 @@ import org.w3c.dom.Text;
  */
 public class ArrowView extends TextView {
 
-
+  Context mContext;
   public ArrowView(Context context) {
     super(context);
+    mContext = context;
+    init();
   }
 
   public ArrowView(Context context, AttributeSet attrs) {
     super(context, attrs);
+    mContext = context;
+    init();
   }
 
   public ArrowView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
+    mContext = context;
+    init();
   }
 
   View firstView;
@@ -34,6 +41,13 @@ public class ArrowView extends TextView {
   int   w           = 12;
   int   h           = 6;
   int   borderWidth = 2;
+
+  private void init(){
+    topX = ViewHelper.dp2pixels(mContext,topX);
+    topY = ViewHelper.dp2pixels(mContext,topY);
+    w = ViewHelper.dp2pixels(mContext,w);
+    h = ViewHelper.dp2pixels(mContext,h);
+  }
 
   protected void onDraw(Canvas canvas) {
     // TODO Auto-generated method stub
@@ -62,6 +76,7 @@ public class ArrowView extends TextView {
     linePaint.setStrokeWidth(1);
     linePaint.setColor(Color.WHITE);
     path.moveTo(0, topY + h);
+
     path.lineTo(topX - (w / 2), topY + h);
 //    path.close();
     path.lineTo(topX,topY);
