@@ -94,8 +94,14 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
             holder.imageView.setImageResource(R.drawable.addnewdevice_ic_butoon_normal);
             holder.textView.setTextColor(Color.WHITE);
             holder.textView.setText(getString(R.string.newDevice));
-            holder.deviceNumView.setText(newDeviceCount + "");
-            holder.deviceNumView.setVisibility(View.VISIBLE);
+            if (newDeviceCount != 0){
+              holder.deviceNumView.setText(newDeviceCount + "");
+              holder.deviceNumView.setText(newDeviceCount + "");
+              holder.deviceNumView.setVisibility(View.VISIBLE);
+            }else{
+              holder.deviceNumView.setVisibility(View.GONE);
+            }
+
             return;
           }
           String[] strArr = player.getName().split("-");
