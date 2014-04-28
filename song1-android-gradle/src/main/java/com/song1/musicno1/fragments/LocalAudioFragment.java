@@ -23,7 +23,6 @@ import com.song1.musicno1.models.LocalAudioStore;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.models.play.Playlist;
-import com.song1.musicno1.util.ToastUtil;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -35,18 +34,18 @@ import java.util.Random;
  * Date: 13-8-29
  * Time: PM3:07
  */
-public class LocalAudioFragment extends ListFragment<Audio> implements AdapterView.OnItemClickListener{
+public class LocalAudioFragment extends ListFragment<Audio> implements AdapterView.OnItemClickListener {
   @Inject LocalAudioStore localAudioStore;
   private Album           album;
   private Artist          artist;
   private TextView        audioTotalTextView;
-  private ListView        listView;
 
   AudioAdapter audioAdapter;
   int audioTotal = 0;
 
   Map<String, Button> mapNumberButton = Maps.newHashMap();
   Button currentNumberButton;
+  private View playHeaderView;
 
   @Inject
   public LocalAudioFragment() {
@@ -84,20 +83,28 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
   @Override
   public void showContent() {
     super.showContent();
-    if (!isDataEmpty() && getListView().getHeaderViewsCount() == 0) {
-      View headerView = View.inflate(getActivity(), R.layout.header_local_audio, null);
-      headerView.setOnClickListener((view) -> {
-        List<Audio> dataList = getDataList();
-        Random random = new Random();
-        int randomIndex = random.nextInt(dataList.size());
-        Players.setPlaylist(new Playlist(List8.newList(dataList), dataList.get(randomIndex)));
-      });
-      getListView().addHeaderView(headerView);
-      audioTotalTextView = (TextView) headerView.findViewById(R.id.audioTotal);
+    if (isDataEmpty()) {
+      if (playHeaderView != null) {
+        getListView().removeHeaderView(playHeaderView);
+        playHeaderView = null;
+      }
+    } else {
+      if (playHeaderView == null) {
+        playHeaderView = View.inflate(getActivity(), R.layout.header_local_audio, null);
+        playHeaderView.setOnClickListener((view) -> {
+          List<Audio> dataList = getDataList();
+          if (dataList.size() > 0) {
+            Random random = new Random();
+            int randomIndex = random.nextInt(dataList.size());
+            Players.setPlaylist(new Playlist(List8.newList(dataList), dataList.get(randomIndex)));
+          }
+        });
+        getListView().addHeaderView(playHeaderView);
+      }
+      audioTotalTextView = (TextView) playHeaderView.findViewById(R.id.audioTotal);
+      String str = String.format(getString(R.string.allAudios), audioTotal);
+      audioTotalTextView.setText(str);
     }
-
-    String str = String.format(getString(R.string.allAudios), audioTotal);
-    audioTotalTextView.setText(str);
   }
 
 
@@ -129,20 +136,21 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
       button.setOnClickListener(numberButtonClickListener);
       button.setTag(chars.indexOf(ch));
       linearLayout.addView(button);
-      mapNumberButton.put(ch,button);
+      mapNumberButton.put(ch, button);
     }
     return linearLayout;
   }
 
-  private void setCurrentNumberButton(String number){
-    if (number != null){
-      if (currentNumberButton != null){
+  private void setCurrentNumberButton(String number) {
+    if (number != null) {
+      if (currentNumberButton != null) {
         currentNumberButton.setBackgroundColor(Color.TRANSPARENT);
       }
       currentNumberButton = mapNumberButton.get(number);
       currentNumberButton.setBackgroundColor(getResources().getColor(R.color.title_bg_color));
     }
   }
+
   @Override
   protected DataAdapter<Audio> newAdapter() {
     audioAdapter = new AudioAdapter(getActivity());
@@ -185,11 +193,11 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
   @Override
   public void onScroll(AbsListView absListView, int firstVisibleItem,
                        int visibleItemCount, int totalItemCount) {
-    if (audioAdapter.getCount() == 0){
+    if (audioAdapter.getCount() == 0) {
       return;
     }
     Audio audio = audioAdapter.getDataItem(firstVisibleItem);
-    if (audio instanceof AudioGroup){
+    if (audio instanceof AudioGroup) {
       setCurrentNumberButton(audio.getTitle());
     }
   }
