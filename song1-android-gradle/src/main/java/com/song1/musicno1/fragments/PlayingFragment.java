@@ -1,5 +1,6 @@
 package com.song1.musicno1.fragments;
 
+import android.net.wifi.ScanResult;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,28 +18,37 @@ import butterknife.OnClick;
 import com.song1.musicno1.R;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.FavoriteAudio;
+import com.song1.musicno1.models.WifiModel;
 import com.song1.musicno1.models.events.play.*;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.models.play.Volume;
+import com.song1.musicno1.ui.IocTextView;
+import com.song1.musicno1.util.DeviceUtil;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.CirclePageIndicator;
+
+import java.util.List;
 
 /**
  * Created by windless on 3/28/14.
  */
 
-public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
+public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, WifiModel.ScanListener {
   protected int   state;
   protected Audio currentAudio;
 
-  @InjectView(R.id.volume_bar)  SeekBar             volumeBar;
-  @InjectView(R.id.play)        ImageButton         playBtn;
-  @InjectView(R.id.pager)       ViewPager           pager;
-  @InjectView(R.id.indicator)   CirclePageIndicator indicator;
-  @InjectView(R.id.favorite)    ImageButton         favoriteBtn;
-  @InjectView(R.id.player_list) ImageButton         playerListBtn;
+  @InjectView(R.id.volume_bar)    SeekBar             volumeBar;
+  @InjectView(R.id.play)          ImageButton         playBtn;
+  @InjectView(R.id.pager)         ViewPager           pager;
+  @InjectView(R.id.indicator)     CirclePageIndicator indicator;
+  @InjectView(R.id.favorite)      ImageButton         favoriteBtn;
+  @InjectView(R.id.player_list)   ImageButton         playerListBtn;
+  @InjectView(R.id.deviceNumView) IocTextView         deviceNumView;
+  WifiModel wifiModel;
+  int newDeviceCount = 0;
+
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,6 +66,10 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
 
     volumeBar.setOnSeekBarChangeListener(this);
     volumeBar.setEnabled(false);
+
+    wifiModel = new WifiModel(getActivity());
+    wifiModel.setScanListener(this);
+    wifiModel.scan();
   }
 
   @Override
@@ -68,6 +82,12 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
   public void onResume() {
     super.onResume();
     MainBus.register(this);
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    wifiModel.stop();
   }
 
   @Subscribe
@@ -205,6 +225,18 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
   @OnClick(R.id.volume_max)
   public void volumeUp() {
     MainBus.post(new UpdateVolumeEvent(UpdateVolumeEvent.UP, false));
+  }
+
+  @Override
+  public void scanResult(List<ScanResult> scanResults) {
+    List<String> ssidList = DeviceUtil.filterScanResultList(scanResults);
+    newDeviceCount = ssidList.size();
+    if (newDeviceCount != 0){
+      deviceNumView.setText(newDeviceCount + "");
+      deviceNumView.setVisibility(View.VISIBLE);
+    }else{
+      deviceNumView.setVisibility(View.GONE);
+    }
   }
 
 

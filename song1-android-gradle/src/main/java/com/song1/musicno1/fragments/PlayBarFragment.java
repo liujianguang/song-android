@@ -1,5 +1,6 @@
 package com.song1.musicno1.fragments;
 
+import android.net.wifi.ScanResult;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -20,18 +21,23 @@ import com.song1.musicno1.helpers.AlbumArtHelper;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.TimeHelper;
 import com.song1.musicno1.models.LocalAudioStore;
+import com.song1.musicno1.models.WifiModel;
 import com.song1.musicno1.models.events.play.*;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.play.Players;
+import com.song1.musicno1.ui.IocTextView;
+import com.song1.musicno1.util.DeviceUtil;
 import com.song1.musicno1.util.RoundedTransformation;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 /**
  * Created by windless on 3/27/14.
  */
-public class PlayBarFragment extends Fragment {
+public class PlayBarFragment extends Fragment implements WifiModel.ScanListener {
   protected                            int                state;
   @InjectView(R.id.bottom_title)       TextView           bottomTitleView;
   @InjectView(R.id.bottom_subtitle)    TextView           bottomSubtitleView;
@@ -45,9 +51,13 @@ public class PlayBarFragment extends Fragment {
   @InjectView(R.id.refresh_layout)     SwipeRefreshLayout refreshLayout;
   @InjectView(R.id.bottom_album_art)   ImageView          albumArtImageView;
   @InjectView(R.id.timer_time)         TextView           timerTextView;
+  @InjectView(R.id.deviceNumView)      IocTextView        deviceNumView;
 
   LocalAudioStore localAudioStore;
   protected int timerValue;
+
+  WifiModel wifiModel;
+  int newDeviceCount = 0;
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
@@ -59,6 +69,9 @@ public class PlayBarFragment extends Fragment {
         android.R.color.holo_green_light,
         android.R.color.holo_orange_light
     );
+    wifiModel = new WifiModel(getActivity());
+    wifiModel.setScanListener(this);
+    wifiModel.scan();
   }
 
   @Override
@@ -78,6 +91,12 @@ public class PlayBarFragment extends Fragment {
   public void onPause() {
     super.onPause();
     MainBus.unregister(this);
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    wifiModel.stop();
   }
 
   @OnClick(R.id.bottom_player_list)
@@ -202,5 +221,17 @@ public class PlayBarFragment extends Fragment {
       timerTextView.setVisibility(View.VISIBLE);
     }
     timerTextView.setText(TimeHelper.secondToString(event.getTimerValue()));
+  }
+
+  @Override
+  public void scanResult(List<ScanResult> scanResults) {
+    List<String> ssidList = DeviceUtil.filterScanResultList(scanResults);
+    newDeviceCount = ssidList.size();
+    if (newDeviceCount != 0){
+      deviceNumView.setText(newDeviceCount + "");
+      deviceNumView.setVisibility(View.VISIBLE);
+    }else{
+      deviceNumView.setVisibility(View.GONE);
+    }
   }
 }
