@@ -120,4 +120,8 @@ public class FavoritesDialog extends DialogFragment implements AdapterView.OnIte
           dismiss();
         }).show(getFragmentManager(), "");
   }
+  @OnClick(R.id.cancel)
+  public void cancelClick(){
+      dismiss();
+  }
 }

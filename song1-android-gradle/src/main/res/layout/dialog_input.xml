@@ -3,45 +3,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="wrap_content"
+              android:gravity="center">
 
-  <TextView
-      android:id="@+id/title"
-      android:padding="8dp"
-      android:gravity="center_horizontal"
-      android:textSize="@dimen/text_size_bigger"
+
+  <include layout="@layout/top_title" />
+
+  <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"/>
-
+      android:layout_height="wrap_content"
+      android:layout_margin="30dp"
+      android:gravity="center">
   <EditText
       android:id="@+id/input"
       android:maxLength="50"
-      android:layout_width="match_parent"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:inputType="text"/>
-
-  <LinearLayout
-      android:id="@+id/buttons_section"
-      android:orientation="horizontal"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content">
-
-    <Button
-        android:id="@+id/cancel"
-        android:text="@android:string/cancel"
-        style="?android:attr/buttonBarButtonStyle"
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:id="@+id/confirm"
-        style="?android:attr/buttonBarButtonStyle"
-        android:text="@android:string/ok"
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
+      android:inputType="text"
+      android:background="@drawable/edittext_bg"/>
   </LinearLayout>
+
+  <include layout="@layout/bottom_button" />
 
 </LinearLayout>
