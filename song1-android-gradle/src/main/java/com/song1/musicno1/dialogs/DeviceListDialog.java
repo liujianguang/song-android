@@ -43,6 +43,7 @@ public class DeviceListDialog extends SpecialDialog implements WifiModel.ScanLis
     if (deviceName == null) {
       return;
     }
+    //wifiModel.connect(deviceName.toString(),"");
     deviceSettingDialog = new DeviceSettingDialog(deviceName.toString());
     deviceSettingDialog.show(getFragmentManager(), "deviceFragmentDialg");
   }

@@ -24,6 +24,7 @@ import java.util.List;
 public class FavoriteAudioFragment extends ListFragment<Audio> implements AdapterView.OnItemClickListener {
   private Favorite favorite;
 
+  private View headerView;
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
@@ -31,6 +32,8 @@ public class FavoriteAudioFragment extends ListFragment<Audio> implements Adapte
       setTitle(favorite.name);
     }
     getListView().setOnItemClickListener(this);
+    headerView = getLayoutInflater(savedInstanceState).inflate(R.layout.favoriteaudio_header,null);
+    getListView().addHeaderView(headerView);
   }
 
   @Override

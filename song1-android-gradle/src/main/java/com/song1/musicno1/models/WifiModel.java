@@ -131,6 +131,7 @@ public class WifiModel {
     }else{
       wifiConfiguration = newConfig(ssid, password, WPA);
     }
+    System.out.println(wifiConfiguration);
     int id = wifiManager.addNetwork(wifiConfiguration);
     Log.d(this, "id : " + id);
     if (id != -1) {
@@ -157,6 +158,7 @@ public class WifiModel {
     for (WifiConfiguration config : configs) {
       System.out.println(config.SSID);
       if (("\"" + ssid + "\"").equals(config.SSID)) {
+        System.out.println(config);
         System.out.println("*****************");
         return config;
       }
@@ -176,11 +178,13 @@ public class WifiModel {
     config.allowedKeyManagement.clear();
     config.allowedPairwiseCiphers.clear();
     config.allowedProtocols.clear();
+    System.out.println("ssid : " + ssid);
     config.SSID = "\"" + SSID + "\"";
+    System.out.println("ssid : " + config.SSID);
     if (type == NO_PASS) {
-      config.wepKeys[0] = "";
+      //config.wepKeys[0] = "";
       config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-      config.wepTxKeyIndex = 0;
+      //config.wepTxKeyIndex = 0;
     }else if (type == WEP) {
       config.preSharedKey = "\"" + password + "\"";
       config.hiddenSSID = true;

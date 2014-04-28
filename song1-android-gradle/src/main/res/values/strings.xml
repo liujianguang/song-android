@@ -210,8 +210,11 @@
   <string name="zero_minutes">0分钟</string>
   <string name="max_minutes">120分钟</string>
   <string name="stop_timer">停止</string>
+
   <string name="added_to_red_heart">收藏成功</string>
   <string name="removed_frome_red_heart">取消收藏成功</string>
+
+  <string name="selectAll">全选</string>
 
   <array name="timer_values">
     <item>关闭</item>
