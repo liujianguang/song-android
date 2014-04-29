@@ -3,7 +3,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="wrap_content"
+              android:background="@color/title_bg_color">
 
   <View
       android:layout_width="match_parent"
@@ -23,11 +24,13 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:text="@string/cancle"/>
+
     <View
         android:layout_width="0.1dp"
-        android:layout_height="30dp"
-        android:background="@color/title_bg_color"
+        android:layout_height="20dp"
+        android:background="@color/content_bg_color"
         />
+
     <Button
         android:id="@+id/confirm"
         style="@style/buttonStyle"

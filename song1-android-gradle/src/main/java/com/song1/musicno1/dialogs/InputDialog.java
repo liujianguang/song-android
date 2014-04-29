@@ -16,7 +16,7 @@ import com.song1.musicno1.R;
 /**
  * Created by windless on 14-4-11.
  */
-public class InputDialog extends DialogFragment {
+public class InputDialog extends Dialog {
   protected String title;
 
   @InjectView(R.id.title) TextView titleView;
