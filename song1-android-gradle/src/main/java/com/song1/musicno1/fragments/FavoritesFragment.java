@@ -12,6 +12,7 @@ import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.adapter.DataAdapter;
 import com.song1.musicno1.dialogs.InputDialog;
+import com.song1.musicno1.dialogs.PromptDialog;
 import com.song1.musicno1.fragments.base.DataFragment;
 import com.song1.musicno1.helpers.ActiveHelper;
 import com.song1.musicno1.models.Favorite;
@@ -43,21 +44,44 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
     public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
       switch (menuItem.getItemId()) {
         case R.id.delete:
-          AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-          builder.setTitle(R.string.notice)
+          PromptDialog promptDialog = new PromptDialog(getActivity());
+          promptDialog.setTitle(R.string.notice)
               .setMessage(R.string.confirm_delete)
-              .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                ActiveHelper.transition(() -> {
-                  for (Favorite favorite : selectedItem.values()) {
-                    favorite.destroy();
-                  }
-                });
-                actionMode.finish();
-                reload();
-                dialog.dismiss();
+              .setConfirmClick(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                  ActiveHelper.transition(() -> {
+                    for (Favorite favorite : selectedItem.values()) {
+                      favorite.destroy();
+                    }
+                  });
+                  actionMode.finish();
+                  reload();
+                  promptDialog.dismiss();
+                }
               })
-              .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss())
-              .create().show();
+              .setCancelClick(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                  promptDialog.dismiss();
+                }
+              });
+          promptDialog.show(getFragmentManager(), "promptDialog");
+//          AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//          builder.setTitle(R.string.notice)
+//              .setMessage(R.string.confirm_delete)
+//              .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+//                ActiveHelper.transition(() -> {
+//                  for (Favorite favorite : selectedItem.values()) {
+//                    favorite.destroy();
+//                  }
+//                });
+//                actionMode.finish();
+//                reload();
+//                dialog.dismiss();
+//              })
+//              .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss())
+//              .create().show();
           return true;
       }
       return false;
