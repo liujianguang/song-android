@@ -7,16 +7,11 @@
 
   <include android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           layout="@layout/favorites_header"/>
+           layout="@layout/split_line"/>
   <ListView
       android:id="@+id/list"
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:layout_weight="1"/>
 
-  <include
-           android:id="@+id/bottom"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           layout="@layout/favorites_bottom"/>
 </LinearLayout>

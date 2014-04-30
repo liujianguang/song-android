@@ -30,53 +30,7 @@ import java.util.Map;
 public class FavoritesFragment extends DataFragment<Favorite> implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
   @InjectView(R.id.list) ListView listView;
 
-  @InjectView(R.id.create_new)
-  Button     newFavoritesButton;
-  @InjectView(R.id.edit)
-  Button     editButton;
-  @InjectView(R.id.selectAll)
-  CheckBox   selectAllButton;
-  @InjectView(R.id.bottom)
-  View buttonTool;
-  @InjectView(R.id.cancel)
-  Button     cancelButton;
-  @InjectView(R.id.delete)
-  Button     deleteButton;
-
   Map<Integer, Favorite> selectedItem = Maps.newHashMap();
-
-  View.OnClickListener buttonClickListener = new View.OnClickListener() {
-    @Override
-    public void onClick(View view) {
-      switch (view.getId()) {
-        case R.id.create_new:
-          createFavorite();
-          break;
-        case R.id.edit:
-          showEdit();
-          break;
-        case R.id.cancel:
-          hideEdit();
-          break;
-        case R.id.delete:
-          delete();
-          break;
-        default:
-          break;
-      }
-    }
-  };
-
-  CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
-    @Override
-    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-      if (b){
-        selectAll();
-      }else{
-        clearAllSelected();
-      }
-    }
-  };
 
   ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
     @Override
@@ -139,10 +93,6 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
 
     @Override
     public void onDestroyActionMode(ActionMode actionMode) {
-      newFavoritesButton.setVisibility(View.VISIBLE);
-      editButton.setVisibility(View.VISIBLE);
-      selectAllButton.setVisibility(View.GONE);
-      buttonTool.setVisibility(View.GONE);
 
       FavoritesFragment.this.actionMode = null;
       selectedItem.clear();
@@ -152,74 +102,6 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
     }
   };
 
-  boolean isEditing = false;
-
-  private void hideEdit() {
-    isEditing = false;
-    newFavoritesButton.setVisibility(View.VISIBLE);
-    editButton.setVisibility(View.VISIBLE);
-    selectAllButton.setVisibility(View.GONE);
-    buttonTool.setVisibility(View.GONE);
-
-    selectedItem.clear();
-    getAdapter().notifyDataSetChanged();
-
-    MainActivity activity = (MainActivity) getActivity();
-    activity.showPlayBar();
-  }
-
-  private void showEdit() {
-    isEditing = true;
-    newFavoritesButton.setVisibility(View.GONE);
-    editButton.setVisibility(View.GONE);
-    selectAllButton.setVisibility(View.VISIBLE);
-    buttonTool.setVisibility(View.VISIBLE);
-
-    onSelectedNumChange();
-    getAdapter().notifyDataSetChanged();
-
-    MainActivity activity = (MainActivity) getActivity();
-    activity.hidePlayBar();
-  }
-
-  private void selectAll() {
-    List<Favorite> dataList = getDataList();
-    for (int i = 0; i < dataList.size();i++){
-      Favorite favorite = dataList.get(i);
-      selectedItem.put(i,favorite);
-    }
-    getAdapter().notifyDataSetChanged();
-  }
-  private void clearAllSelected(){
-    selectedItem.clear();
-    getAdapter().notifyDataSetChanged();
-  }
-  private void delete(){
-    PromptDialog promptDialog = new PromptDialog(getActivity());
-    promptDialog.setTitle(R.string.notice)
-        .setMessage(R.string.confirm_delete)
-        .setConfirmClick(new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-            ActiveHelper.transition(() -> {
-              for (Favorite favorite : selectedItem.values()) {
-                favorite.destroy();
-              }
-            });
-            //actionMode.finish();
-            selectedItem.clear();
-            reload();
-            promptDialog.dismiss();
-          }
-        })
-        .setCancelClick(new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-            promptDialog.dismiss();
-          }
-        });
-    promptDialog.show(getFragmentManager(), "promptDialog");
-  }
   protected ActionMode actionMode;
 
   @Override
@@ -235,15 +117,8 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
     setTitle(getString(R.string.favorite));
     listView.setAdapter(getAdapter());
     listView.setOnItemClickListener(this);
-    //listView.setOnItemLongClickListener(this);
+    listView.setOnItemLongClickListener(this);
     setHasOptionsMenu(true);
-
-    newFavoritesButton.setOnClickListener(buttonClickListener);
-    selectAllButton.setOnCheckedChangeListener(onCheckedChangeListener);
-    editButton.setOnClickListener(buttonClickListener);
-    cancelButton.setOnClickListener(buttonClickListener);
-    deleteButton.setOnClickListener(buttonClickListener);
-    buttonTool.setVisibility(View.GONE);
   }
 
   @Override
@@ -254,7 +129,7 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
   
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    //inflater.inflate(R.menu.favorites, menu);
+    inflater.inflate(R.menu.favorites, menu);
     super.onCreateOptionsMenu(menu, inflater);
   }
 
@@ -314,8 +189,7 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
 
         holder.checkBox.setChecked(selectedItem.get(i) != null);
 
-        if (isEditing) {
-//        if (actionMode != null) {
+        if (actionMode != null) {
           holder.checkBox.setVisibility(View.VISIBLE);
         } else {
           holder.checkBox.setVisibility(View.GONE);
@@ -327,8 +201,7 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
 
   @Override
   public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-    if (isEditing) {
-//    if (actionMode != null) {
+    if (actionMode != null) {
       ViewHolder holder = (ViewHolder) view.getTag();
       holder.checkBox.setChecked(!holder.checkBox.isChecked());
       return;
@@ -361,15 +234,6 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
     return true;
   }
 
-  private void onSelectedNumChange(){
-    if (selectedItem.size() == 0){
-      deleteButton.setEnabled(false);
-    }
-    else{
-      deleteButton.setEnabled(true);
-    }
-    deleteButton.setText(getString(R.string.delete) + "(" + selectedItem.size() + ")");
-  }
   class ViewHolder implements CompoundButton.OnCheckedChangeListener {
     @InjectView(R.id.title)    TextView title;
     @InjectView(R.id.checkbox) CheckBox checkBox;
@@ -388,10 +252,8 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
         selectedItem.remove(index);
       }
 
-      if (isEditing) {
-//      if (actionMode != null) {
-        onSelectedNumChange();
-        //actionMode.setTitle(getString(R.string.selected_items, selectedItem.size()));
+      if (actionMode != null) {
+        actionMode.setTitle(getString(R.string.selected_items, selectedItem.size()));
       }
     }
   }

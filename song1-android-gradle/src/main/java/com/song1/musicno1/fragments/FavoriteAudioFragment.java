@@ -25,9 +25,6 @@ import java.util.List;
 public class FavoriteAudioFragment extends ListFragment<Audio> implements AdapterView.OnItemClickListener {
   private Favorite favorite;
 
-  private View headerView;
-
-
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
@@ -41,8 +38,6 @@ public class FavoriteAudioFragment extends ListFragment<Audio> implements Adapte
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = super.onCreateView(inflater,container,savedInstanceState);
-    headerView = getLayoutInflater(savedInstanceState).inflate(R.layout.favoriteaudio_header,null);
-    getListView().addHeaderView(headerView);
     return view;
   }
 
