@@ -250,11 +250,11 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
   private void startConnect(String ssid, String password) {
     System.out.println("start connect : " + ssid);
     if (ssid.equals(deviceConfig.getSsid())) {
-      handler.sendEmptyMessage(STATUS_CONNECT_DEVICE);
+      sendEmptyMessage(STATUS_CONNECT_DEVICE);
     } else {
-      handler.sendEmptyMessage(STATUS_CONNECT_WIFI);
+      sendEmptyMessage(STATUS_CONNECT_WIFI);
     }
-    handler.post(new Runnable() {
+    post(new Runnable() {
       @Override
       public void run() {
         wifiModel.connect(ssid, password);
@@ -263,7 +263,7 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
   }
 
   private void setDevice() {
-    handler.sendEmptyMessage(STATUS_SET_DEVICE);
+    sendEmptyMessage(STATUS_SET_DEVICE);
     new Thread(new Runnable() {
       @Override
       public void run() {
@@ -274,32 +274,21 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
         remoteSetting.setDeviceName(deviceConfig.getFriendlyName());
         remoteSetting.setCurrentMode(false);
         remoteSetting.setSsidAndPass(deviceConfig.getWifiSsid(), deviceConfig.getWifiPass());
-        handler.sendEmptyMessage(STATUS_SET_DEVICE_FINISH);
+        sendEmptyMessage(STATUS_SET_DEVICE_FINISH);
       }
     }).start();
   }
 
-  private void waitDeviceSetSucc() {
-    //handler.sendEmptyMessageDelayed(STATUS_SET_DEVICE_SUCC, 12000);
-//    new Thread(new Runnable() {
-//      @Override
-//      public void run() {
-//        while(true) {
-//          RemoteSetting remoteSetting = new RemoteSetting("192.168.198.1");
-//
-//          System.out.println("mode : " + remoteSetting.getCurrentMode());
-//          System.out.println("ssid : " + remoteSetting.getCurrentSSID());
-//          System.out.println("name : " + remoteSetting.getDeviceName());
-//          try {
-//            Thread.sleep(1000);
-//          } catch (InterruptedException e) {
-//            e.printStackTrace();
-//          }
-//        }
-//      }
-//    });
+  private void sendEmptyMessage(int what){
+    if (handler != null){
+      handler.sendEmptyMessage(what);
+    }
   }
-
+  private void post(Runnable runnable){
+    if (handler != null){
+      handler.post(runnable);
+    }
+  }
   private void stopConnect() {
     handler = null;
     this.dismiss();
@@ -338,7 +327,7 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
       //System.out.println("id : " + id);
       //System.out.println("tempId : " + tempId.toLowerCase());
       if (id.contains(tempId.toLowerCase())) {
-        handler.sendEmptyMessage(STATUS_WAIT_DEVICE_SET_SUCCESS);
+        sendEmptyMessage(STATUS_WAIT_DEVICE_SET_SUCCESS);
       }
     }
   }
