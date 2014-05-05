@@ -21,6 +21,8 @@ import com.song1.musicno1.adapter.NavigationAdapter;
 import com.song1.musicno1.dialogs.LoadingDialog;
 import com.song1.musicno1.fragments.base.BaseFragment;
 import com.song1.musicno1.fragments.download.DownLoadManagerFragment;
+import com.song1.musicno1.fragments.test.*;
+import com.song1.musicno1.fragments.test.TestFragment;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.events.ExitEvent;
 import com.song1.musicno1.models.events.upnp.MediaServerEvent;
@@ -80,6 +82,7 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
 
     items.add(getString(R.string.cloud_source));
     items.add(R.string.migu_title);
+    items.add(R.string.test);
 //    items.add(R.string.beatles_music);
 //    items.add(R.string.justing);
 
@@ -134,6 +137,9 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
         break;
       case R.string.justing:
         fragment = new JustingCategoryFragment();
+        break;
+      case R.string.test:
+        fragment = new TestFragment();
         break;
     }
 

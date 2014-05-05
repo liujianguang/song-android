@@ -279,16 +279,18 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
     }).start();
   }
 
-  private void sendEmptyMessage(int what){
-    if (handler != null){
+  private void sendEmptyMessage(int what) {
+    if (handler != null) {
       handler.sendEmptyMessage(what);
     }
   }
-  private void post(Runnable runnable){
-    if (handler != null){
+
+  private void post(Runnable runnable) {
+    if (handler != null) {
       handler.post(runnable);
     }
   }
+
   private void stopConnect() {
     handler = null;
     this.dismiss();
@@ -309,12 +311,23 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
     MainBus.unregister(this);
   }
 
+
+  int searchMaxCount = 3;
+  int searchCount    = 0;
+
+  private void search() {
+    if (searchCount == searchMaxCount) {
+      return;
+    }
+    System.out.println("search*************************************************");
+    MainBus.post(new SearchDeviceEvent(MediaRenderer.DEVICE_TYPE));
+    searchCount++;
+  }
+
   @Subscribe
   public void onDeviceChanged(DeviceChangeEvent event) {
-//    currentWifiSSID = wifiModel.getCurrentSSID();
-//    if (deviceSSID.equals(currentWifiSSID)) {
-//      return;
-//    }
+    System.out.println("receiver*************************************************");
+
     List<Player> players = Lists.newArrayList(event.players);
     String tempId;
     if (deviceSSID.startsWith("yy")) {
@@ -322,13 +335,20 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
     } else {
       tempId = deviceSSID.substring(deviceSSID.indexOf("-") + 1, deviceSSID.indexOf("ONE"));
     }
+    boolean isFind = false;
     for (Player player : players) {
       String id = player.getId();
-      //System.out.println("id : " + id);
-      //System.out.println("tempId : " + tempId.toLowerCase());
+      System.out.println("id : " + id);
+      System.out.println("tempId : " + tempId.toLowerCase());
       if (id.contains(tempId.toLowerCase())) {
+        isFind = true;
         sendEmptyMessage(STATUS_WAIT_DEVICE_SET_SUCCESS);
+        break;
       }
+    }
+    System.out.println("isFind : " + isFind);
+    if (!isFind) {
+      search();
     }
   }
 }

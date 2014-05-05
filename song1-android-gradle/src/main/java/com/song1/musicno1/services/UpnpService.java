@@ -142,6 +142,7 @@ public class UpnpService extends Service implements DeviceChangeListener {
 
   @Override
   public void deviceAdded(Device device) {
+    System.out.println("deviceAdded...");
     if (MediaRenderer.DEVICE_TYPE.equals(device.getDeviceType())) {
       addMediaRenderer(device);
     } else if (MediaServer.DEVICE_TYPE.equals(device.getDeviceType())) {
@@ -182,6 +183,7 @@ public class UpnpService extends Service implements DeviceChangeListener {
   @Subscribe
   public void searchDevice(SearchDeviceEvent event) {
     Log.d(this, "Search device");
+    System.out.println("searchDevice....");
     executorService.submit(() -> mediaController.search());
   }
 
