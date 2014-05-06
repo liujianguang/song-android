@@ -48,9 +48,6 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
   Map<String, Button> mapNumberButton = Maps.newHashMap();
   Button currentNumberButton;
 
-  private LinearLayout headerLayout;
-  private View playHeaderView;
-
   @Inject
   public LocalAudioFragment() {
   }
@@ -79,7 +76,9 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
 
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.local_audio,menu);
+    if (album == null && artist == null){
+      inflater.inflate(R.menu.local_audio,menu);
+    }
     super.onCreateOptionsMenu(menu, inflater);
   }
 
@@ -107,10 +106,10 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
     if (isDataEmpty()) {
 //      if (playHeaderView != null) {
        // getListView().removeHeaderView(playHeaderView);
-        headerLayout.setVisibility(View.GONE);
+      playHeaderView.setVisibility(View.GONE);
 //      }
     } else {
-      headerLayout.setVisibility(View.VISIBLE);
+      playHeaderView.setVisibility(View.VISIBLE);
 //      if (playHeaderView == null) {
 //        playHeaderView = View.inflate(getActivity(), R.layout.header_local_audio, null);
 //        playHeaderView.setOnClickListener((view) -> {
@@ -128,11 +127,12 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
     }
   }
 
+  private View playHeaderView;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     RelativeLayout root = (RelativeLayout) super.onCreateView(inflater, container, savedInstanceState);
-    headerLayout = (LinearLayout) root.findViewById(R.id.headerLayout);
+    LinearLayout headerLayout = (LinearLayout) root.findViewById(R.id.headerLayout);
     playHeaderView = inflater.inflate(R.layout.header_local_audio,headerLayout);
     audioTotalTextView = (TextView) playHeaderView.findViewById(R.id.audioTotal);
     playAllLayout = (LinearLayout) playHeaderView.findViewById(R.id.playAll);
@@ -144,7 +144,9 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
         Players.setPlaylist(new Playlist(List8.newList(dataList), dataList.get(randomIndex)));
       }
     });
-    root.addView(createNumberNegative());
+    if (album == null && artist == null){
+      root.addView(createNumberNegative());
+    }
     return root;
   }
 

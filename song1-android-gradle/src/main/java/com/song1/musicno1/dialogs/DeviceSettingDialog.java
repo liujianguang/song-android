@@ -94,7 +94,7 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
           status.setText(getString(R.string.WifiConnectSucc));
           progressBar.setProgress(60);
           register();
-          MainBus.post(new SearchDeviceEvent(MediaRenderer.DEVICE_TYPE));
+          search();
           status.setText(getString(R.string.wait_device_set_succ));
           break;
         case STATUS_CONNECT_WIFI_TIMEOUT:
@@ -293,6 +293,7 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
 
   private void stopConnect() {
     handler = null;
+    isFind = true;
     this.dismiss();
     try {
       unregister();
@@ -316,14 +317,26 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
   int searchCount    = 0;
 
   private void search() {
-    if (searchCount == searchMaxCount) {
-      return;
-    }
-    System.out.println("search*************************************************");
-    MainBus.post(new SearchDeviceEvent(MediaRenderer.DEVICE_TYPE));
-    searchCount++;
+//    if (searchCount == searchMaxCount) {
+//      return;
+//    }
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        while(!isFind){
+          System.out.println("search*************************************************");
+          MainBus.post(new SearchDeviceEvent(MediaRenderer.DEVICE_TYPE));
+          try {
+            Thread.sleep(3000);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
+        }
+      }
+    }).start();
   }
 
+  boolean isFind = false;
   @Subscribe
   public void onDeviceChanged(DeviceChangeEvent event) {
     System.out.println("receiver*************************************************");
@@ -335,7 +348,7 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
     } else {
       tempId = deviceSSID.substring(deviceSSID.indexOf("-") + 1, deviceSSID.indexOf("ONE"));
     }
-    boolean isFind = false;
+
     for (Player player : players) {
       String id = player.getId();
       System.out.println("id : " + id);
@@ -347,8 +360,8 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
       }
     }
     System.out.println("isFind : " + isFind);
-    if (!isFind) {
-      search();
-    }
+//    if (!isFind) {
+//      search();
+//    }
   }
 }

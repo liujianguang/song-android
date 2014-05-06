@@ -41,20 +41,27 @@ public class ArrowView extends TextView {
   int   w           = 12;
   int   h           = 6;
   int   borderWidth = 2;
+  boolean isReady = false;
 
   private void init(){
+    System.out.println("ArrowView init");
     topX = ViewHelper.dp2pixels(mContext,topX);
     topY = ViewHelper.dp2pixels(mContext,topY);
     w = ViewHelper.dp2pixels(mContext,w);
     h = ViewHelper.dp2pixels(mContext,h);
   }
 
+  public boolean isReady(){
+    return isReady;
+  }
   protected void onDraw(Canvas canvas) {
     // TODO Auto-generated method stub
-    System.out.println("onDraw...");
+    //System.out.println("onDraw...");
     super.onDraw(canvas); /*设置背景为白色*/
     if (firstView != null) {
+      System.out.println("firstView : " + firstView);
       topX = firstView.getWidth() / 2 + firstView.getX();
+      isReady = true;
       firstView = null;
     }
     int width = getWidth();
@@ -63,20 +70,19 @@ public class ArrowView extends TextView {
     //canvas.drawLine(topX + (w / 2), topY + h, width, topY + h, linePaint);
 
     Path path2 = new Path();
-    path2.moveTo(topX - (w / 2), topY + h + 3);
+    path2.moveTo(topX - (w / 2) - 1, topY + h + 3);
     path2.lineTo(topX, topY);
     path2.lineTo(topX + (w / 2), topY + h + 2);
     canvas.clipPath(path2,Region.Op.DIFFERENCE);
     canvas.drawColor(getResources().getColor(R.color.title_bg_color));
 
-
+//
     Path path = new Path();
     Paint linePaint = new Paint();
     linePaint.setStyle(Paint.Style.STROKE);
     linePaint.setStrokeWidth(1);
     linePaint.setColor(Color.WHITE);
     path.moveTo(0, topY + h);
-
     path.lineTo(topX - (w / 2), topY + h);
 //    path.close();
     path.lineTo(topX,topY);

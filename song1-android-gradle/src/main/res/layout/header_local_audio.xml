@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/header"
                 android:clickable="true"
                 android:background="@drawable/button"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/list_item_height"
                 android:minHeight="@dimen/list_item_height"
-                android:layout_marginRight="10dp"
                 android:gravity="center_vertical">
-
   <LinearLayout
       android:id="@+id/playAll"
       android:layout_width="wrap_content"
@@ -22,7 +20,6 @@
         android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginTop="5dp"
         android:src="@drawable/play"
         android:background="@color/transparent">
 
@@ -32,7 +29,6 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
         android:orientation="vertical"
         android:gravity="center_vertical"
         android:layout_toRightOf="@id/icon">
@@ -55,6 +51,10 @@
     </LinearLayout>
   </LinearLayout>
 
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:background="@color/title_bg_color"/>
 
   <LinearLayout
       android:layout_width="@dimen/list_item_height"
@@ -80,4 +80,4 @@
         android:textSize="@dimen/list_item_subtitle_text_size"/>
   </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

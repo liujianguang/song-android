@@ -39,7 +39,7 @@ public class LocalAudioContainerFragment extends BaseFragment implements ViewPag
   @Inject LocalAlbumFragment  localAlbumFragment;
   @Inject LocalArtistFragment localArtistFragment;
 
-  @InjectView(R.id.songButton)   Button    songButotn;
+  @InjectView(R.id.songButton)   Button    songButton;
   @InjectView(R.id.artistButton) Button    artistButton;
   @InjectView(R.id.albumButton)  Button    albumButton;
   @InjectView(R.id.arrow)        ArrowView arrowView;
@@ -65,6 +65,7 @@ public class LocalAudioContainerFragment extends BaseFragment implements ViewPag
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
+    System.out.println("onCreate....");
     super.onCreate(savedInstanceState);
     fragments = Lists.newArrayList(
         localAudioFragment,
@@ -76,15 +77,20 @@ public class LocalAudioContainerFragment extends BaseFragment implements ViewPag
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
+    System.out.println("onActivityCreated...");
     super.onActivityCreated(savedInstanceState);
     setTitle(getString(R.string.local_source));
     viewPager.setAdapter(adapter);
     viewPager.setOnPageChangeListener(this);
-    arrowView.setFristPoint(songButotn);
+    if (currentButton == null){
+      currentButton = songButton;
+    }
+    arrowView.setFristPoint(currentButton);
   }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    System.out.println("onCreateView....");
     View view = inflater.inflate(R.layout.fragment_local_audio, container, false);
     ButterKnife.inject(this, view);
     return view;
@@ -92,34 +98,37 @@ public class LocalAudioContainerFragment extends BaseFragment implements ViewPag
 
   @Override
   public void onResume() {
+    System.out.println("onResume...");
     super.onResume();
   }
 
   @Override
   public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
   }
 
+  Button currentButton = null;
   @Override
   public void onPageSelected(int position) {
-    Button button = null;
+    System.out.println("onPageSelected..." + position);
      switch (position){
        case 0:
-         button = songButotn;
+         currentButton = songButton;
          break;
        case 1:
-         button = artistButton;
+         currentButton = artistButton;
          break;
        case 2:
-         button = albumButton;
+         currentButton = albumButton;
          break;
      }
-    if (button != null) {
-      songButotn.setTextColor(Color.BLACK);
+    if (currentButton != null) {
+      songButton.setTextColor(Color.BLACK);
       artistButton.setTextColor(Color.BLACK);
       albumButton.setTextColor(Color.BLACK);
-      button.setTextColor(Color.WHITE);
-      arrowView.move(button);
+      currentButton.setTextColor(Color.WHITE);
+      if (arrowView.isReady()){
+        arrowView.move(currentButton);
+      }
     }
   }
 
