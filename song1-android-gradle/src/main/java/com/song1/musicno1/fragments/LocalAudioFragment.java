@@ -3,10 +3,7 @@ package com.song1.musicno1.fragments;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.*;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -73,6 +70,22 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
 //      }
     }
     return audioList;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.local_audio,menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+      switch (item.getItemId()){
+        case R.id.refresh:
+          Toast.makeText(getActivity(),"refresh",Toast.LENGTH_SHORT).show();
+          break;
+      }
+    return true;
   }
 
   @Override
@@ -165,6 +178,7 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     getListView().setOnItemClickListener(this);
+    setHasOptionsMenu(true);
   }
 
   @Override

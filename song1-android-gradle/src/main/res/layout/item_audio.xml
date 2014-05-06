@@ -81,5 +81,25 @@
         android:drawableTop="@drawable/ic_heart_normal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/lookInfo"
+        android:text="@string/lookInfo"
+        android:textSize="@dimen/text_size_small"
+        android:layout_weight="1"
+        android:drawablePadding="-8dp"
+        android:layout_gravity="center_vertical"
+        android:drawableTop="@drawable/ic_heart_normal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/delete"
+        android:text="@string/delete"
+        android:textSize="@dimen/text_size_small"
+        android:layout_weight="1"
+        android:drawablePadding="-8dp"
+        android:layout_gravity="center_vertical"
+        android:drawableTop="@drawable/ic_delete_normal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"/>
   </LinearLayout>
 </RelativeLayout>

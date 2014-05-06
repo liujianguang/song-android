@@ -183,6 +183,15 @@ public class AudioAdapter extends DataAdapter<Audio> {
       showFavoritesDialog(audio);
     }
 
+    @OnClick(R.id.lookInfo)
+    public void lookInfo(View view){
+
+    }
+    @OnClick(R.id.delete)
+    public void delete(View view){
+
+    }
+
     private void showFavoritesDialog(Audio audio) {
       if (context instanceof FragmentActivity) {
         FragmentActivity activity = (FragmentActivity) context;

@@ -213,6 +213,7 @@
 
   <string name="added_to_red_heart">收藏成功</string>
   <string name="removed_frome_red_heart">取消收藏成功</string>
+  <string name="lookInfo">查看信息</string>
 
   <string name="selectAll">全 选</string>
   <string name="edit">编 辑</string>
