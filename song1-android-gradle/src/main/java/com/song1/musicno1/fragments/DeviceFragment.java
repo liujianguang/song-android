@@ -139,7 +139,7 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
     networkHelp.onConnected(() -> {
       WifiInfo info = wifi.getConnectionInfo();
       if (info != null) {
-        currentNetworkView.setText(info.getSSID());
+        currentNetworkView.setText(info.getSSID().replaceAll("\"",""));
       }
     }).onDisconnected(() -> currentNetworkView.setText(R.string.not_network))
         .register(getActivity());
