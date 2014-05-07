@@ -77,7 +77,7 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     if (album == null && artist == null){
-      inflater.inflate(R.menu.local_audio,menu);
+      //inflater.inflate(R.menu.local_audio,menu);
     }
     super.onCreateOptionsMenu(menu, inflater);
   }

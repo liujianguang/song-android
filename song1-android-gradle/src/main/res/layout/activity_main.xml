@@ -13,17 +13,24 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent">
 
-    <FrameLayout
+    <LinearLayout
         android:paddingTop="46dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-      <FrameLayout
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+      <include
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           layout="@layout/split_line"
+          />
+      <LinearLayout
           android:id="@+id/main"
           android:layout_width="match_parent"
-          android:layout_height="match_parent">
-      </FrameLayout>
-    </FrameLayout>
+          android:layout_height="0dp"
+          android:layout_weight="1"
+          android:orientation="vertical">
+      </LinearLayout>
+    </LinearLayout>
 
 
     <LinearLayout

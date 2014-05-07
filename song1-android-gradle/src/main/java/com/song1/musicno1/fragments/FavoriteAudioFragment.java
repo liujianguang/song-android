@@ -38,7 +38,6 @@ public class FavoriteAudioFragment extends ListFragment<Audio> implements Adapte
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = super.onCreateView(inflater,container,savedInstanceState);
-    view.findViewById(R.id.underLine).setVisibility(View.VISIBLE);
     return view;
   }
 

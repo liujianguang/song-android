@@ -90,7 +90,8 @@
         android:layout_gravity="center_vertical"
         android:drawableTop="@drawable/ic_heart_normal"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
     <Button
         android:id="@+id/delete"
         android:text="@string/delete"
@@ -100,6 +101,7 @@
         android:layout_gravity="center_vertical"
         android:drawableTop="@drawable/ic_delete_normal"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
   </LinearLayout>
 </RelativeLayout>
