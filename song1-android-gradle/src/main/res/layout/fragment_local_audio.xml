@@ -23,22 +23,22 @@
         android:background="@android:color/transparent"/>
 
     <Button
-        android:id="@+id/artistButton"
+        android:id="@+id/albumButton"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="歌手"
+        android:text="专辑"
         android:textSize="15dp"
         android:textColor="@color/black"
         android:layout_marginTop="7dp"
         android:background="@android:color/transparent"/>
 
     <Button
-        android:id="@+id/albumButton"
+        android:id="@+id/artistButton"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="专辑"
+        android:text="歌手"
         android:textSize="15dp"
         android:textColor="@color/black"
         android:layout_marginTop="7dp"

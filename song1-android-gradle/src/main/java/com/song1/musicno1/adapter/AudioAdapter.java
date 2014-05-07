@@ -112,7 +112,6 @@ public class AudioAdapter extends DataAdapter<Audio> {
         Drawable drawableNormal = context.getResources().getDrawable(R.drawable.ic_heart_normal);
         Drawable drawableChoose = context.getResources().getDrawable(R.drawable.ic_heart_choose);
         if (FavoriteAudio.isFavorite(audio)) {
-
           holder.redHeartBtn.setCompoundDrawablesWithIntrinsicBounds(null, drawableChoose, null, null);
         } else {
           holder.redHeartBtn.setCompoundDrawablesWithIntrinsicBounds(null, drawableNormal, null, null);

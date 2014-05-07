@@ -28,6 +28,7 @@ import com.song1.musicno1.ui.IocTextView;
 import com.song1.musicno1.util.DeviceUtil;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.CirclePageIndicator;
+import de.akquinet.android.androlog.Log;
 
 import java.util.List;
 
@@ -74,12 +75,14 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
 
   @Override
   public void onPause() {
+    Log.d(this,"onResume...");
     super.onPause();
     MainBus.unregister(this);
   }
 
   @Override
   public void onResume() {
+    Log.d(this,"onResume...");
     super.onResume();
     MainBus.register(this);
   }
@@ -125,6 +128,8 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
 
   @Subscribe
   public void onCurrentPlayerVolumeChanged(VolumeEvent event) {
+    Log.d(this,"onCurrentPlayerVolumeChanged...");
+    setFavoriteBtn();
     Volume volume = event.getVolume();
     volumeBar.setMax(volume.getMax());
     volumeBar.setProgress(volume.getCurrent());
@@ -183,19 +188,22 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
   public void setCurrentAudio(Audio currentAudio) {
     if (this.currentAudio != currentAudio) {
       this.currentAudio = currentAudio;
-      if (currentAudio != null) {
-        if (currentAudio.canFavorite()) {
-          if (FavoriteAudio.isFavorite(currentAudio)) {
-            favoriteBtn.setImageResource(R.drawable.ic_red_heat_selected);
-          } else {
-            favoriteBtn.setImageResource(R.drawable.ic_red_heat_nor);
-          }
+      setFavoriteBtn();
+    }
+    favoriteBtn.setEnabled(currentAudio != null && currentAudio.canFavorite());
+  }
+  private void setFavoriteBtn(){
+    if (currentAudio != null) {
+      if (currentAudio.canFavorite()) {
+        if (FavoriteAudio.isFavorite(currentAudio)) {
+          favoriteBtn.setImageResource(R.drawable.ic_red_heat_selected);
         } else {
           favoriteBtn.setImageResource(R.drawable.ic_red_heat_nor);
         }
+      } else {
+        favoriteBtn.setImageResource(R.drawable.ic_red_heat_nor);
       }
     }
-    favoriteBtn.setEnabled(currentAudio != null && currentAudio.canFavorite());
   }
 
   @OnClick(R.id.favorite)

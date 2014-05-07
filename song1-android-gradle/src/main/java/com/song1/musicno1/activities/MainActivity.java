@@ -6,6 +6,8 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -14,10 +16,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.song1.musicno1.App;
 import com.song1.musicno1.R;
-import com.song1.musicno1.fragments.LeftFragment;
-import com.song1.musicno1.fragments.PlayBarFragment;
-import com.song1.musicno1.fragments.PlayingFragment;
-import com.song1.musicno1.fragments.TestFragment;
+import com.song1.musicno1.fragments.*;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.ViewHelper;
 import com.song1.musicno1.models.events.ExitEvent;
@@ -180,6 +179,17 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
   public void onPanelCollapsed(View panel) {
     if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
       drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+    }
+    Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main);
+    if (fragment instanceof LocalAudioContainerFragment){
+        LocalAudioContainerFragment localAudioContainerFragment = (LocalAudioContainerFragment) fragment;
+      FragmentPagerAdapter adapter = localAudioContainerFragment.getAdapter();
+      ViewPager pager = localAudioContainerFragment.getViewPager();
+      Fragment fragment1 = adapter.getItem(pager.getCurrentItem());
+      if (fragment1 instanceof LocalAudioFragment){
+        LocalAudioFragment localAudioFragment = (LocalAudioFragment) fragment1;
+        localAudioFragment.refreshData();
+      }
     }
   }
 

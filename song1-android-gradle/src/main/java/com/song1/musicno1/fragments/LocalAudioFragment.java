@@ -23,6 +23,7 @@ import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.models.play.Playlist;
 import com.song1.musicno1.util.ToastUtil;
+import de.akquinet.android.androlog.Log;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -150,6 +151,18 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
     return root;
   }
 
+  @Override
+  public void onResume() {
+    super.onResume();
+    Log.d(this,"onResume...");
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    Log.d(this,"onPause...");
+  }
+
   private View createNumberNegative() {
     List<String> chars = Lists.newArrayList(getResources().getStringArray(R.array.chars));
     chars.add("#");
@@ -192,6 +205,10 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
   protected DataAdapter<Audio> newAdapter() {
     audioAdapter = new AudioAdapter(getActivity());
     return audioAdapter;
+  }
+
+  public void refreshData(){
+    audioAdapter.notifyDataSetChanged();
   }
 
   @Override

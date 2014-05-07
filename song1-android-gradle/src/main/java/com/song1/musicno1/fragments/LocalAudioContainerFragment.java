@@ -40,8 +40,8 @@ public class LocalAudioContainerFragment extends BaseFragment implements ViewPag
   @Inject LocalArtistFragment localArtistFragment;
 
   @InjectView(R.id.songButton)   Button    songButton;
-  @InjectView(R.id.artistButton) Button    artistButton;
   @InjectView(R.id.albumButton)  Button    albumButton;
+  @InjectView(R.id.artistButton) Button    artistButton;
   @InjectView(R.id.arrow)        ArrowView arrowView;
   @InjectView(R.id.pager)        ViewPager viewPager;
 
@@ -49,16 +49,22 @@ public class LocalAudioContainerFragment extends BaseFragment implements ViewPag
   public void onSongButtonClick(){
     viewPager.setCurrentItem(0);
   }
-  @OnClick(R.id.artistButton)
-  public void onArtistButtonClick(){
-    viewPager.setCurrentItem(1);
-  }
   @OnClick(R.id.albumButton)
   public void onAlbumButton(){
+    viewPager.setCurrentItem(1);
+  }
+  @OnClick(R.id.artistButton)
+  public void onArtistButtonClick(){
     viewPager.setCurrentItem(2);
   }
   FragmentAdapter adapter;
 
+  public FragmentPagerAdapter getAdapter(){
+    return adapter;
+  }
+  public ViewPager getViewPager(){
+    return viewPager;
+  }
   @Inject
   public LocalAudioContainerFragment() {
   }
@@ -115,16 +121,16 @@ public class LocalAudioContainerFragment extends BaseFragment implements ViewPag
          currentButton = songButton;
          break;
        case 1:
-         currentButton = artistButton;
+         currentButton = albumButton;
          break;
        case 2:
-         currentButton = albumButton;
+         currentButton = artistButton;
          break;
      }
     if (currentButton != null) {
       songButton.setTextColor(Color.BLACK);
-      artistButton.setTextColor(Color.BLACK);
       albumButton.setTextColor(Color.BLACK);
+      artistButton.setTextColor(Color.BLACK);
       currentButton.setTextColor(Color.WHITE);
       if (arrowView.isReady()){
         arrowView.move(currentButton);
