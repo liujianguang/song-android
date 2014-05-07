@@ -11,6 +11,7 @@
   <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.WAKE_LOCK"/>
+  <uses-permission android:name="android.permission.READ_LOGS"/>
 
   <application
       android:allowBackup="true"
@@ -28,6 +29,9 @@
     <meta-data
         android:name="appid"
         android:value="appid:004711975924897866"/>
+
+    <!-- 友盟 -->
+    <meta-data android:value="5369d4fa56240b536101081a" android:name="UMENG_APPKEY"/>
 
     <activity
         android:name=".activities.MainActivity"

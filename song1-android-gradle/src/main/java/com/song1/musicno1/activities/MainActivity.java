@@ -7,13 +7,11 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.crashlytics.android.Crashlytics;
 import com.song1.musicno1.App;
 import com.song1.musicno1.R;
 import com.song1.musicno1.fragments.LeftFragment;
@@ -30,6 +28,7 @@ import com.song1.musicno1.services.PlayService;
 import com.song1.musicno1.services.UpnpService;
 import com.song1.musicno1.vender.SlidingUpPanelLayout;
 import com.squareup.otto.Subscribe;
+import com.umeng.analytics.MobclickAgent;
 import de.akquinet.android.androlog.Log;
 
 import javax.inject.Inject;
@@ -39,7 +38,7 @@ import javax.inject.Inject;
  * Date: 14-3-5
  * Time: PM4:40
  */
-public class MainActivity extends ActionBarActivity implements SlidingUpPanelLayout.PanelSlideListener {
+public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.PanelSlideListener {
   protected                         PlayBarFragment      playBarFragment;
   @InjectView(R.id.drawer)          DrawerLayout         drawerLayout;
   @InjectView(R.id.sling_up)        SlidingUpPanelLayout slidingUpPanel;
@@ -53,8 +52,6 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Crashlytics.start(this);
-
     Log.init();
     App.inject(this);
     MainBus.register(this);
@@ -91,7 +88,6 @@ public class MainActivity extends ActionBarActivity implements SlidingUpPanelLay
     drawerLayout.setDrawerListener(actionBarDrawerToggle);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportActionBar().setHomeButtonEnabled(true);
-
   }
 
   @Override

@@ -4,6 +4,7 @@ import com.activeandroid.ActiveAndroid;
 import com.activeandroid.app.Application;
 import com.song1.musicno1.models.Favorite;
 import com.song1.musicno1.modules.AppModule;
+import com.umeng.analytics.MobclickAgent;
 import dagger.ObjectGraph;
 
 /**

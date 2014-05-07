@@ -1,8 +1,7 @@
 package com.song1.musicno1.activities;
 
-import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.KeyEvent;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * User: windless
@@ -10,22 +9,15 @@ import android.view.KeyEvent;
  * Time: PM7:21
  */
 public abstract class BaseActivity extends ActionBarActivity {
-
   @Override
-  public boolean onKeyDown(int keyCode, KeyEvent event) {
-    switch (keyCode) {
-      case KeyEvent.KEYCODE_VOLUME_DOWN:
-//        getPlayerAction().volumeDown();
-        return true;
-      case KeyEvent.KEYCODE_VOLUME_UP:
-//        getPlayerAction().volumeUp();
-        return true;
-    }
-    return super.onKeyDown(keyCode, event);
+  protected void onResume() {
+    super.onResume();
+    MobclickAgent.onResume(this);
   }
 
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  protected void onPause() {
+    super.onPause();
+    MobclickAgent.onPause(this);
   }
 }

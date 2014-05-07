@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.nineoldandroids.view.animation.AnimatorProxy;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.AudioAdapter;
 import com.song1.musicno1.adapter.DataAdapter;
@@ -121,7 +122,7 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
     chars.add("#");
     LinearLayout linearLayout = new LinearLayout(getActivity());
     linearLayout.setBackgroundColor(Color.GRAY);
-    linearLayout.getBackground().setAlpha(120);
+    AnimatorProxy.wrap(linearLayout).setAlpha(120);
 
     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.MATCH_PARENT);
     layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
