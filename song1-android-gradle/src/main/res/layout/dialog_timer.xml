@@ -49,11 +49,12 @@
       <SeekBar
           android:id="@+id/time_seeker"
           android:layout_weight="1"
-          android:thumb="@drawable/vol_slider"
+          android:thumb="@drawable/slider"
           android:layout_width="0dp"
           android:progress="60"
           android:max="7200"
-          android:layout_height="wrap_content"/>
+          android:layout_height="wrap_content"
+          style="@style/seekBarStyle"/>
 
       <TextView
           android:text="@string/max_minutes"

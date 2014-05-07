@@ -166,7 +166,7 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
   private View createNumberNegative() {
     List<String> chars = Lists.newArrayList(getResources().getStringArray(R.array.chars));
     chars.add("#");
-    LinearLayout linearLayout = new LinearLayout(getActivity());
+    LinearLayout linearLayout  = new LinearLayout(getActivity());
     linearLayout.setBackgroundColor(Color.GRAY);
     AnimatorProxy.wrap(linearLayout).setAlpha(120);
 

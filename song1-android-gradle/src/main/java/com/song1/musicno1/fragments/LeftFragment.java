@@ -80,8 +80,8 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
     items.add(R.string.red_heart);
 
 
-    items.add(getString(R.string.cloud_source));
-    items.add(R.string.migu_title);
+    //items.add(getString(R.string.cloud_source));
+    //items.add(R.string.migu_title);
     //items.add(R.string.test);
 //    items.add(R.string.beatles_music);
 //    items.add(R.string.justing);
