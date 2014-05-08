@@ -26,6 +26,7 @@ import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.models.play.Volume;
 import com.song1.musicno1.ui.IocTextView;
 import com.song1.musicno1.util.DeviceUtil;
+import com.song1.musicno1.util.ToastUtil;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.CirclePageIndicator;
 import de.akquinet.android.androlog.Log;
@@ -39,6 +40,7 @@ import java.util.List;
 public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, WifiModel.ScanListener {
   protected int   state;
   protected Audio currentAudio;
+  private int playMode = Player.MODE_REPEAT_ALL;
 
   @InjectView(R.id.volume_bar)    SeekBar             volumeBar;
   @InjectView(R.id.play)          ImageButton         playBtn;
@@ -135,6 +137,12 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     volumeBar.setProgress(volume.getCurrent());
   }
 
+  @Subscribe
+  public void onPlayModeChanged(PlayModeEvent event) {
+    playMode = event.getPlayMode();
+    //ToastUtil.show(getActivity(),event.getPlayMode()+"");
+  }
+
   @OnClick(R.id.play)
   public void onPlayClick() {
     switch (state) {
@@ -145,7 +153,12 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
         Players.resume();
         break;
       case Player.STOPPED:
-        Players.play();
+        //ToastUtil.show(getActivity(),currentAudio + "");
+        if (playMode == Player.MODE_NORMAL){
+          Players.rePlay();
+        }else{
+          Players.play();
+        }
     }
   }
 

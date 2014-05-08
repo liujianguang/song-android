@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import com.google.common.collect.Maps;
+import com.song1.musicno1.event.Event;
 import com.song1.musicno1.helpers.LatestExecutor;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.events.ExitEvent;
@@ -137,6 +138,19 @@ public class PlayService extends Service {
         }
       }
     });
+  }
+
+
+  @Subscribe
+  public void rePlay(Event.RePlayEvent event) {
+    Player player = currentPlayer;
+    if (player != null) {
+      Playlist playlist = playlistMap.get(player.getId());
+      if (playlist != null) {
+        playlist.setCurrentAudio(playlist.getAudios().get(0));
+        play(new PlayEvent());
+      }
+    }
   }
 
   @Subscribe

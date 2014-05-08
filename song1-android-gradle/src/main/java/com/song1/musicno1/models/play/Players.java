@@ -1,5 +1,6 @@
 package com.song1.musicno1.models.play;
 
+import com.song1.musicno1.event.Event;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.events.play.*;
 
@@ -10,7 +11,6 @@ public class Players {
   public static void play() {
     MainBus.post(new PlayEvent());
   }
-
   public static void pause() {
     MainBus.post(new PauseEvent());
   }
@@ -37,5 +37,9 @@ public class Players {
 
   public static void resume() {
     MainBus.post(new ResumeEvent());
+  }
+
+  public static void rePlay(){
+    MainBus.post(new Event.RePlayEvent());
   }
 }

@@ -5,3 +5,4 @@ package com.song1.musicno1.models.events.play;
  */
 public class PlayEvent {
 }
+
