@@ -120,6 +120,7 @@ public class PlayService extends Service {
     if (player != null) {
       playlistMap.put(player.getId(), event.getPlaylist());
       postEvent(currentPlaylist());
+      postEvent(currentPlayerPlayMode());
       play(new PlayEvent());
     } else {
       waitingEvent = event;
@@ -216,6 +217,12 @@ public class PlayService extends Service {
       postEvent(currentPlayerPlayMode());
     }
   }
+
+  @Subscribe
+  public void setPlayMode(Event.SetPlayModeEvent event){
+
+  }
+
 
   @Produce
   public PositionEvent currentPlayerPosition() {
