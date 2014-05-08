@@ -45,6 +45,7 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
 
   @InjectView(R.id.titleTextView)       TextView    titleTextView;
   @InjectView(R.id.deviceNameSpinner)   Spinner     deviceNameSpinner;
+  @InjectView(R.id.deviceNameEditText)  EditText    deviceNameEdit;
   @InjectView(R.id.networkSpinner)      Spinner     networkSpinner;
   @InjectView(R.id.networkPassEditText) EditText    networkPassView;
   @InjectView(R.id.confirm)             Button      confirm;
@@ -121,7 +122,7 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
   public void confirmClick() {
     setEnable(false);
     deviceConfig = new DeviceConfig();
-    deviceConfig.setFriendlyName(deviceNameSpinner.getSelectedItem().toString());
+    deviceConfig.setFriendlyName(deviceNameEdit.getText().toString());
     deviceConfig.setSsid(deviceSSID);
     deviceConfig.setWifiSsid(networkSpinner.getSelectedItem().toString());
     deviceConfig.setWifiPass(networkPassView.getText().toString());
@@ -152,6 +153,19 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
     deviceNameSpinner.setAdapter(deviceNameAdapter);
     networkSpinner.setAdapter(networkAdapter);
 
+    deviceNameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      @Override
+      public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        System.out.println("onItemSelected...");
+        String deviceName = deviceNameList.get(i);
+        deviceNameEdit.setText(deviceName);
+        deviceNameEdit.setSelection(deviceName.length());
+      }
+      @Override
+      public void onNothingSelected(AdapterView<?> adapterView) {
+        System.out.println("onNothingSelected...");
+      }
+    });
     wifiModel = new WifiModel(getActivity());
     wifiModel.setConnectListener(this);
     wifiModel.setScanListener(this);
