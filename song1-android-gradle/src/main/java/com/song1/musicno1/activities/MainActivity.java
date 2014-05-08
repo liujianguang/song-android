@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -16,6 +17,9 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.song1.musicno1.App;
 import com.song1.musicno1.R;
+import com.song1.musicno1.dialogs.PromptDialog;
+import com.song1.musicno1.dialogs.QuitDialog;
+import com.song1.musicno1.event.Event;
 import com.song1.musicno1.fragments.*;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.ViewHelper;
@@ -233,4 +237,30 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
   public void onExit(ExitEvent event) {
     finish();
   }
+  @Subscribe
+  public void showExitDailog(Event.ShowExitDialogEvent event){
+    PromptDialog dialog = new PromptDialog(this);
+    dialog.setTitle(R.string.notice).setMessage(R.string.exitMsg).setCancelClick(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        dialog.dismiss();
+      }
+    }).setConfirmClick(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        handler.removeCallbacks(exitRunnable);
+        handler.post(exitRunnable);
+      }
+    });
+    dialog.show(getSupportFragmentManager(),"exitDialog");
+    handler.postDelayed(exitRunnable,1000 * 30);
+  }
+
+  Handler handler = new Handler();
+  private Runnable exitRunnable = new Runnable() {
+    @Override
+    public void run() {
+      MainBus.post(new ExitEvent());
+    }
+  };
 }

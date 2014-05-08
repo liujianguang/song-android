@@ -217,6 +217,7 @@
 
   <string name="selectAll">全 选</string>
   <string name="edit">编 辑</string>
+  <string name="exitMsg">确定退出应用?</string>
   <array name="timer_values">
     <item>关闭</item>
     <item>15分钟</item>

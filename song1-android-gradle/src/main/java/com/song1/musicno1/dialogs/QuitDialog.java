@@ -11,7 +11,7 @@ import com.song1.musicno1.R;
 /**
  * Created by leovo on 2014/4/10.
  */
-public class QuitDialog extends DialogFragment implements View.OnClickListener {
+public class QuitDialog extends DialogFragment{
 
   Button notQuitButton;
   Button quitButton;
@@ -27,20 +27,18 @@ public class QuitDialog extends DialogFragment implements View.OnClickListener {
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    notQuitButton.setOnClickListener(this);
-    quitButton.setOnClickListener(this);
+    notQuitButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        QuitDialog.this.dismiss();
+      }
+    });
+    quitButton.setOnClickListener(confirmClickListener);
   }
 
-  @Override
-  public void onClick(View view) {
-    switch (view.getId()){
-      case R.id.notQuitButton:
-        dismiss();
-        break;
-      case R.id.quitButton:
-        dismiss();
-        getActivity().finish();
-        break;
-    }
+  private View.OnClickListener confirmClickListener;
+
+  public void setConfirmClickListener(View.OnClickListener onClickListener) {
+    confirmClickListener = onClickListener;
   }
 }

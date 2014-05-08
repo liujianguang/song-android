@@ -7,4 +7,6 @@ public class Event {
 
   public static class RePlayEvent{
   }
+  public static class ShowExitDialogEvent{
+  }
 }
