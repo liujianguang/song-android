@@ -24,6 +24,7 @@ import com.song1.musicno1.fragments.*;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.ViewHelper;
 import com.song1.musicno1.models.events.ExitEvent;
+import com.song1.musicno1.models.events.play.ActivityExitEvent;
 import com.song1.musicno1.models.events.play.CurrentPlayerOccupiedEvent;
 import com.song1.musicno1.models.events.play.UpdateVolumeEvent;
 import com.song1.musicno1.services.HttpService;
@@ -96,6 +97,7 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
   @Override
   protected void onDestroy() {
     super.onDestroy();
+    MainBus.post(new ActivityExitEvent());
     MainBus.unregister(this);
   }
 
@@ -243,6 +245,7 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
     dialog.setTitle(R.string.notice).setMessage(R.string.exitMsg).setCancelClick(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
+        handler.removeCallbacks(exitRunnable);
         dialog.dismiss();
       }
     }).setConfirmClick(new View.OnClickListener() {

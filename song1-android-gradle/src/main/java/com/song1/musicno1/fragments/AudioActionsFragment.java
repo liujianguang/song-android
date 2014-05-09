@@ -104,11 +104,11 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
         );
       }
       positionSeeker.setEnabled(event.getAudio() != null);
-      durationView.setText(TimeHelper.milli2str(event.getDuration()));
     }
 
     positionSeeker.setMax(event.getDuration());
     positionSeeker.setProgress(event.getPosition());
+    durationView.setText(TimeHelper.milli2str(event.getDuration()));
   }
 
   @Subscribe

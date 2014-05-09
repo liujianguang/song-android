@@ -13,7 +13,6 @@ import com.song1.musicno1.models.events.play.*;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.play.Playlist;
-import com.song1.musicno1.util.ToastUtil;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 import de.akquinet.android.androlog.Log;
@@ -35,6 +34,7 @@ public class PlayService extends Service {
 
   protected Runnable timerRunnable;
   protected int      timerValue;
+  private   boolean  isActivityExited;
 
   @Override
   public IBinder onBind(Intent intent) {
@@ -47,6 +47,7 @@ public class PlayService extends Service {
     MainBus.register(this);
     playExecutor = new LatestExecutor();
     volumeExecutor = new LatestExecutor();
+    isActivityExited = false;
   }
 
   @Override
@@ -219,7 +220,7 @@ public class PlayService extends Service {
   }
 
   @Subscribe
-  public void setPlayMode(Event.SetPlayModeEvent event){
+  public void setPlayMode(Event.SetPlayModeEvent event) {
 
   }
 
@@ -337,7 +338,11 @@ public class PlayService extends Service {
             if (timerValue == 0) {
               handler.removeCallbacks(this);
               timerRunnable = null;
-              MainBus.post(new Event.ShowExitDialogEvent());
+              if (isActivityExited) {
+                MainBus.post(new ExitEvent());
+              } else {
+                MainBus.post(new Event.ShowExitDialogEvent());
+              }
             } else {
               handler.postDelayed(this, 1000);
             }
@@ -358,7 +363,11 @@ public class PlayService extends Service {
 
   @Subscribe
   public void onExit(ExitEvent event) {
-    //ToastUtil.show(this,"exit");
     stopSelf();
+  }
+
+  @Subscribe
+  public void onActivityExit(ActivityExitEvent event) {
+    isActivityExited = true;
   }
 }

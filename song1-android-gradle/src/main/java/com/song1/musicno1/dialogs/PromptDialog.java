@@ -50,6 +50,8 @@ public class PromptDialog extends DialogFragment {
     int width = dm.widthPixels;
     WindowManager.LayoutParams params = window.getAttributes();
     window.setLayout(width - 30, WindowManager.LayoutParams.WRAP_CONTENT);
+
+    getDialog().setCanceledOnTouchOutside(false);
   }
 
   @Override
