@@ -139,6 +139,9 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
       case R.id.add:
         createFavorite();
         return true;
+      case R.id.edit:
+        edit();
+        return true;
     }
     return super.onOptionsItemSelected(item);
   }
@@ -223,15 +226,18 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
     if (actionMode != null) {
       return false;
     }
+    edit();
+    return true;
+  }
+  private void edit(){
 
     MainActivity activity = (MainActivity) getActivity();
     activity.hidePlayBar();
 
     actionMode = startActionMode(actionModeCallback);
     actionMode.setTitle(getString(R.string.selected_items, selectedItem.size()));
-    selectedItem.put(i, getDataItem(i));
+    //selectedItem.put(i, getDataItem(i));
     getAdapter().notifyDataSetChanged();
-    return true;
   }
 
   class ViewHolder implements CompoundButton.OnCheckedChangeListener {
