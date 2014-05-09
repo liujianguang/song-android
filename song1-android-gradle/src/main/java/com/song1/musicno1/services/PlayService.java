@@ -54,6 +54,9 @@ public class PlayService extends Service {
     stopAllPlayers();
     playExecutor.shutdown();
     volumeExecutor.shutdown();
+    if (timerRunnable != null) {
+      handler.removeCallbacks(timerRunnable);
+    }
     Log.d(this, "Exit PlayService");
   }
 
