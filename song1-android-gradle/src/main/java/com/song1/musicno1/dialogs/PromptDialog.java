@@ -6,6 +6,7 @@ import android.support.v4.app.DialogFragment;
 import android.util.DisplayMetrics;
 import android.view.*;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -19,6 +20,7 @@ import org.w3c.dom.Text;
 public class PromptDialog extends DialogFragment {
 
   View view;
+  @InjectView(R.id.content) LinearLayout contentView;
   @InjectView(R.id.title)   TextView titleView;
   @InjectView(R.id.message) TextView messageView;
 
@@ -31,7 +33,12 @@ public class PromptDialog extends DialogFragment {
     mContext = context;
     view = LayoutInflater.from(context).inflate(R.layout.dialog,null);
     ButterKnife.inject(this, view);
-
+    cancelButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        dismiss();
+      }
+    });
   }
 
   @Override
@@ -69,6 +76,16 @@ public class PromptDialog extends DialogFragment {
     return this;
   }
 
+  public PromptDialog setCancelText(int resId){
+    cancelButton.setText(resId);
+    return this;
+  }
+
+  public PromptDialog setConfirmText(int resId){
+    confirmButton.setText(resId);
+    return this;
+  }
+
   public PromptDialog setCancelClick(View.OnClickListener clickListener) {
     cancelButton.setOnClickListener(clickListener);
     return this;
@@ -77,4 +94,14 @@ public class PromptDialog extends DialogFragment {
     confirmButton.setOnClickListener(clickListener);
     return this;
   }
+  public PromptDialog setClickListener(View.OnClickListener clickListener){
+    cancelButton.setOnClickListener(clickListener);
+    confirmButton.setOnClickListener(clickListener);
+    return this;
+  }
+  public void setCustomView(View view){
+    messageView.setVisibility(View.GONE);
+    contentView.addView(view);
+  }
+
 }

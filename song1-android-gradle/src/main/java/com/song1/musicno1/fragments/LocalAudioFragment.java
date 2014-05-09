@@ -237,6 +237,7 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
   @Override
   protected DataAdapter<Audio> newAdapter() {
     audioAdapter = new AudioAdapter(getActivity());
+    audioAdapter.setFragment(this);
     return audioAdapter;
   }
 

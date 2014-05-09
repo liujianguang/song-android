@@ -20,6 +20,9 @@ public class Audio {
   private String remotePlayUrl;
   private String localPlayUri;
   private String albumArt;
+  private String mimiType;
+  private long duration;
+  private long size;
 
   public String getRemotePlayUrl() {
     return remotePlayUrl;
@@ -98,5 +101,29 @@ public class Audio {
 
   public void setAlbumId(String albumId) {
     this.albumId = albumId;
+  }
+
+  public String getMimiType() {
+    return mimiType;
+  }
+
+  public void setMimiType(String mimiType) {
+    this.mimiType = mimiType;
+  }
+
+  public long getDuration() {
+    return duration;
+  }
+
+  public void setDuration(long duration) {
+    this.duration = duration;
+  }
+
+  public long getSize() {
+    return size;
+  }
+
+  public void setSize(long size) {
+    this.size = size;
   }
 }

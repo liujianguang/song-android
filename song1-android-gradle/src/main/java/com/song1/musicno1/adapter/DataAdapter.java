@@ -41,4 +41,8 @@ public abstract class DataAdapter<T> extends android.widget.BaseAdapter {
   public long getItemId(int i) {
     return i;
   }
+
+  public void remove(T t){
+    this.dataList.remove(t);
+  }
 }

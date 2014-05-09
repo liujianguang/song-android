@@ -2,13 +2,12 @@ package com.song1.musicno1.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -16,9 +15,14 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.song1.musicno1.R;
 import com.song1.musicno1.dialogs.FavoritesDialog;
+import com.song1.musicno1.dialogs.PromptDialog;
 import com.song1.musicno1.entity.AudioGroup;
+import com.song1.musicno1.helpers.TimeHelper;
 import com.song1.musicno1.models.FavoriteAudio;
+import com.song1.musicno1.models.LocalAudioStore;
 import com.song1.musicno1.models.play.Audio;
+import com.song1.musicno1.util.Global;
+import com.song1.musicno1.util.ToastUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -30,22 +34,34 @@ public class AudioAdapter extends DataAdapter<Audio> {
   private final static int GROUP = 0;
   private final static int AUDIO = 1;
 
+  LocalAudioStore localAudioStore;
+
   protected Audio selectedAudio;
+  Fragment fragment;
+
+  FragmentActivity activity;
 
   public AudioAdapter(Context context) {
     super(context);
+    activity = (FragmentActivity) context;
+    localAudioStore = new LocalAudioStore(context);
+  }
+
+  public void setFragment(Fragment fragment) {
+    this.fragment = fragment;
   }
 
   private Map<String, Integer> mapGroupPosition = Maps.newHashMap();
-  private String firstGroupName = null;
+  private String               firstGroupName   = null;
+
   @Override
   public void setDataList(List<Audio> dataList) {
     super.setDataList(dataList);
     for (Audio audio : dataList) {
       //System.out.println("--------------------" + audio.getTitle());
       if (audio instanceof AudioGroup) {
-        mapGroupPosition.put(audio.getTitle(),dataList.indexOf(audio));
-        if (firstGroupName == null){
+        mapGroupPosition.put(audio.getTitle(), dataList.indexOf(audio));
+        if (firstGroupName == null) {
           firstGroupName = audio.getTitle();
         }
       }
@@ -65,9 +81,10 @@ public class AudioAdapter extends DataAdapter<Audio> {
     return newList;
   }
 
-  public String  getFirstGroupName(){
+  public String getFirstGroupName() {
     return firstGroupName;
   }
+
   public Integer getGroupPositionByName(String name) {
     return mapGroupPosition.get(name);
   }
@@ -101,6 +118,7 @@ public class AudioAdapter extends DataAdapter<Audio> {
       holder.title.setText(audio.getTitle());
     } else {
       ViewHolder holder = (ViewHolder) view.getTag();
+      holder.setAudio(audio);
       holder.menuBtn.setTag(audio);
       holder.addToBtn.setTag(audio);
       holder.redHeartBtn.setTag(audio);
@@ -116,7 +134,7 @@ public class AudioAdapter extends DataAdapter<Audio> {
         } else {
           holder.redHeartBtn.setCompoundDrawablesWithIntrinsicBounds(null, drawableNormal, null, null);
         }
-      }else{
+      } else {
         holder.menu.setVisibility(View.GONE);
       }
     }
@@ -141,6 +159,9 @@ public class AudioAdapter extends DataAdapter<Audio> {
     }
   }
 
+  PromptDialog          detailDialog;
+  AudioDetailViewHolder detailViewHolder;
+
   class ViewHolder {
     @InjectView(R.id.title)     TextView    title;
     @InjectView(R.id.menu)      View        menu;
@@ -152,6 +173,12 @@ public class AudioAdapter extends DataAdapter<Audio> {
 
     public ViewHolder(View view) {
       ButterKnife.inject(this, view);
+    }
+
+    Audio audio;
+
+    public void setAudio(Audio audio) {
+      this.audio = audio;
     }
 
     @OnClick(R.id.menu_btn)
@@ -183,12 +210,36 @@ public class AudioAdapter extends DataAdapter<Audio> {
     }
 
     @OnClick(R.id.lookInfo)
-    public void lookInfo(View view){
-
+    public void lookInfo(View view) {
+      if (context instanceof FragmentActivity) {
+        FragmentActivity activity = (FragmentActivity) context;
+//        if (detailDialog == null){
+        detailDialog = new PromptDialog(context);
+        detailViewHolder = new AudioDetailViewHolder();
+        detailDialog.setTitle(R.string.songInfo);
+        detailDialog.setCancelText(R.string.close);
+        detailDialog.setConfirmText(R.string.update);
+        detailDialog.setClickListener(detailViewHolder);
+        detailDialog.setCustomView(detailViewHolder.view);
+//        }
+        detailViewHolder.setData(audio);
+        detailDialog.show(activity.getSupportFragmentManager(), "AudioDetail");
+      }
     }
-    @OnClick(R.id.delete)
-    public void delete(View view){
 
+
+    @OnClick(R.id.delete)
+    public void delete(View view) {
+      //ToastUtil.show(context, audio.getLocalPlayUri());
+      if (localAudioStore.deleteAudio(audio))
+      {
+        //ToastUtil.show(context,"删除成功!");
+        remove(audio);
+      }
+      else{
+        //ToastUtil.show(context,"删除失败!");
+      }
+      notifyDataSetChanged();
     }
 
     private void showFavoritesDialog(Audio audio) {
@@ -197,6 +248,71 @@ public class AudioAdapter extends DataAdapter<Audio> {
         FavoritesDialog favoritesDialog = new FavoritesDialog();
         favoritesDialog.setAddingAudio(audio);
         favoritesDialog.show(activity.getSupportFragmentManager(), "");
+      }
+    }
+  }
+
+  class AudioDetailViewHolder implements View.OnClickListener {
+    View view;
+    @InjectView(R.id.songName)
+    TextView songName;
+    @InjectView(R.id.fileType)
+    TextView fileType;
+    @InjectView(R.id.fileSize)
+    TextView fileSize;
+    @InjectView(R.id.duration)
+    TextView duration;
+    @InjectView(R.id.path)
+    TextView path;
+
+    Audio audio;
+
+    private AudioDetailViewHolder() {
+      view = LayoutInflater.from(context).inflate(R.layout.audio_detail, null);
+      ButterKnife.inject(this, view);
+    }
+
+    public void setData(Audio audio) {
+      this.audio = audio;
+      songName.setText(audio.getTitle());
+      path.setText(audio.getLocalPlayUri());
+      fileSize.setText(Global.format(audio.getSize()));
+      duration.setText(TimeHelper.milli2str((int) audio.getDuration()));
+      fileType.setText(audio.getMimiType());
+    }
+
+    @Override
+    public void onClick(View view) {
+      switch (view.getId()) {
+        case R.id.cancel:
+          detailDialog.dismiss();
+          break;
+        case R.id.confirm:
+          detailDialog.dismiss();
+          PromptDialog editDialog = new PromptDialog(context);
+          View editView = LayoutInflater.from(context).inflate(R.layout.audio_edit,null);
+          EditText songNameEditView = (EditText) editView.findViewById(R.id.songName);
+          songNameEditView.setText(audio.getTitle());
+          songNameEditView.setSelection(audio.getTitle().length());
+
+          editDialog.setTitle(R.string.updateTitle);
+          editDialog.setCustomView(editView);
+          editDialog.setConfirmClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              audio.setTitle(songNameEditView.getText().toString());
+              Audio newAudio = localAudioStore.update(audio);
+              if (newAudio == null){
+                remove(audio);
+              }else{
+                audio.setLocalPlayUri(newAudio.getLocalPlayUri());
+              }
+              notifyDataSetChanged();
+              editDialog.dismiss();
+            }
+          });
+          editDialog.show(activity.getSupportFragmentManager(),"EditDialog");
+          break;
       }
     }
   }

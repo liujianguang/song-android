@@ -1,6 +1,7 @@
 package com.song1.musicno1.models;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
@@ -11,6 +12,7 @@ import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.util.AudioUtil;
 
 import javax.inject.Inject;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +36,7 @@ public class LocalAudioStore {
 
     Cursor cursor = contentResolver.query(
         EXTERNAL_CONTENT_URI,
-        new String[]{TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE},
+        new String[]{TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE,SIZE},
         MIME_TYPE + " IN (?,?,?,?,?)",
         new String[]{"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac", "audio/x-ms-wma"},
         TITLE
@@ -46,7 +48,7 @@ public class LocalAudioStore {
   public List<Audio> audios(String col, String selection) {
     Cursor cursor = contentResolver.query(
         EXTERNAL_CONTENT_URI,
-        new String[]{TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE},
+        new String[]{TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE,SIZE},
         MIME_TYPE + " IN (?,?,?,?,?) AND " + col + "=?",
         new String[]{"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac", "audio/x-ms-wma", selection},
         TITLE
@@ -86,7 +88,10 @@ public class LocalAudioStore {
       audio.setLocalPlayUri(cursor.getString(cursor.getColumnIndex(DATA)));
       audio.setFrom(Audio.LOCAL);
       audio.setAlbumId(cursor.getString(cursor.getColumnIndex(ALBUM_ID)));
-
+      audio.setDuration(cursor.getLong(cursor.getColumnIndex(DURATION)));
+      audio.setSize(cursor.getLong(cursor.getColumnIndex(SIZE)));
+      String[] strs = cursor.getString(cursor.getColumnIndex(MIME_TYPE)).split("/");
+      audio.setMimiType(strs[1]);
       audios.add(audio);
     }
     cursor.close();
@@ -111,6 +116,37 @@ public class LocalAudioStore {
     return album_path;
   }
 
+  public Audio update(Audio audio){
+    File file = new File(audio.getLocalPlayUri());
+    File newFile = null;
+    if (file.exists()){
+      System.out.println("fileName : " + file.getName());
+      String name = file.getName();
+      String extend = name.substring(name.lastIndexOf("."),name.length());
+      newFile = new File(file.getParent() + "/" + audio.getTitle() + extend);
+      System.out.println("extend : " + extend);
+      file.renameTo(newFile);
+
+      ContentValues values = new ContentValues();
+      values.put(TITLE,audio.getTitle());
+      values.put(DATA,newFile.getPath());
+      int count = contentResolver.update(EXTERNAL_CONTENT_URI,values,_ID + " = ?",new String[]{audio.getId() + ""});
+
+      audio.setLocalPlayUri(newFile.getPath());
+      return audio;
+    }else{
+      deleteAudio(audio);
+      return null;
+    }
+  }
+  public boolean deleteAudio(Audio audio){
+    int count = contentResolver.delete(EXTERNAL_CONTENT_URI,_ID + " = ?",new String[]{audio.getId() + ""});
+    File file = new File(audio.getLocalPlayUri());
+    if (file.exists()){
+      file.delete();
+    }
+    return count > 0 ? true : false;
+  }
   public int audios_count() {
     Cursor cursor = contentResolver.query(
         EXTERNAL_CONTENT_URI,
