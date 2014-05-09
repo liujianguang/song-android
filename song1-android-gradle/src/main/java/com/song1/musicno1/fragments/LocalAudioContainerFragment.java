@@ -8,10 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.Button;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -20,6 +17,7 @@ import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.fragments.base.BaseFragment;
 import com.song1.musicno1.ui.ArrowView;
+import com.song1.musicno1.util.ToastUtil;
 
 import javax.inject.Inject;
 import java.lang.reflect.Field;
@@ -79,6 +77,7 @@ public class LocalAudioContainerFragment extends BaseFragment implements ViewPag
         localArtistFragment
     );
     adapter = new FragmentAdapter(getChildFragmentManager());
+    //ToastUtil.show(getActivity(),"LocalAudioContainerFragment...");
   }
 
   @Override
@@ -92,6 +91,7 @@ public class LocalAudioContainerFragment extends BaseFragment implements ViewPag
       currentButton = songButton;
     }
     arrowView.setFristPoint(currentButton);
+    //setHasOptionsMenu(true);
   }
 
   @Override

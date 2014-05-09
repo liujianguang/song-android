@@ -61,6 +61,7 @@ public abstract class ListFragment<T> extends DataFragment<T> implements AbsList
   public void showContent() {
     loadingView.setVisibility(View.GONE);
     emptyView.setVisibility(View.GONE);
+    headerView.setVisibility(View.VISIBLE);
     listView.setVisibility(View.VISIBLE);
     retryView.setVisibility(View.GONE);
 
@@ -75,6 +76,7 @@ public abstract class ListFragment<T> extends DataFragment<T> implements AbsList
   public void showError() {
     if (isDataEmpty()) {
       listView.setVisibility(View.GONE);
+      headerView.setVisibility(View.GONE);
       retryView.setVisibility(View.VISIBLE);
       loadingView.setVisibility(View.GONE);
       emptyView.setVisibility(View.GONE);
@@ -89,7 +91,8 @@ public abstract class ListFragment<T> extends DataFragment<T> implements AbsList
     if (isDataEmpty()) {
       loadingView.setVisibility(View.VISIBLE);
       emptyView.setVisibility(View.GONE);
-      listView.setVisibility(View.VISIBLE);
+      headerView.setVisibility(View.GONE);
+      listView.setVisibility(View.GONE);
       retryView.setVisibility(View.GONE);
 
       footerRetryBtn.setVisibility(View.GONE);

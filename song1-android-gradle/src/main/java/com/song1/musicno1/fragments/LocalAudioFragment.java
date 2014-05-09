@@ -1,6 +1,11 @@
 package com.song1.musicno1.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.view.*;
@@ -30,6 +35,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import static android.os.Environment.getExternalStorageDirectory;
+
 /**
  * User: windless
  * Date: 13-8-29
@@ -40,14 +47,30 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
   private Album           album;
   private Artist          artist;
 
-  private LinearLayout    playAllLayout;
-  private TextView        audioTotalTextView;
+  private LinearLayout playAllLayout;
+  private TextView     audioTotalTextView;
 
   AudioAdapter audioAdapter;
   int audioTotal = 0;
 
   Map<String, Button> mapNumberButton = Maps.newHashMap();
   Button currentNumberButton;
+
+  BroadcastReceiver refreshReceiver = new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      String action = intent.getAction();
+      System.out.println("action : " + action);
+      if (Intent.ACTION_MEDIA_SCANNER_STARTED.equals(action)) {
+        clearLoadData();
+        showLoading();
+      } else if (Intent.ACTION_MEDIA_SCANNER_FINISHED.equals(action)) {
+        showContent();
+        reload();
+        isRefreshing = false;
+      }
+    }
+  };
 
   @Inject
   public LocalAudioFragment() {
@@ -77,19 +100,29 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
 
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    if (album == null && artist == null){
-      //inflater.inflate(R.menu.local_audio,menu);
+    System.out.println("onCreateOptionMenu...");
+    if (album == null && artist == null) {
+      inflater.inflate(R.menu.local_audio, menu);
     }
     super.onCreateOptionsMenu(menu, inflater);
   }
 
+  boolean isRefreshing = false;
+
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-      switch (item.getItemId()){
-        case R.id.refresh:
-          Toast.makeText(getActivity(),"refresh",Toast.LENGTH_SHORT).show();
-          break;
-      }
+    switch (item.getItemId()) {
+      case R.id.refresh:
+        if (isRefreshing) {
+          return true;
+        }
+        System.out.println("refresh...");
+        //reload();
+        isRefreshing = true;
+        getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + getExternalStorageDirectory().getAbsolutePath())));
+//        Toast.makeText(getActivity(), "refresh", Toast.LENGTH_SHORT).show();
+        break;
+    }
     return true;
   }
 
@@ -106,7 +139,7 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
 
     if (isDataEmpty()) {
 //      if (playHeaderView != null) {
-       // getListView().removeHeaderView(playHeaderView);
+      // getListView().removeHeaderView(playHeaderView);
       playHeaderView.setVisibility(View.GONE);
 //      }
     } else {
@@ -134,7 +167,7 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     RelativeLayout root = (RelativeLayout) super.onCreateView(inflater, container, savedInstanceState);
     LinearLayout headerLayout = (LinearLayout) root.findViewById(R.id.headerLayout);
-    playHeaderView = inflater.inflate(R.layout.header_local_audio,headerLayout);
+    playHeaderView = inflater.inflate(R.layout.header_local_audio, headerLayout);
     audioTotalTextView = (TextView) playHeaderView.findViewById(R.id.audioTotal);
     playAllLayout = (LinearLayout) playHeaderView.findViewById(R.id.playAll);
     playAllLayout.setOnClickListener((view) -> {
@@ -145,7 +178,7 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
         Players.setPlaylist(new Playlist(List8.newList(dataList), dataList.get(0)));
       }
     });
-    if (album == null && artist == null){
+    if (album == null && artist == null) {
       root.addView(createNumberNegative());
     }
     return root;
@@ -154,33 +187,33 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
   @Override
   public void onResume() {
     super.onResume();
-    Log.d(this,"onResume...");
+    Log.d(this, "onResume...");
   }
 
   @Override
   public void onPause() {
     super.onPause();
-    Log.d(this,"onPause...");
+    Log.d(this, "onPause...");
   }
 
   private View createNumberNegative() {
     List<String> chars = Lists.newArrayList(getResources().getStringArray(R.array.chars));
     chars.add("#");
-    LinearLayout linearLayout  = new LinearLayout(getActivity());
+    LinearLayout linearLayout = new LinearLayout(getActivity());
     linearLayout.setBackgroundColor(Color.GRAY);
     AnimatorProxy.wrap(linearLayout).setAlpha(120);
 
-    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.MATCH_PARENT);
+    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
     layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
     linearLayout.setLayoutParams(layoutParams);
     linearLayout.setOrientation(LinearLayout.VERTICAL);
     linearLayout.setGravity(Gravity.CENTER);
-    linearLayout.setPadding(0,10,0,0);
+    linearLayout.setPadding(0, 10, 0, 0);
     for (String ch : chars) {
       Button button = new Button(getActivity());
-      button.setLayoutParams(new LinearLayout.LayoutParams(ViewHelper.dp2pixels(getActivity(), 18f), 0,1));
+      button.setLayoutParams(new LinearLayout.LayoutParams(ViewHelper.dp2pixels(getActivity(), 18f), 0, 1));
       button.setText(ch);
-      button.setTextSize(ViewHelper.dp2pixels(getActivity(),5f));
+      button.setTextSize(ViewHelper.dp2pixels(getActivity(), 5f));
       button.setTextColor(getResources().getColor(R.color.number_color));
       button.setGravity(Gravity.CENTER | Gravity.CENTER_VERTICAL);
       button.setOnClickListener(numberButtonClickListener);
@@ -207,7 +240,7 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
     return audioAdapter;
   }
 
-  public void refreshData(){
+  public void refreshData() {
     audioAdapter.notifyDataSetChanged();
   }
 
@@ -216,6 +249,17 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
     super.onActivityCreated(savedInstanceState);
     getListView().setOnItemClickListener(this);
     setHasOptionsMenu(true);
+
+    IntentFilter intentFilter = new IntentFilter(Intent.ACTION_MEDIA_SCANNER_STARTED);
+    intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
+    intentFilter.addDataScheme("file");
+    getActivity().registerReceiver(refreshReceiver, intentFilter);
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    getActivity().unregisterReceiver(refreshReceiver);
   }
 
   @Override

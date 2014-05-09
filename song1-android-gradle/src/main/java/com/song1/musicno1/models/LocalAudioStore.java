@@ -121,7 +121,9 @@ public class LocalAudioStore {
     if (cursor == null) return 0;
 
     cursor.moveToFirst();
-    return cursor.getInt(0);
+    int count = cursor.getInt(0);
+    cursor.close();
+    return count;
   }
 
   public int lossless_count() {

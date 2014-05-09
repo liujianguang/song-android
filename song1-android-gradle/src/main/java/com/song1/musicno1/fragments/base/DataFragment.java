@@ -139,6 +139,11 @@ public abstract class DataFragment<T> extends BaseFragment implements LoaderMana
     return loadData.isEmpty();
   }
 
+  protected void clearLoadData(){
+    loadData = new LoadData<>();
+    adapter.getDataList().clear();
+  }
+
   protected void showContent() {
   }
 

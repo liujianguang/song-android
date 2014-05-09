@@ -20,6 +20,7 @@ import com.song1.musicno1.helpers.ActiveHelper;
 import com.song1.musicno1.loader.LoadData;
 import com.song1.musicno1.models.Favorite;
 import com.song1.musicno1.ui.ButtonTool;
+import com.song1.musicno1.util.ToastUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -129,6 +130,8 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
   
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//    ToastUtil.show(getActivity(),"hello");
+    System.out.println("onCreateOptionMenu...");
     inflater.inflate(R.menu.favorites, menu);
     super.onCreateOptionsMenu(menu, inflater);
   }
