@@ -17,12 +17,15 @@ import com.song1.musicno1.R;
 import com.song1.musicno1.dialogs.FavoritesDialog;
 import com.song1.musicno1.dialogs.PromptDialog;
 import com.song1.musicno1.entity.AudioGroup;
+import com.song1.musicno1.event.Event;
+import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.TimeHelper;
 import com.song1.musicno1.models.FavoriteAudio;
 import com.song1.musicno1.models.LocalAudioStore;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.util.Global;
 import com.song1.musicno1.util.ToastUtil;
+import com.squareup.otto.Subscribe;
 
 import java.util.List;
 import java.util.Map;
@@ -124,6 +127,11 @@ public class AudioAdapter extends DataAdapter<Audio> {
       holder.redHeartBtn.setTag(audio);
       holder.title.setText(audio.getTitle());
       holder.art.setText(audio.getArtist() + "-" + audio.getAlbum());
+      holder.currentImageView.setVisibility(View.GONE);
+
+      if (audio == playingAudio){
+        holder.currentImageView.setVisibility(View.VISIBLE);
+      }
 
       if (selectedAudio == audio) {
         holder.menu.setVisibility(View.VISIBLE);
@@ -139,6 +147,14 @@ public class AudioAdapter extends DataAdapter<Audio> {
       }
     }
     return view;
+  }
+
+  Audio playingAudio;
+  @Subscribe
+  public void playingAudio(Event.PlayingAudioEvent event){
+    playingAudio = event.getAudio();
+    notifyDataSetChanged();
+    ToastUtil.show(context,"audio : " + playingAudio);
   }
 
   @Override
@@ -170,6 +186,7 @@ public class AudioAdapter extends DataAdapter<Audio> {
     @InjectView(R.id.add_to)    Button      addToBtn;
     //@InjectView(R.id.tune)      ImageView   tuneImg;
     @InjectView(R.id.art)       TextView    art;
+    @InjectView(R.id.currentAudioImageView) ImageView currentImageView;
 
     public ViewHolder(View view) {
       ButterKnife.inject(this, view);

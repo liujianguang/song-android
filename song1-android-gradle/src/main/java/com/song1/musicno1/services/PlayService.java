@@ -137,7 +137,10 @@ public class PlayService extends Service {
         Playlist playlist = playlistMap.get(player.getId());
         if (playlist != null) {
           Audio currentAudio = playlist.getCurrentAudio();
-          if (currentAudio != null) player.play(currentAudio);
+          if (currentAudio != null) {
+            player.play(currentAudio);
+          }
+          MainBus.post(new Event.PlayingAudioEvent(currentAudio));
         }
       }
     });

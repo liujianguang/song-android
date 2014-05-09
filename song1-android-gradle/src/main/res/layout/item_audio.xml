@@ -12,6 +12,15 @@
       android:layout_width="match_parent"
       android:layout_height="60dp">
 
+    <ImageView
+        android:id="@+id/currentAudioImageView"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:background="@color/transparent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"
+        android:src="@drawable/vol_max"/>
+
     <ImageButton
         android:id="@+id/menu_btn"
         android:layout_alignParentRight="true"

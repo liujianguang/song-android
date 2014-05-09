@@ -21,6 +21,7 @@ import com.song1.musicno1.entity.Artist;
 import com.song1.musicno1.entity.AudioGroup;
 import com.song1.musicno1.fragments.base.ListFragment;
 import com.song1.musicno1.helpers.List8;
+import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.ViewHelper;
 import com.song1.musicno1.loader.LoadData;
 import com.song1.musicno1.models.LocalAudioStore;
@@ -255,12 +256,14 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
     intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
     intentFilter.addDataScheme("file");
     getActivity().registerReceiver(refreshReceiver, intentFilter);
+    MainBus.register(audioAdapter);
   }
 
   @Override
   public void onDestroy() {
     super.onDestroy();
     getActivity().unregisterReceiver(refreshReceiver);
+    MainBus.unregister(audioAdapter);
   }
 
   @Override
