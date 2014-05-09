@@ -341,11 +341,12 @@ public class PlayService extends Service {
             if (timerValue == 0) {
               handler.removeCallbacks(this);
               timerRunnable = null;
-              if (isActivityExited) {
-                MainBus.post(new ExitEvent());
-              } else {
-                MainBus.post(new Event.ShowExitDialogEvent());
-              }
+              MainBus.post(new ExitEvent());
+//              if (isActivityExited) {
+//                MainBus.post(new ExitEvent());
+//              } else {
+//                MainBus.post(new Event.ShowExitDialogEvent());
+//              }
             } else {
               handler.postDelayed(this, 1000);
             }
@@ -372,5 +373,6 @@ public class PlayService extends Service {
   @Subscribe
   public void onActivityExit(ActivityExitEvent event) {
     isActivityExited = true;
+    Log.d(this, "On activity exit");
   }
 }

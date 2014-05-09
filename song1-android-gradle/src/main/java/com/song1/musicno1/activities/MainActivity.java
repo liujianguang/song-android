@@ -99,6 +99,7 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
     super.onDestroy();
     MainBus.post(new ActivityExitEvent());
     MainBus.unregister(this);
+    Log.d(this, "Main activity destroyed");
   }
 
   @Subscribe
@@ -239,6 +240,7 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
   public void onExit(ExitEvent event) {
     finish();
   }
+
   @Subscribe
   public void showExitDailog(Event.ShowExitDialogEvent event){
     PromptDialog dialog = new PromptDialog(this);
@@ -255,6 +257,7 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
         handler.post(exitRunnable);
       }
     });
+    Log.d(this, "Show exit dialog");
     dialog.show(getSupportFragmentManager(),"exitDialog");
     handler.postDelayed(exitRunnable,1000 * 30);
   }
