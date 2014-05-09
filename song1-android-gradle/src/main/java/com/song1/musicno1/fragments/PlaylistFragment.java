@@ -48,7 +48,7 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemClic
     listView.setOnItemClickListener(this);
   }
 
-  Audio playingAudio;
+  static Audio playingAudio;
 
   @Subscribe
   public void playingAudio(Event.PlayingAudioEvent event){

@@ -149,7 +149,7 @@ public class AudioAdapter extends DataAdapter<Audio> {
     return view;
   }
 
-  Audio playingAudio;
+  static Audio playingAudio;
   @Subscribe
   public void playingAudio(Event.PlayingAudioEvent event){
     playingAudio = event.getAudio();
