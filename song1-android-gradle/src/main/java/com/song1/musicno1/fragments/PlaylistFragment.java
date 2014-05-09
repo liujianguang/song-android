@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import butterknife.ButterKnife;
@@ -14,6 +15,7 @@ import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.BaseAdapter;
 import com.song1.musicno1.entity.AudioGroup;
+import com.song1.musicno1.event.Event;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.events.play.CurrentPlaylistEvent;
 import com.song1.musicno1.models.play.Audio;
@@ -46,10 +48,23 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemClic
     listView.setOnItemClickListener(this);
   }
 
+  Audio playingAudio;
+
+  @Subscribe
+  public void playingAudio(Event.PlayingAudioEvent event){
+    playingAudio = event.getAudio();
+    adapter.notifyDataSetChanged();
+  }
+
   private BaseAdapter<Audio, ViewHolder> newAdapter() {
     return new BaseAdapter<Audio, ViewHolder>(getActivity(), R.layout.item_text)
         .bind(() -> new ViewHolder())
         .setData((i, audio, holder) -> {
+          if (audio == playingAudio){
+            holder.currentAudioImageView.setVisibility(View.VISIBLE);
+          }else{
+            holder.currentAudioImageView.setVisibility(View.INVISIBLE);
+          }
           holder.title.setText(audio.getTitle());
         });
   }
@@ -91,6 +106,7 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemClic
   }
 
   class ViewHolder extends BaseAdapter.ViewHolder {
+    @InjectView(R.id.currentAudioImageView) ImageView currentAudioImageView;
     @InjectView(R.id.title) TextView title;
 
     @Override

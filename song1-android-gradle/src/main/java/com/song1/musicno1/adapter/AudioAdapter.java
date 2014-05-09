@@ -154,7 +154,7 @@ public class AudioAdapter extends DataAdapter<Audio> {
   public void playingAudio(Event.PlayingAudioEvent event){
     playingAudio = event.getAudio();
     notifyDataSetChanged();
-    ToastUtil.show(context,"audio : " + playingAudio);
+    ///ToastUtil.show(context,"audio : " + playingAudio);
   }
 
   @Override
