@@ -47,6 +47,7 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
   private ObjectAnimator  rotation;
 
   private float rotationStart = 0;
+  protected Audio currentAudio;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -90,22 +91,24 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
   @Subscribe
   public void onPositionChanged(PositionEvent event) {
     Audio audio = event.getAudio();
-    if (event.getAudio() == null) {
-      Picasso.with(getActivity()).load(R.drawable.default_album_art).transform(new RoundedTransformation()).into(albumArtImageView);
-    } else {
-      AlbumArtHelper.loadAlbumArtRounded(
-          getActivity(),
-          audio.getAlbumArt(localAudioStore),
-          albumArtImageView,
-          R.drawable.default_album_art
-      );
+    if (currentAudio != audio) {
+      currentAudio = audio;
+      if (currentAudio == null) {
+        Picasso.with(getActivity()).load(R.drawable.default_album_art).transform(new RoundedTransformation()).into(albumArtImageView);
+      } else {
+        AlbumArtHelper.loadAlbumArtRounded(
+            getActivity(),
+            currentAudio.getAlbumArt(localAudioStore),
+            albumArtImageView,
+            R.drawable.default_album_art
+        );
+      }
+      positionSeeker.setEnabled(event.getAudio() != null);
+      durationView.setText(TimeHelper.milli2str(event.getDuration()));
     }
-
-    positionSeeker.setEnabled(event.getAudio() != null);
 
     positionSeeker.setMax(event.getDuration());
     positionSeeker.setProgress(event.getPosition());
-    durationView.setText(TimeHelper.milli2str(event.getDuration()));
   }
 
   @Subscribe
