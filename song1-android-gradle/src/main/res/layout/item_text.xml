@@ -21,7 +21,7 @@
       android:layout_width="15dp"
       android:layout_height="15dp"
       android:background="@color/transparent"
-      android:src="@drawable/vol_max"
+      android:src="@drawable/ic_vol_max"
       android:visibility="gone"/>
 
   <TextView

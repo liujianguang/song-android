@@ -19,7 +19,7 @@
         android:background="@color/transparent"
         android:layout_alignParentLeft="true"
         android:layout_centerInParent="true"
-        android:src="@drawable/vol_max"
+        android:src="@drawable/ic_vol_max"
         android:visibility="gone"/>
 
     <ImageButton

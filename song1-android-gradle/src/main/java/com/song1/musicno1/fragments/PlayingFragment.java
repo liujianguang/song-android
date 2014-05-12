@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.song1.musicno1.R;
+import com.song1.musicno1.event.Event;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.FavoriteAudio;
 import com.song1.musicno1.models.WifiModel;
@@ -49,6 +50,12 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
   @InjectView(R.id.favorite)      ImageButton         favoriteBtn;
   @InjectView(R.id.player_list)   ImageButton         playerListBtn;
   @InjectView(R.id.deviceNumView) IocTextView         deviceNumView;
+  @InjectView(R.id.previous)      ImageButton         prevButton;
+  @InjectView(R.id.play)          ImageButton         playButton;
+  @InjectView(R.id.next)          ImageButton         nextButton;
+  @InjectView(R.id.volume_min)    ImageButton         volumeMinButton;
+  @InjectView(R.id.volume_max)    ImageButton         volumeMaxButton;
+
   WifiModel wifiModel;
   int newDeviceCount = 0;
 
@@ -73,6 +80,11 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     wifiModel = new WifiModel(getActivity());
     wifiModel.setScanListener(this);
     wifiModel.scan();
+
+    setEnabled(false);
+    favoriteBtn.setEnabled(false);
+    volumeMinButton.setEnabled(false);
+    volumeMaxButton.setEnabled(false);
   }
 
   @Override
@@ -116,16 +128,25 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     switch (event.state) {
       case Player.PAUSED:
       case Player.STOPPED:
-        playBtn.setImageResource(R.drawable.ic_play_large);
+        playBtn.setImageResource(R.drawable.play_disable);
         playBtn.setEnabled(true);
+        setEnabled(true);
         break;
       case Player.PLAYING:
-        playBtn.setImageResource(R.drawable.ic_pause_large);
+        playBtn.setImageResource(R.drawable.stop_disable);
         playBtn.setEnabled(true);
+        setEnabled(true);
         break;
       case Player.PREPARING:
         playBtn.setEnabled(false);
+        setEnabled(false);
     }
+  }
+  private void setEnabled(boolean enabled){
+    playButton.setEnabled(enabled);
+    prevButton.setEnabled(enabled);
+    nextButton.setEnabled(enabled);
+
   }
 
   @Subscribe
@@ -202,8 +223,11 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     if (this.currentAudio != currentAudio) {
       this.currentAudio = currentAudio;
       setFavoriteBtn();
+      volumeMinButton.setEnabled(true);
+      volumeMaxButton.setEnabled(true);
     }
     favoriteBtn.setEnabled(currentAudio != null && currentAudio.canFavorite());
+
   }
   private void setFavoriteBtn(){
     if (currentAudio != null) {

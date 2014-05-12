@@ -31,7 +31,7 @@
     <ImageButton
         android:id="@+id/favorite"
         android:layout_weight="1"
-        android:src="@drawable/ic_red_heat_nor"
+        android:src="@drawable/favortie_disable"
         android:background="@null"
         android:layout_width="70dp"
         android:layout_height="70dp"/>
@@ -40,7 +40,7 @@
         android:id="@+id/previous"
         android:scaleType="fitCenter"
         android:layout_weight="1"
-        android:src="@drawable/ic_previous"
+        android:src="@drawable/prev_disable"
         android:background="@null"
         android:layout_width="70dp"
         android:layout_height="70dp"/>
@@ -49,7 +49,7 @@
         android:id="@+id/play"
         android:scaleType="fitCenter"
         android:layout_weight="1"
-        android:src="@drawable/ic_play_large"
+        android:src="@drawable/play_disable"
         android:background="@null"
         android:layout_width="70dp"
         android:layout_height="70dp"/>
@@ -57,7 +57,7 @@
     <ImageButton
         android:id="@+id/next"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_next"
+        android:src="@drawable/next_disable"
         android:layout_weight="1"
         android:background="@null"
         android:layout_width="70dp"
@@ -95,7 +95,7 @@
 
     <ImageButton
         android:id="@+id/volume_min"
-        android:src="@drawable/vol_min"
+        android:src="@drawable/vol_min_disable"
         android:scaleType="fitCenter"
         android:background="@null"
         android:padding="6dp"
@@ -114,7 +114,7 @@
 
     <ImageButton
         android:id="@+id/volume_max"
-        android:src="@drawable/vol_max"
+        android:src="@drawable/vol_max_disable"
         android:scaleType="fitCenter"
         android:background="@null"
         android:padding="6dp"

@@ -63,7 +63,7 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemClic
           if (audio == playingAudio){
             holder.currentAudioImageView.setVisibility(View.VISIBLE);
           }else{
-            holder.currentAudioImageView.setVisibility(View.INVISIBLE);
+            holder.currentAudioImageView.setVisibility(View.GONE);
           }
           holder.title.setText(audio.getTitle());
         });
