@@ -77,6 +77,15 @@ android {
         versionName getVersionName()
     }
 
+    signingConfigs {
+        song1Config {
+            storeFile file('keystore.jks')
+            storePassword "SZyinyue1hao"
+            keyAlias "song1"
+            keyPassword "SZyinyue1hao"
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -85,7 +94,9 @@ android {
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            
+
+            signingConfig signingConfigs.song1Config
+
             applicationVariants.all { variant ->
                 def file = variant.outputFile
                 variant.outputFile = new File(file.parent, file.name.replace(".apk", "-" + defaultConfig.versionName + ".apk"))
