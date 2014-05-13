@@ -87,6 +87,7 @@ public class UpnpService extends Service implements DeviceChangeListener {
     lock.release();
     stopController();
     executorService.shutdown();
+    Log.d(this, "Exit UPnP Service");
   }
 
   private void startController() {
@@ -131,6 +132,7 @@ public class UpnpService extends Service implements DeviceChangeListener {
         }
       });
     } catch (RejectedExecutionException ignored) {
+      Log.d(this, "Stop control point failed");
     }
   }
 
