@@ -129,7 +129,7 @@ public class AudioAdapter extends DataAdapter<Audio> {
       holder.art.setText(audio.getArtist() + "-" + audio.getAlbum());
       holder.currentImageView.setVisibility(View.GONE);
 
-      if (audio == playingAudio){
+      if (audio == playingAudio) {
         holder.currentImageView.setVisibility(View.VISIBLE);
       }
 
@@ -150,8 +150,9 @@ public class AudioAdapter extends DataAdapter<Audio> {
   }
 
   static Audio playingAudio;
+
   @Subscribe
-  public void playingAudio(Event.PlayingAudioEvent event){
+  public void playingAudio(Event.PlayingAudioEvent event) {
     playingAudio = event.getAudio();
     notifyDataSetChanged();
     ///ToastUtil.show(context,"audio : " + playingAudio);
@@ -179,14 +180,14 @@ public class AudioAdapter extends DataAdapter<Audio> {
   AudioDetailViewHolder detailViewHolder;
 
   class ViewHolder {
-    @InjectView(R.id.title)     TextView    title;
-    @InjectView(R.id.menu)      View        menu;
-    @InjectView(R.id.menu_btn)  ImageButton menuBtn;
-    @InjectView(R.id.red_heart) Button      redHeartBtn;
-    @InjectView(R.id.add_to)    Button      addToBtn;
+    @InjectView(R.id.title)                 TextView    title;
+    @InjectView(R.id.menu)                  View        menu;
+    @InjectView(R.id.menu_btn)              ImageButton menuBtn;
+    @InjectView(R.id.red_heart)             Button      redHeartBtn;
+    @InjectView(R.id.add_to)                Button      addToBtn;
     //@InjectView(R.id.tune)      ImageView   tuneImg;
-    @InjectView(R.id.art)       TextView    art;
-    @InjectView(R.id.currentAudioImageView) ImageView currentImageView;
+    @InjectView(R.id.art)                   TextView    art;
+    @InjectView(R.id.currentAudioImageView) ImageView   currentImageView;
 
     public ViewHolder(View view) {
       ButterKnife.inject(this, view);
@@ -248,15 +249,24 @@ public class AudioAdapter extends DataAdapter<Audio> {
     @OnClick(R.id.delete)
     public void delete(View view) {
       //ToastUtil.show(context, audio.getLocalPlayUri());
-      if (localAudioStore.deleteAudio(audio))
-      {
-        //ToastUtil.show(context,"删除成功!");
-        remove(audio);
-      }
-      else{
-        //ToastUtil.show(context,"删除失败!");
-      }
-      notifyDataSetChanged();
+      FragmentActivity activity = (FragmentActivity) context;
+      PromptDialog dialog = new PromptDialog(context);
+      dialog.setTitle(R.string.notice)
+          .setMessage(R.string.confirm_delete)
+          .setConfirmClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              if (localAudioStore.deleteAudio(audio)) {
+                //ToastUtil.show(context,"删除成功!");
+                remove(audio);
+              } else {
+                //ToastUtil.show(context,"删除失败!");
+              }
+              notifyDataSetChanged();
+              dialog.dismiss();
+            }
+          });
+      dialog.show(activity.getSupportFragmentManager(),"deleteDialog");
     }
 
     private void showFavoritesDialog(Audio audio) {
@@ -307,7 +317,7 @@ public class AudioAdapter extends DataAdapter<Audio> {
         case R.id.confirm:
           detailDialog.dismiss();
           PromptDialog editDialog = new PromptDialog(context);
-          View editView = LayoutInflater.from(context).inflate(R.layout.audio_edit,null);
+          View editView = LayoutInflater.from(context).inflate(R.layout.audio_edit, null);
           EditText songNameEditView = (EditText) editView.findViewById(R.id.songName);
           songNameEditView.setText(audio.getTitle());
           songNameEditView.setSelection(audio.getTitle().length());
@@ -319,16 +329,16 @@ public class AudioAdapter extends DataAdapter<Audio> {
             public void onClick(View view) {
               audio.setTitle(songNameEditView.getText().toString());
               Audio newAudio = localAudioStore.update(audio);
-              if (newAudio == null){
+              if (newAudio == null) {
                 remove(audio);
-              }else{
+              } else {
                 audio.setLocalPlayUri(newAudio.getLocalPlayUri());
               }
               notifyDataSetChanged();
               editDialog.dismiss();
             }
           });
-          editDialog.show(activity.getSupportFragmentManager(),"EditDialog");
+          editDialog.show(activity.getSupportFragmentManager(), "EditDialog");
           break;
       }
     }

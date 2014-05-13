@@ -238,7 +238,7 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
           favoriteBtn.setImageResource(R.drawable.ic_red_heat_nor);
         }
       } else {
-        favoriteBtn.setImageResource(R.drawable.ic_red_heat_nor);
+        favoriteBtn.setImageResource(R.drawable.favortie_disable);
       }
     }
   }
