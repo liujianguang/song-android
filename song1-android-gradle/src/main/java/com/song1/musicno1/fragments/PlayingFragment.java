@@ -162,56 +162,11 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     wifiModel.stop();
   }
 
-  @Subscribe
-  public void currentPlayerChanged(CurrentPlayerEvent event) {
-    if (event.getCurrentPlayer() != null && !event.getCurrentPlayer().getId().equals("0")) {
-      playerListBtn.setImageResource(R.drawable.ic_device_list_large_press);
-    } else {
-      playerListBtn.setImageResource(R.drawable.ic_device_list_large_nor);
-    }
-    volumeBar.setEnabled(event.getCurrentPlayer() != null);
-  }
-
-  @Subscribe
-  public void onPositionInfoChanged(PositionEvent event) {
-    setCurrentAudio(event.getAudio());
-  }
-
-  @Subscribe
-  public void onCurrentPlayerStateChanged(CurrentPlayerStateEvent event) {
-    state = event.state;
-    switch (event.state) {
-      case OldPlayer.PAUSED:
-      case OldPlayer.STOPPED:
-        playBtn.setImageResource(R.drawable.play_disable);
-        playBtn.setEnabled(true);
-        setEnabled(true);
-        break;
-      case OldPlayer.PLAYING:
-        playBtn.setImageResource(R.drawable.stop_disable);
-        playBtn.setEnabled(true);
-        setEnabled(true);
-        break;
-      case OldPlayer.PREPARING:
-        playBtn.setEnabled(false);
-        setEnabled(false);
-    }
-  }
-
   private void setEnabled(boolean enabled) {
     playButton.setEnabled(enabled);
     prevButton.setEnabled(enabled);
     nextButton.setEnabled(enabled);
 
-  }
-
-  @Subscribe
-  public void onCurrentPlayerVolumeChanged(VolumeEvent event) {
-    Log.d(this, "onCurrentPlayerVolumeChanged...");
-    setFavoriteBtn();
-    Volume volume = event.getVolume();
-    volumeBar.setMax(volume.getMax());
-    volumeBar.setProgress(volume.getCurrent());
   }
 
   @Subscribe
@@ -275,27 +230,16 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     return currentAudio;
   }
 
-  public void setCurrentAudio(Audio currentAudio) {
-    if (this.currentAudio != currentAudio) {
-      this.currentAudio = currentAudio;
-      setFavoriteBtn();
-      volumeMinButton.setEnabled(true);
-      volumeMaxButton.setEnabled(true);
-    }
-    favoriteBtn.setEnabled(currentAudio != null && currentAudio.canFavorite());
-
-  }
-
   private void setFavoriteBtn() {
     if (currentAudio != null) {
       if (currentAudio.canFavorite()) {
         if (FavoriteAudio.isFavorite(currentAudio)) {
           favoriteBtn.setImageResource(R.drawable.ic_red_heat_selected);
         } else {
-          favoriteBtn.setImageResource(R.drawable.ic_red_heat_nor);
+          favoriteBtn.setImageResource(R.drawable.ic_red_heart_nor);
         }
       } else {
-        favoriteBtn.setImageResource(R.drawable.ic_red_heat_nor);
+        favoriteBtn.setImageResource(R.drawable.ic_red_heart_nor);
       }
     }
   }
@@ -308,7 +252,7 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
       favoriteBtn.setImageResource(R.drawable.ic_red_heat_selected);
       Toast.makeText(getActivity(), R.string.added_to_red_heart, Toast.LENGTH_SHORT).show();
     } else {
-      favoriteBtn.setImageResource(R.drawable.ic_red_heat_nor);
+      favoriteBtn.setImageResource(R.drawable.ic_red_heart_nor);
       Toast.makeText(getActivity(), R.string.removed_frome_red_heart, Toast.LENGTH_SHORT).show();
     }
 

@@ -89,8 +89,28 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
     wifiModel.setScanListener(this);
     wifiModel.scan();
 
-    updatePlayerState(null);
-    updatePlayingAudio(null);
+    updatePlayerInfo(null);
+  }
+
+  @Subscribe
+  public void updatePlayerInfo(PlayerStore.CurrentPlayerChangedEvent event) {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (currentPlayer == null) {
+      handler.removeCallbacks(positionRunnable);
+      bottomTitleView.setText("");
+      bottomSubtitleView.setText("");
+      topTitleView.setText("");
+      topSubtitleView.setText("");
+      bottomPlayBtn.setEnabled(false);
+
+      positionBar.setProgress(0);
+      refreshLayout.setRefreshing(false);
+      albumArtImageView.setImageResource(R.drawable.default_album_art_small);
+    } else {
+      bottomPlayBtn.setEnabled(true);
+      updatePlayerState(null);
+      updatePlayingAudio(null);
+    }
   }
 
   @Subscribe
@@ -101,13 +121,13 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
       switch (state) {
         case Player.State.PAUSED:
         case Player.State.STOPPED:
-          bottomPlayBtn.setImageResource(R.drawable.ic_play);
+          bottomPlayBtn.setImageResource(R.drawable.ic_play_large);
           bottomPlayBtn.setEnabled(true);
           positionBar.setVisibility(View.VISIBLE);
           refreshLayout.setRefreshing(false);
           break;
         case Player.State.PLAYING:
-          bottomPlayBtn.setImageResource(R.drawable.ic_pause);
+          bottomPlayBtn.setImageResource(R.drawable.ic_pause_large);
           bottomPlayBtn.setEnabled(true);
           positionBar.setVisibility(View.VISIBLE);
           refreshLayout.setRefreshing(false);

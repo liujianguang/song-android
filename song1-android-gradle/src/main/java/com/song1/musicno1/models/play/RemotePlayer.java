@@ -154,9 +154,9 @@ public class RemotePlayer implements Player {
 
   @Override
   public void pause() {
-    setState(State.PREPARING);
     try {
       playExecutor.submit(() -> {
+        setState(State.PREPARING);
         try {
           renderer.pause();
           checkStatus(State.PAUSED, () -> renderer.isPlaying());
@@ -170,9 +170,9 @@ public class RemotePlayer implements Player {
 
   @Override
   public void resume() {
-    setState(State.PREPARING);
     try {
       playExecutor.submit(() -> {
+        setState(State.PREPARING);
         try {
           renderer.play();
           checkStatus(State.PLAYING, () -> !renderer.isPlaying());
@@ -195,10 +195,10 @@ public class RemotePlayer implements Player {
       return;
     }
 
-    setState(State.PREPARING);
     position = seconds;
     try {
       playExecutor.submit(() -> {
+        setState(State.PREPARING);
         try {
           renderer.seek(seconds);
           checkStatus(State.PLAYING, () -> !checkPosition(seconds));

@@ -52,6 +52,11 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemClic
     listView.setAdapter(audiosAdapter);
     listView.setOnItemClickListener(this);
 
+    updatePlayerInfo(null);
+  }
+
+  @Subscribe
+  public void updatePlayerInfo(PlayerStore.CurrentPlayerChangedEvent event) {
     updatePlaylist(null);
     updatePlayingAudio(null);
   }

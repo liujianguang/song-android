@@ -83,8 +83,7 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
 
     newRotationAnimator();
 
-    updatePlayerState(null);
-    updatePlayingAudio(null);
+    updatePlayerInfo(null);
   }
 
   private void newRotationAnimator() {
@@ -95,6 +94,12 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
     rotation.setDuration(30000);
     rotation.addUpdateListener(animation -> rotationStart = (float) animation.getAnimatedValue()
     );
+  }
+
+  @Subscribe
+  public void updatePlayerInfo(PlayerStore.CurrentPlayerChangedEvent event) {
+    updatePlayerState(null);
+    updatePlayingAudio(null);
   }
 
   @Subscribe
