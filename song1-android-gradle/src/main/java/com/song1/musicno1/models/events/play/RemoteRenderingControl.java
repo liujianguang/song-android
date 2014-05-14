@@ -55,9 +55,6 @@ public class RemoteRenderingControl implements RenderingControl {
     action.setArgumentValue(org.cybergarage.upnp.std.av.renderer.RenderingControl.DESIREDVOLUME, volume);
 
     if (!action.postControlAction()) throw new RendererException("");
-
-    this.volume = volume;
-    Log.d(this, "Set volume: " + volume);
   }
 
   @Override
@@ -81,6 +78,7 @@ public class RemoteRenderingControl implements RenderingControl {
 
   @Override
   public Volume getVolume() throws RendererException {
+    updateVolume();
     return new Volume(volume, 100);
   }
 }

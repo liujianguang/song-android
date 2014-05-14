@@ -21,12 +21,14 @@ public class RemotePlayer implements Player {
 
   protected final RemoteRenderingControl renderingControl;
   protected final Device                 device;
-  protected final ExecutorService        executorService;
+  protected final ExecutorService        playExecutor;
+  protected final ExecutorService volumeExecutors;
 
   protected     RemoteRenderer renderer = null;
   private final Object         lock     = new Object();
 
   protected Playlist playlist;
+  private   int      volume;
   protected int      state;
   protected Callback callback;
   protected Audio    playingAudio;
@@ -85,7 +87,12 @@ public class RemotePlayer implements Player {
     this.device = device;
     this.renderer = renderer;
     this.renderingControl = renderingControl;
-    executorService = Executors.newFixedThreadPool(1);
+    playExecutor = Executors.newFixedThreadPool(1);
+    volumeExecutors = Executors.newFixedThreadPool(1);
+    try {
+      volume = renderingControl.getVolume().getCurrent();
+    } catch (RendererException ignored) {
+    }
   }
 
   @Override
@@ -131,7 +138,7 @@ public class RemotePlayer implements Player {
       audio.setRemotePlayUrl(HttpService.instance().share(audio.getLocalPlayUri()));
     }
     try {
-      executorService.submit(() -> {
+      playExecutor.submit(() -> {
         try {
           renderer.setUri(audio.getRemotePlayUrl());
           renderer.play();
@@ -149,7 +156,7 @@ public class RemotePlayer implements Player {
   public void pause() {
     setState(State.PREPARING);
     try {
-      executorService.submit(() -> {
+      playExecutor.submit(() -> {
         try {
           renderer.pause();
           checkStatus(State.PAUSED, () -> renderer.isPlaying());
@@ -165,7 +172,7 @@ public class RemotePlayer implements Player {
   public void resume() {
     setState(State.PREPARING);
     try {
-      executorService.submit(() -> {
+      playExecutor.submit(() -> {
         try {
           renderer.play();
           checkStatus(State.PLAYING, () -> !renderer.isPlaying());
@@ -191,7 +198,7 @@ public class RemotePlayer implements Player {
     setState(State.PREPARING);
     position = seconds;
     try {
-      executorService.submit(() -> {
+      playExecutor.submit(() -> {
         try {
           renderer.seek(seconds);
           checkStatus(State.PLAYING, () -> !checkPosition(seconds));
@@ -207,7 +214,7 @@ public class RemotePlayer implements Player {
   @Override
   public void stop() {
     try {
-      executorService.submit(() -> {
+      playExecutor.submit(() -> {
         try {
           renderer.stop();
         } catch (RendererException ignored) {
@@ -221,6 +228,8 @@ public class RemotePlayer implements Player {
   @Override
   public void release() {
     stop();
+    playExecutor.shutdown();
+    volumeExecutors.shutdown();
   }
 
   @Override
@@ -271,22 +280,39 @@ public class RemotePlayer implements Player {
 
   @Override
   public void setVolume(int volume, boolean showPanel) {
-
+    this.volume = volume;
+    try {
+      volumeExecutors.submit(() -> {
+        try {
+          renderingControl.setVolume(volume);
+        } catch (RendererException ignored) {
+        }
+      });
+    } catch (RejectedExecutionException ignored) {
+    }
   }
 
   @Override
   public Volume getVolume() {
-    return new Volume(0, 100);
+    return new Volume(volume, 100);
   }
 
   @Override
   public void volumeUp(boolean showPanel) {
-
+    volume = volume + 3;
+    if (volume > 100) {
+      volume = 100;
+    }
+    setVolume(volume, false);
   }
 
   @Override
   public void volumeDown(boolean showPanel) {
-
+    volume = volume - 3;
+    if (volume < 0) {
+      volume = 0;
+    }
+    setVolume(volume, false);
   }
 
   private void setState(int state) {
