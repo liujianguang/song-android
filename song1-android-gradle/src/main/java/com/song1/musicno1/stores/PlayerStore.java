@@ -7,6 +7,7 @@ import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.OldPlayer;
 import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.play.Playlist;
+import de.akquinet.android.androlog.Log;
 
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,7 @@ public enum PlayerStore implements Player.Callback {
     newPlayer.setCallback(this);
     playerMap.put(newPlayer.getId(), newPlayer);
     MainBus.post(new PlayerListChangedEvent());
+    Log.d(this, "Add new player: " + newPlayer.getName());
   }
 
   public void removePlayerById(String id) {
@@ -90,6 +92,11 @@ public enum PlayerStore implements Player.Callback {
     if (player == currentPlayer) {
       MainBus.post(new PlayerPlaylistChangedEvent());
     }
+  }
+
+  @Override
+  public void onOccupied(Player player) {
+
   }
 
   /*

@@ -157,6 +157,8 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
 
   @Subscribe
   public void onPositionChanged(PositionEvent event) {
+    positionSeeker.setMax(0);
+    positionSeeker.setProgress(0);
     Audio audio = event.getAudio();
     if (playingAudio != audio) {
       playingAudio = audio;

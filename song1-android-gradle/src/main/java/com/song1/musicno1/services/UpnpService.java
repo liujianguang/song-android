@@ -41,12 +41,10 @@ import java.util.concurrent.RejectedExecutionException;
 public class UpnpService extends Service implements DeviceChangeListener {
   @Inject LocalRenderer localRenderer;
 
-  private OldPlayer                 localPlayer;
   private MediaController           mediaController;
   private NetworkHelp               networkHelp;
   private ExecutorService           executorService;
   private WifiManager.MulticastLock lock;
-  private List8<OldPlayer>          playerList;
 
   private Map<String, com.song1.musicno1.models.play.MediaServer> mediaServerMap = Maps.newHashMap();
 
@@ -61,10 +59,6 @@ public class UpnpService extends Service implements DeviceChangeListener {
     super.onCreate();
     Log.init();
     App.inject(this);
-
-    localPlayer = new OldPlayer(this, localRenderer, new LocalRenderingControl(this));
-    playerList = List8.newList();
-    playerList.add(localPlayer);
 
     MainBus.register(this);
 
@@ -166,21 +160,16 @@ public class UpnpService extends Service implements DeviceChangeListener {
 
   private void addMediaRenderer(Device device) {
     Log.d(this, "Device added " + device.getFriendlyName() + " " + device.getDeviceType());
-    playerList.add(new OldPlayer(this, new RemoteRenderer(device), new RemoteRenderingControl(device)));
-    MainBus.post(produceDeviceList());
+    RemotePlayer remotePlayer = RemotePlayer.newInstance(device);
+    if (remotePlayer != null) {
+      PlayerStore.INSTANCE.addPlayer(remotePlayer);
+    }
   }
 
   @Override
   public void deviceRemoved(Device removedDevice) {
     Log.d(this, "Device removed " + removedDevice.getFriendlyName() + " " + removedDevice.getDeviceType());
-    playerList.deleteIf((player) -> player.getId().equals(removedDevice.getUDN()));
-    MainBus.post(produceDeviceList());
-  }
-
-  @Produce
-  public DeviceChangeEvent produceDeviceList() {
-    Log.d(this, "Produce device list");
-    return new DeviceChangeEvent(playerList);
+    PlayerStore.INSTANCE.removePlayerById(removedDevice.getUDN());
   }
 
   @Subscribe

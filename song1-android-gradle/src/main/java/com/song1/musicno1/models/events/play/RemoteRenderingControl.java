@@ -13,11 +13,15 @@ import org.cybergarage.upnp.Service;
  * Created by windless on 14-4-9.
  */
 public class RemoteRenderingControl implements RenderingControl {
-  protected final Service renderingControl;
-  protected       int     volume;
+  protected Service renderingControl;
+  protected int     volume;
 
   public RemoteRenderingControl(Device device) {
     renderingControl = device.getService(org.cybergarage.upnp.std.av.renderer.RenderingControl.SERVICE_TYPE);
+  }
+
+  public RemoteRenderingControl(Service renderingControl) {
+    this.renderingControl = renderingControl;
   }
 
   @Override

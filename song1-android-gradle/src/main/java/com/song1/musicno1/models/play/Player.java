@@ -61,5 +61,7 @@ public interface Player {
     public void onPlayingAudioChanged(Player player, Audio audio);
 
     public void onPlaylistChanged(Player player, Playlist playlist);
+
+    void onOccupied(Player remotePlayer);
   }
 }
