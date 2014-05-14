@@ -106,8 +106,15 @@ public class PlayService extends Service {
       Playlist playlist = playlistMap.get(player.getId());
       if (playlist != null) {
         playlist.autoNext(player.getPlayMode());
-        if (playlist.getCurrentAudio() == null) {
-          player.stop();
+        if (playlist.getCurrentAudio() == player.getCurrentAudio()) {
+          if (player.getPlayMode() == Player.MODE_NORMAL){
+            player.setCurrentAudio(null);
+            player.stop();
+            MainBus.post(new Event.PlayingAudioEvent(null));
+          }else{
+            play(new PlayEvent());
+          }
+
         } else {
           player.play(playlist.getCurrentAudio());
         }
@@ -137,10 +144,13 @@ public class PlayService extends Service {
         Playlist playlist = playlistMap.get(player.getId());
         if (playlist != null) {
           Audio currentAudio = playlist.getCurrentAudio();
+          if (player.getPlayMode() == Player.MODE_NORMAL && player.getCurrentAudio()  == currentAudio){
+            return;
+          }
           if (currentAudio != null) {
             player.play(currentAudio);
+            MainBus.post(new Event.PlayingAudioEvent(currentAudio));
           }
-          MainBus.post(new Event.PlayingAudioEvent(currentAudio));
         }
       }
     });
@@ -207,7 +217,7 @@ public class PlayService extends Service {
     if (player != null) {
       Playlist playlist = playlistMap.get(player.getId());
       if (playlist != null) {
-        playlist.previous();
+        playlist.previous(player.getPlayMode());
         play(new PlayEvent());
       }
     }

@@ -53,6 +53,8 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
   @InjectView(R.id.timer_time)         TextView           timerTextView;
   @InjectView(R.id.deviceNumView)      IocTextView        deviceNumView;
 
+  private int playMode = Player.MODE_REPEAT_ALL;
+
   LocalAudioStore localAudioStore;
   protected int timerValue;
 
@@ -78,6 +80,7 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_play_bar, container, false);
     ButterKnife.inject(this, view);
+    bottomPlayBtn.setEnabled(false);
     return view;
   }
 
@@ -115,8 +118,19 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
         Players.resume();
         break;
       case Player.STOPPED:
-        Players.play();
+        if (playMode == Player.MODE_NORMAL){
+          Players.rePlay();
+        }else{
+          Players.play();
+        }
     }
+  }
+
+
+  @Subscribe
+  public void onPlayModeChanged(PlayModeEvent event) {
+    playMode = event.getPlayMode();
+    //ToastUtil.show(getActivity(),event.getPlayMode()+"");
   }
 
   @Subscribe
@@ -132,15 +146,17 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
   public void onCurrentPlayerStateChanged(CurrentPlayerStateEvent event) {
     state = event.state;
     switch (event.state) {
-      case Player.PAUSED:
+
       case Player.STOPPED:
-        bottomPlayBtn.setImageResource(R.drawable.ic_play);
+        //onCurrentPositionChanged(new PositionEvent(null,0,0));
+      case Player.PAUSED:
+        bottomPlayBtn.setImageResource(R.drawable.play_small_disable);
         bottomPlayBtn.setEnabled(true);
         positionBar.setVisibility(View.VISIBLE);
         refreshLayout.setRefreshing(false);
         break;
       case Player.PLAYING:
-        bottomPlayBtn.setImageResource(R.drawable.ic_pause);
+        bottomPlayBtn.setImageResource(R.drawable.stop_small_disable);
         bottomPlayBtn.setEnabled(true);
         positionBar.setVisibility(View.VISIBLE);
         refreshLayout.setRefreshing(false);

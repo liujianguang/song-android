@@ -52,11 +52,12 @@
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/gap"
         android:background="@null"
-        android:src="@drawable/ic_play"
+        android:src="@drawable/play_small_disable"
         android:scaleType="fitCenter"
         android:layout_width="54dp"
         android:layout_height="54dp"
-        android:contentDescription="@null"/>
+        android:contentDescription="@null"
+        android:clickable="false"/>
 
 
     <RelativeLayout

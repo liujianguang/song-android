@@ -127,10 +127,15 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     state = event.state;
     switch (event.state) {
       case Player.PAUSED:
-      case Player.STOPPED:
         playBtn.setImageResource(R.drawable.play_disable);
         playBtn.setEnabled(true);
         setEnabled(true);
+        break;
+      case Player.STOPPED:
+        setEnabled(false);
+        playBtn.setImageResource(R.drawable.play_disable);
+        playBtn.setEnabled(true);
+        setCurrentAudio(null);
         break;
       case Player.PLAYING:
         playBtn.setImageResource(R.drawable.stop_disable);
@@ -213,6 +218,7 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
 
   @Override
   public void onStopTrackingTouch(SeekBar seekBar) {
+
   }
 
   public Audio getCurrentAudio() {
@@ -240,6 +246,8 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
       } else {
         favoriteBtn.setImageResource(R.drawable.favortie_disable);
       }
+    }else{
+      favoriteBtn.setImageResource(R.drawable.favortie_disable);
     }
   }
 

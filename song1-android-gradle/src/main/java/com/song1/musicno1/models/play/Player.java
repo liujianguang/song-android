@@ -270,6 +270,9 @@ public class Player {
     positionThread.start();
   }
 
+  public void setCurrentAudio(Audio audio){
+    this.currentAudio = audio;
+  }
   public Audio getCurrentAudio() {
     return currentAudio;
   }

@@ -25,19 +25,20 @@ public class Playlist {
   public void next(int playMode) {
     if (audios.size() == 0) return;
 
-    if (playMode != Player.MODE_SHUFFLE) {
-      int i = audios.indexOf(currentAudio);
-      i++;
-      if (i >= audios.size()) {
-        i = 0;
-      }
-      Audio audio = audios.get(i);
-      if (audio != null) {
-        setCurrentAudio(audio);
-      }
-    } else {
-      randomNext();
-    }
+    autoNext(playMode);
+//    if (playMode != Player.MODE_SHUFFLE) {
+//      int i = audios.indexOf(currentAudio);
+//      i++;
+//      if (i >= audios.size()) {
+//        i = 0;
+//      }
+//      Audio audio = audios.get(i);
+//      if (audio != null) {
+//        setCurrentAudio(audio);
+//      }
+//    } else {
+//      randomNext();
+//    }
   }
 
   private void randomNext() {
@@ -56,33 +57,55 @@ public class Playlist {
 
   public void autoNext(int playMode) {
     int i = audios.indexOf(currentAudio);
-    i++;
+    //i++;
     switch (playMode) {
       case Player.MODE_NORMAL:
-        if (i >= audios.size()) {
-          currentAudio = null;
-        } else {
-          setCurrentAudio(audios.get(i));
+        if (i != (audios.size() - 1)) {
+          setCurrentAudio(audios.get(++i));
         }
         break;
       case Player.MODE_REPEAT_ALL:
-        if (i >= audios.size()) {
+        if (i != (audios.size() - 1)) {
+          i++;
+        }else{
           i = 0;
         }
         setCurrentAudio(audios.get(i));
         break;
       case Player.MODE_SHUFFLE:
         randomNext();
+        break;
     }
   }
 
-  public void previous() {
-    if (historyStack.size() == 0) {
-      currentAudio = null;
-    } else {
-      currentAudio = historyStack.pop();
-    }
+//  public void previous() {
+//    if (historyStack.size() == 0) {
+//      currentAudio = null;
+//    } else {
+//      currentAudio = historyStack.pop();
+//    }
+//  }
 
+  public void previous(int playMode){
+    int i = audios.indexOf(currentAudio);
+    //i++;
+    switch (playMode) {
+      case Player.MODE_NORMAL:
+        if (i != 0) {
+          setCurrentAudio(audios.get(--i));
+        }
+        break;
+      case Player.MODE_REPEAT_ALL:
+        if (i != 0) {
+          i--;
+        }else{
+          i = audios.size() - 1;
+        }
+        setCurrentAudio(audios.get(i));
+        break;
+      case Player.MODE_SHUFFLE:
+        randomNext();
+    }
   }
 
   public Audio getCurrentAudio() {
