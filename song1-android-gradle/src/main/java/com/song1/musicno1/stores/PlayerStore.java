@@ -49,7 +49,10 @@ public enum PlayerStore implements Player.Callback {
   }
 
   public void setCurrentPlayer(Player player) {
-    currentPlayer = player;
+    if (currentPlayer != player) {
+      currentPlayer = player;
+      MainBus.post(new CurrentPlayerChangedEvent());
+    }
   }
 
   public List<Player> getPlayerList() {
@@ -89,6 +92,9 @@ public enum PlayerStore implements Player.Callback {
     }
   }
 
+  /*
+   ********************* events **************************
+   */
 
   public class PlayerListChangedEvent {
   }
@@ -100,5 +106,8 @@ public enum PlayerStore implements Player.Callback {
   }
 
   public class PlayerPlaylistChangedEvent {
+  }
+
+  public class CurrentPlayerChangedEvent {
   }
 }

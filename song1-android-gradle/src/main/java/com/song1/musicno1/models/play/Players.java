@@ -69,6 +69,27 @@ public class Players {
     }
   }
 
+  public static void setVolume(int volume, boolean showPanel) {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (currentPlayer != null) {
+      currentPlayer.setVolume(volume, showPanel);
+    }
+  }
+
+  public static void volumeUp(boolean showPanel) {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (currentPlayer != null) {
+      currentPlayer.volumeUp(showPanel);
+    }
+  }
+
+  public static void volumeDown(boolean showPanel) {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (currentPlayer != null) {
+      currentPlayer.volumeDown(showPanel);
+    }
+  }
+
   public static void nextPlayMode() {
   }
 

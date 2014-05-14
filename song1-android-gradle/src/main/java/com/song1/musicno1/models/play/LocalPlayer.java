@@ -1,6 +1,7 @@
 package com.song1.musicno1.models.play;
 
 import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import com.song1.musicno1.R;
 
@@ -16,12 +17,13 @@ public class LocalPlayer implements Player, MediaPlayer.OnCompletionListener, Me
   protected final MediaPlayer     mediaPlayer;
   protected final ExecutorService executor;
   protected final Context         context;
-  protected       Playlist        playlist;
-  protected       int             state;
-  protected       Callback        callback;
-  protected       Audio           playingAudio;
-  protected       int             position;
-  protected int duration;
+  protected final AudioManager audioManager;
+  protected Playlist playlist;
+  protected int      state;
+  protected Callback callback;
+  protected Audio    playingAudio;
+  protected int      position;
+  protected int      duration;
 
   public LocalPlayer(Context context) {
     this.context = context;
@@ -30,6 +32,7 @@ public class LocalPlayer implements Player, MediaPlayer.OnCompletionListener, Me
     mediaPlayer.setOnSeekCompleteListener(this);
     mediaPlayer.setOnPreparedListener(this);
     executor = Executors.newFixedThreadPool(1);
+    audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
   }
 
   @Override
@@ -162,6 +165,43 @@ public class LocalPlayer implements Player, MediaPlayer.OnCompletionListener, Me
   @Override
   public void setCallback(Callback callback) {
     this.callback = callback;
+  }
+
+  @Override
+  public void setVolume(int volume, boolean showPanel) {
+    if (showPanel) {
+      audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, AudioManager.FLAG_SHOW_UI);
+    } else {
+      audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, AudioManager.FLAG_ALLOW_RINGER_MODES);
+    }
+  }
+
+  @Override
+  public Volume getVolume() {
+    int volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+    int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+    return new Volume(volume, max);
+  }
+
+  @Override
+  public void volumeUp(boolean showPanel) {
+    Volume volume = getVolume();
+    int setVolume = volume.getCurrent() + 1;
+    if (setVolume > volume.getMax()) {
+      setVolume = volume.getMax();
+    }
+    setVolume(setVolume, showPanel);
+
+  }
+
+  @Override
+  public void volumeDown(boolean showPanel) {
+    Volume volume = getVolume();
+    int setVolume = volume.getCurrent() - 1;
+    if (setVolume < 0) {
+      setVolume = 0;
+    }
+    setVolume(setVolume, showPanel);
   }
 
   private void setState(int state) {

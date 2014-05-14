@@ -71,19 +71,37 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     indicator.setViewPager(pager);
 
     volumeBar.setOnSeekBarChangeListener(this);
-    volumeBar.setEnabled(false);
 
     wifiModel = new WifiModel(getActivity());
     wifiModel.setScanListener(this);
     wifiModel.scan();
 
-    setEnabled(false);
-    favoriteBtn.setEnabled(false);
-    volumeMinButton.setEnabled(false);
-    volumeMaxButton.setEnabled(false);
+    updatePlayerInfo(null);
+  }
+
+  public void updateVolume() {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (currentPlayer != null) {
+      Volume volume = currentPlayer.getVolume();
+      volumeBar.setMax(volume.getMax());
+      volumeBar.setProgress(volume.getCurrent());
+    }
+  }
+
+  @Subscribe
+  public void updatePlayerInfo(PlayerStore.CurrentPlayerChangedEvent event) {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+
+    boolean isCurrentPlayerExist = currentPlayer != null;
+    setEnabled(isCurrentPlayerExist);
+    volumeBar.setEnabled(isCurrentPlayerExist);
+    favoriteBtn.setEnabled(isCurrentPlayerExist);
+    volumeMinButton.setEnabled(isCurrentPlayerExist);
+    volumeMaxButton.setEnabled(isCurrentPlayerExist);
 
     updatePlayerState(null);
     updatePlayingAudio(null);
+    updateVolume();
   }
 
   @Subscribe
@@ -240,7 +258,7 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
   @Override
   public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
     if (fromUser) {
-      MainBus.post(new UpdateVolumeEvent(new Volume(i, seekBar.getMax())));
+      Players.setVolume(seekBar.getProgress(), false);
     }
   }
 
@@ -303,12 +321,14 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
 
   @OnClick(R.id.volume_min)
   public void volumeDown() {
-    MainBus.post(new UpdateVolumeEvent(UpdateVolumeEvent.DOWN, false));
+    Players.volumeDown(false);
+    updateVolume();
   }
 
   @OnClick(R.id.volume_max)
   public void volumeUp() {
-    MainBus.post(new UpdateVolumeEvent(UpdateVolumeEvent.UP, false));
+    Players.volumeUp(false);
+    updateVolume();
   }
 
   @Override

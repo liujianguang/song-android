@@ -38,6 +38,14 @@ public interface Player {
 
   public void setCallback(Callback callback);
 
+  public void setVolume(int volume, boolean showPanel);
+
+  public Volume getVolume();
+
+  public void volumeUp(boolean showPanel);
+
+  public void volumeDown(boolean showPanel);
+
   public interface State {
     int STOPPED   = 0;
     int PREPARING = 1;

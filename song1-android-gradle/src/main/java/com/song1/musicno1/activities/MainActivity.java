@@ -18,7 +18,6 @@ import butterknife.InjectView;
 import com.song1.musicno1.App;
 import com.song1.musicno1.R;
 import com.song1.musicno1.dialogs.PromptDialog;
-import com.song1.musicno1.dialogs.QuitDialog;
 import com.song1.musicno1.event.Event;
 import com.song1.musicno1.fragments.*;
 import com.song1.musicno1.helpers.MainBus;
@@ -27,12 +26,14 @@ import com.song1.musicno1.models.events.ExitEvent;
 import com.song1.musicno1.models.events.play.ActivityExitEvent;
 import com.song1.musicno1.models.events.play.CurrentPlayerOccupiedEvent;
 import com.song1.musicno1.models.events.play.UpdateVolumeEvent;
+import com.song1.musicno1.models.play.Player;
+import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.services.HttpService;
 import com.song1.musicno1.services.PlayService;
 import com.song1.musicno1.services.UpnpService;
+import com.song1.musicno1.stores.PlayerStore;
 import com.song1.musicno1.vender.SlidingUpPanelLayout;
 import com.squareup.otto.Subscribe;
-import com.umeng.analytics.MobclickAgent;
 import de.akquinet.android.androlog.Log;
 
 import javax.inject.Inject;
@@ -50,7 +51,9 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
   @InjectView(R.id.main)            View                 mainView;
   @InjectView(R.id.playing_section) View                 playingSectionView;
 
-  @Inject   LeftFragment          leftFragment;
+  @Inject LeftFragment leftFragment;
+
+  private   PlayingFragment       playingFragment;
   protected ActionBarDrawerToggle actionBarDrawerToggle;
 
   @Override
@@ -68,6 +71,7 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
     startService(new Intent(this, HttpService.class));
 
     playBarFragment = new PlayBarFragment();
+    playingFragment = new PlayingFragment();
 
     slidingUpPanel.setDragView(playBarView);
     slidingUpPanel.setPanelSlideListener(this);
@@ -79,7 +83,7 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
         .replace(R.id.navigation, leftFragment)
         .replace(R.id.play_bar, playBarFragment)
         .replace(R.id.main, new TestFragment())
-        .replace(R.id.playing, new PlayingFragment())
+        .replace(R.id.playing, playingFragment)
         .commit();
 
     actionBarDrawerToggle = new ActionBarDrawerToggle(
@@ -188,12 +192,12 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
       drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
     Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main);
-    if (fragment instanceof LocalAudioContainerFragment){
-        LocalAudioContainerFragment localAudioContainerFragment = (LocalAudioContainerFragment) fragment;
+    if (fragment instanceof LocalAudioContainerFragment) {
+      LocalAudioContainerFragment localAudioContainerFragment = (LocalAudioContainerFragment) fragment;
       FragmentPagerAdapter adapter = localAudioContainerFragment.getAdapter();
       ViewPager pager = localAudioContainerFragment.getViewPager();
       Fragment fragment1 = adapter.getItem(pager.getCurrentItem());
-      if (fragment1 instanceof LocalAudioFragment){
+      if (fragment1 instanceof LocalAudioFragment) {
         LocalAudioFragment localAudioFragment = (LocalAudioFragment) fragment1;
         localAudioFragment.refreshData();
       }
@@ -217,12 +221,17 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
 
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (currentPlayer == null) return super.onKeyDown(keyCode, event);
+
     switch (keyCode) {
       case KeyEvent.KEYCODE_VOLUME_DOWN:
-        MainBus.post(new UpdateVolumeEvent(UpdateVolumeEvent.DOWN));
+        currentPlayer.volumeDown(!slidingUpPanel.isExpanded());
+        playingFragment.updateVolume();
         return true;
       case KeyEvent.KEYCODE_VOLUME_UP:
-        MainBus.post(new UpdateVolumeEvent(UpdateVolumeEvent.UP));
+        currentPlayer.volumeUp(!slidingUpPanel.isExpanded());
+        playingFragment.updateVolume();
         return true;
     }
     return super.onKeyDown(keyCode, event);
@@ -242,7 +251,7 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
   }
 
   @Subscribe
-  public void showExitDailog(Event.ShowExitDialogEvent event){
+  public void showExitDailog(Event.ShowExitDialogEvent event) {
     PromptDialog dialog = new PromptDialog(this);
     dialog.setTitle(R.string.notice).setMessage(R.string.exitMsg).setCancelClick(new View.OnClickListener() {
       @Override
@@ -258,8 +267,8 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
       }
     });
     Log.d(this, "Show exit dialog");
-    dialog.show(getSupportFragmentManager(),"exitDialog");
-    handler.postDelayed(exitRunnable,1000 * 30);
+    dialog.show(getSupportFragmentManager(), "exitDialog");
+    handler.postDelayed(exitRunnable, 1000 * 30);
   }
 
   Handler handler = new Handler();
