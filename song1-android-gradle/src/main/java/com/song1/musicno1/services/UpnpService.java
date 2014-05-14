@@ -16,6 +16,7 @@ import com.song1.musicno1.models.events.upnp.DeviceChangeEvent;
 import com.song1.musicno1.models.events.upnp.MediaServerEvent;
 import com.song1.musicno1.models.events.upnp.SearchDeviceEvent;
 import com.song1.musicno1.models.play.*;
+import com.song1.musicno1.stores.PlayerStore;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 import de.akquinet.android.androlog.Log;
@@ -40,12 +41,12 @@ import java.util.concurrent.RejectedExecutionException;
 public class UpnpService extends Service implements DeviceChangeListener {
   @Inject LocalRenderer localRenderer;
 
-  private Player                    localPlayer;
+  private OldPlayer                 localPlayer;
   private MediaController           mediaController;
   private NetworkHelp               networkHelp;
   private ExecutorService           executorService;
   private WifiManager.MulticastLock lock;
-  private List8<Player>             playerList;
+  private List8<OldPlayer>          playerList;
 
   private Map<String, com.song1.musicno1.models.play.MediaServer> mediaServerMap = Maps.newHashMap();
 
@@ -61,7 +62,7 @@ public class UpnpService extends Service implements DeviceChangeListener {
     Log.init();
     App.inject(this);
 
-    localPlayer = new Player(this, localRenderer, new LocalRenderingControl(this));
+    localPlayer = new OldPlayer(this, localRenderer, new LocalRenderingControl(this));
     playerList = List8.newList();
     playerList.add(localPlayer);
 
@@ -165,7 +166,7 @@ public class UpnpService extends Service implements DeviceChangeListener {
 
   private void addMediaRenderer(Device device) {
     Log.d(this, "Device added " + device.getFriendlyName() + " " + device.getDeviceType());
-    playerList.add(new Player(this, new RemoteRenderer(device), new RemoteRenderingControl(device)));
+    playerList.add(new OldPlayer(this, new RemoteRenderer(device), new RemoteRenderingControl(device)));
     MainBus.post(produceDeviceList());
   }
 

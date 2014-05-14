@@ -14,13 +14,16 @@ import butterknife.InjectView;
 import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.BaseAdapter;
+import com.song1.musicno1.adapter.DataAdapter;
 import com.song1.musicno1.entity.AudioGroup;
 import com.song1.musicno1.event.Event;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.events.play.CurrentPlaylistEvent;
 import com.song1.musicno1.models.play.Audio;
+import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.models.play.Playlist;
+import com.song1.musicno1.stores.PlayerStore;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
@@ -29,9 +32,11 @@ import java.util.List;
  * Created by windless on 4/1/14.
  */
 public class PlaylistFragment extends Fragment implements AdapterView.OnItemClickListener {
-  protected              BaseAdapter<Audio, ViewHolder> adapter;
-  protected              Playlist                       playlist;
-  @InjectView(R.id.list) ListView                       listView;
+  protected Playlist                       playlist;
+  private   DataAdapter<Audio>             audiosAdapter;
+  private   Audio                          playingAudio;
+
+  @InjectView(R.id.list) ListView listView;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,30 +48,62 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemClic
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    adapter = newAdapter();
-    listView.setAdapter(adapter);
+    audiosAdapter = newAdapter();
+    listView.setAdapter(audiosAdapter);
     listView.setOnItemClickListener(this);
-  }
 
-  static Audio playingAudio;
+    updatePlaylist(null);
+    updatePlayingAudio(null);
+  }
 
   @Subscribe
-  public void playingAudio(Event.PlayingAudioEvent event){
-    playingAudio = event.getAudio();
-    adapter.notifyDataSetChanged();
+  public void updatePlaylist(PlayerStore.PlayerPlaylistChangedEvent event) {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (currentPlayer != null) {
+      playlist = currentPlayer.getPlaylist();
+      if (playlist != null) {
+        audiosAdapter.setDataList(playlist.getAudios());
+      } else {
+        audiosAdapter.setDataList(null);
+      }
+      audiosAdapter.notifyDataSetChanged();
+    }
   }
 
-  private BaseAdapter<Audio, ViewHolder> newAdapter() {
-    return new BaseAdapter<Audio, ViewHolder>(getActivity(), R.layout.item_text)
-        .bind(() -> new ViewHolder())
-        .setData((i, audio, holder) -> {
-          if (audio == playingAudio){
-            holder.currentAudioImageView.setVisibility(View.VISIBLE);
-          }else{
-            holder.currentAudioImageView.setVisibility(View.GONE);
-          }
-          holder.title.setText(audio.getTitle());
-        });
+  @Subscribe
+  public void updatePlayingAudio(PlayerStore.PlayerPlayingAudioChangedEvent event) {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (currentPlayer != null) {
+      playingAudio = currentPlayer.getPlayingAudio();
+      audiosAdapter.notifyDataSetChanged();
+    }
+  }
+
+  private DataAdapter<Audio> newAdapter() {
+    return new DataAdapter<Audio>(getActivity()) {
+      @Override
+      public View getView(int i, View view, ViewGroup viewGroup) {
+        ViewHolder holder;
+        if (view == null) {
+          view = View.inflate(getActivity(), R.layout.item_text, null);
+          holder = new ViewHolder();
+          holder.inject(view);
+          view.setTag(holder);
+        } else {
+          holder = (ViewHolder) view.getTag();
+        }
+
+        Audio audio = getDataItem(i);
+        if (audio == playingAudio) {
+          holder.currentAudioImageView.setVisibility(View.VISIBLE);
+        } else {
+          holder.currentAudioImageView.setVisibility(View.GONE);
+        }
+        holder.title.setText(audio.getTitle());
+
+        return view;
+      }
+    };
   }
 
   @Override
@@ -81,33 +118,15 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemClic
     MainBus.unregister(this);
   }
 
-  @Subscribe
-  public void playlistChanged(CurrentPlaylistEvent event) {
-    playlist = event.getPlaylist();
-
-    List<Audio> list = Lists.newArrayList();
-    if (playlist.getAudios() != null) {
-      for (Audio audio :playlist.getAudios()){
-        if (audio instanceof AudioGroup){
-          continue;
-        }
-        list.add(audio);
-      }
-    }
-    adapter.setList(list);
-    adapter.notifyDataSetChanged();
-  }
-
   @Override
   public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-    Audio audio = adapter.getElement(i);
-    playlist.setCurrentAudio(audio);
-    Players.play();
+    Audio audio = audiosAdapter.getDataItem(i);
+    Players.playWithAudio(audio);
   }
 
   class ViewHolder extends BaseAdapter.ViewHolder {
     @InjectView(R.id.currentAudioImageView) ImageView currentAudioImageView;
-    @InjectView(R.id.title) TextView title;
+    @InjectView(R.id.title)                 TextView  title;
 
     @Override
     public void inject(View view) {

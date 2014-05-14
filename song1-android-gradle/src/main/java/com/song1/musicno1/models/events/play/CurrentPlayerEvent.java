@@ -1,19 +1,19 @@
 package com.song1.musicno1.models.events.play;
 
-import com.song1.musicno1.models.play.Player;
+import com.song1.musicno1.models.play.OldPlayer;
 
 /**
  * Created by windless on 3/27/14.
  */
 public class CurrentPlayerEvent {
 
-  protected final Player currentPlayer;
+  protected final OldPlayer currentPlayer;
 
-  public CurrentPlayerEvent(Player currentPlayer) {
+  public CurrentPlayerEvent(OldPlayer currentPlayer) {
     this.currentPlayer = currentPlayer;
   }
 
-  public Player getCurrentPlayer() {
+  public OldPlayer getCurrentPlayer() {
     return currentPlayer;
   }
 }

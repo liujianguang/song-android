@@ -1,0 +1,104 @@
+package com.song1.musicno1.stores;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.song1.musicno1.helpers.MainBus;
+import com.song1.musicno1.models.play.Audio;
+import com.song1.musicno1.models.play.OldPlayer;
+import com.song1.musicno1.models.play.Player;
+import com.song1.musicno1.models.play.Playlist;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Created by windless on 14-5-14.
+ */
+public enum PlayerStore implements Player.Callback {
+  INSTANCE;
+
+  private   Player              localPlayer;
+  private   Map<String, Player> playerMap;
+  protected Player              currentPlayer;
+
+  private PlayerStore() {
+    playerMap = Maps.newLinkedHashMap();
+  }
+
+  public void setLocalPlayer(Player localPlayer) {
+    this.localPlayer = localPlayer;
+    localPlayer.setCallback(this);
+  }
+
+  public void addPlayer(Player newPlayer) {
+    newPlayer.setCallback(this);
+    playerMap.put(newPlayer.getId(), newPlayer);
+    MainBus.post(new PlayerListChangedEvent());
+  }
+
+  public void removePlayerById(String id) {
+    if (playerMap.containsKey(id)) {
+      Player player = playerMap.remove(id);
+      player.release();
+    }
+    MainBus.post(new PlayerListChangedEvent());
+  }
+
+  public Player getCurrentPlayer() {
+    return currentPlayer;
+  }
+
+  public void setCurrentPlayer(Player player) {
+    currentPlayer = player;
+  }
+
+  public List<Player> getPlayerList() {
+    List<Player> playerList = Lists.newArrayList();
+    playerList.add(localPlayer);
+    playerList.addAll(playerMap.values());
+    return playerList;
+  }
+
+  @Override
+  public void onStateChanged(Player player, int state) {
+    if (player == currentPlayer) {
+      MainBus.post(new PlayerStateChangedEvent());
+    }
+  }
+
+  @Override
+  public void onCompletion(Player player, boolean isError) {
+    Playlist playlist = player.getPlaylist();
+    if (playlist != null) {
+      playlist.autoNext(OldPlayer.MODE_NORMAL);
+      player.playWithAudio(playlist.getCurrentAudio());
+    }
+  }
+
+  @Override
+  public void onPlayingAudioChanged(Player player, Audio audio) {
+    if (player == currentPlayer) {
+      MainBus.post(new PlayerPlayingAudioChangedEvent());
+    }
+  }
+
+  @Override
+  public void onPlaylistChanged(Player player, Playlist playlist) {
+    if (player == currentPlayer) {
+      MainBus.post(new PlayerPlaylistChangedEvent());
+    }
+  }
+
+
+  public class PlayerListChangedEvent {
+  }
+
+  public class PlayerStateChangedEvent {
+  }
+
+  public class PlayerPlayingAudioChangedEvent {
+  }
+
+  public class PlayerPlaylistChangedEvent {
+  }
+}

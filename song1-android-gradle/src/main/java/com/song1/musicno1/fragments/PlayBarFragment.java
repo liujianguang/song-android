@@ -2,6 +2,7 @@ package com.song1.musicno1.fragments;
 
 import android.net.wifi.ScanResult;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -24,13 +25,15 @@ import com.song1.musicno1.models.LocalAudioStore;
 import com.song1.musicno1.models.WifiModel;
 import com.song1.musicno1.models.events.play.*;
 import com.song1.musicno1.models.play.Audio;
+import com.song1.musicno1.models.play.OldPlayer;
 import com.song1.musicno1.models.play.Player;
-import com.song1.musicno1.models.play.Players;
+import com.song1.musicno1.stores.PlayerStore;
 import com.song1.musicno1.ui.IocTextView;
 import com.song1.musicno1.util.DeviceUtil;
 import com.song1.musicno1.util.RoundedTransformation;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
+import de.akquinet.android.androlog.Log;
 
 import java.util.List;
 
@@ -59,6 +62,19 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
   WifiModel wifiModel;
   int newDeviceCount = 0;
 
+  private Handler  handler          = new Handler();
+  private Runnable positionRunnable = new Runnable() {
+    @Override
+    public void run() {
+      Player player = PlayerStore.INSTANCE.getCurrentPlayer();
+      if (player != null) {
+        positionBar.setMax(player.getDuration());
+        positionBar.setProgress(player.getPosition());
+      }
+      handler.postDelayed(this, 1000);
+    }
+  };
+
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
@@ -72,6 +88,68 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
     wifiModel = new WifiModel(getActivity());
     wifiModel.setScanListener(this);
     wifiModel.scan();
+
+    updatePlayerState(null);
+    updatePlayingAudio(null);
+  }
+
+  @Subscribe
+  public void updatePlayerState(PlayerStore.PlayerStateChangedEvent event) {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (currentPlayer != null) {
+      state = currentPlayer.getState();
+      switch (state) {
+        case Player.State.PAUSED:
+        case Player.State.STOPPED:
+          bottomPlayBtn.setImageResource(R.drawable.ic_play);
+          bottomPlayBtn.setEnabled(true);
+          positionBar.setVisibility(View.VISIBLE);
+          refreshLayout.setRefreshing(false);
+          break;
+        case Player.State.PLAYING:
+          bottomPlayBtn.setImageResource(R.drawable.ic_pause);
+          bottomPlayBtn.setEnabled(true);
+          positionBar.setVisibility(View.VISIBLE);
+          refreshLayout.setRefreshing(false);
+          break;
+        case Player.State.PREPARING:
+          bottomPlayBtn.setEnabled(false);
+          positionBar.setVisibility(View.GONE);
+          refreshLayout.setRefreshing(true);
+      }
+
+      if (state == Player.State.PLAYING) {
+        handler.post(positionRunnable);
+      } else {
+        handler.removeCallbacks(positionRunnable);
+      }
+    }
+  }
+
+  @Subscribe
+  public void updatePlayingAudio(PlayerStore.PlayerPlayingAudioChangedEvent event) {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (currentPlayer != null) {
+      Audio playingAudio = currentPlayer.getPlayingAudio();
+      if (playingAudio == null) {
+        bottomTitleView.setText("");
+        bottomSubtitleView.setText("");
+        topTitleView.setText("");
+        topSubtitleView.setText("");
+        Picasso.with(getActivity()).load(R.drawable.default_album_art_small).transform(new RoundedTransformation()).into(albumArtImageView);
+      } else {
+        bottomTitleView.setText(playingAudio.getTitle());
+        bottomSubtitleView.setText(playingAudio.getArtist() + " - " + playingAudio.getAlbum());
+
+        topTitleView.setText(playingAudio.getTitle());
+        topSubtitleView.setText(playingAudio.getArtist() + " - " + playingAudio.getAlbum());
+        AlbumArtHelper.loadAlbumArtRounded(
+            getActivity(),
+            playingAudio.getAlbumArt(localAudioStore),
+            albumArtImageView,
+            R.drawable.default_album_art_small);
+      }
+    }
   }
 
   @Override
@@ -97,6 +175,7 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
   public void onDestroy() {
     super.onDestroy();
     wifiModel.stop();
+    handler.removeCallbacks(positionRunnable);
   }
 
   @OnClick(R.id.bottom_player_list)
@@ -107,15 +186,18 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
 
   @OnClick(R.id.bottom_play)
   public void onPlayButtonClick() {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+
+    if (currentPlayer == null) return;
+
     switch (state) {
-      case Player.PLAYING:
-        Players.pause();
+      case Player.State.PLAYING:
+        currentPlayer.pause();
         break;
-      case Player.PAUSED:
-        Players.resume();
+      case Player.State.PAUSED:
+        currentPlayer.resume();
         break;
-      case Player.STOPPED:
-        Players.play();
+      case Player.State.STOPPED:
     }
   }
 
@@ -132,20 +214,20 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
   public void onCurrentPlayerStateChanged(CurrentPlayerStateEvent event) {
     state = event.state;
     switch (event.state) {
-      case Player.PAUSED:
-      case Player.STOPPED:
+      case OldPlayer.PAUSED:
+      case OldPlayer.STOPPED:
         bottomPlayBtn.setImageResource(R.drawable.ic_play);
         bottomPlayBtn.setEnabled(true);
         positionBar.setVisibility(View.VISIBLE);
         refreshLayout.setRefreshing(false);
         break;
-      case Player.PLAYING:
+      case OldPlayer.PLAYING:
         bottomPlayBtn.setImageResource(R.drawable.ic_pause);
         bottomPlayBtn.setEnabled(true);
         positionBar.setVisibility(View.VISIBLE);
         refreshLayout.setRefreshing(false);
         break;
-      case Player.PREPARING:
+      case OldPlayer.PREPARING:
         bottomPlayBtn.setEnabled(false);
         positionBar.setVisibility(View.GONE);
         refreshLayout.setRefreshing(true);
@@ -227,10 +309,10 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
   public void scanResult(List<ScanResult> scanResults) {
     List<String> ssidList = DeviceUtil.filterScanResultList(scanResults);
     newDeviceCount = ssidList.size();
-    if (newDeviceCount != 0){
+    if (newDeviceCount != 0) {
       deviceNumView.setText(newDeviceCount + "");
       deviceNumView.setVisibility(View.VISIBLE);
-    }else{
+    } else {
       deviceNumView.setVisibility(View.GONE);
     }
   }

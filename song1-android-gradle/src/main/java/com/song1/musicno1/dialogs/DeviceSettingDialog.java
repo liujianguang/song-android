@@ -12,13 +12,12 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
-import com.song1.musicno1.constants.Constants;
 import com.song1.musicno1.entity.DeviceConfig;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.WifiModel;
 import com.song1.musicno1.models.events.upnp.DeviceChangeEvent;
 import com.song1.musicno1.models.events.upnp.SearchDeviceEvent;
-import com.song1.musicno1.models.play.Player;
+import com.song1.musicno1.models.play.OldPlayer;
 import com.song1.musicno1.models.setting.RemoteSetting;
 import com.squareup.otto.Subscribe;
 import de.akquinet.android.androlog.Log;
@@ -355,7 +354,7 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
   public void onDeviceChanged(DeviceChangeEvent event) {
     System.out.println("receiver*************************************************");
 
-    List<Player> players = Lists.newArrayList(event.players);
+    List<OldPlayer> players = Lists.newArrayList(event.players);
     String tempId;
     if (deviceSSID.startsWith("yy")) {
       tempId = deviceSSID.substring(2, deviceSSID.length());
@@ -363,7 +362,7 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
       tempId = deviceSSID.substring(deviceSSID.indexOf("-") + 1, deviceSSID.indexOf("ONE"));
     }
 
-    for (Player player : players) {
+    for (OldPlayer player : players) {
       String id = player.getId();
       System.out.println("id : " + id);
       System.out.println("tempId : " + tempId.toLowerCase());

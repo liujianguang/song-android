@@ -10,13 +10,13 @@ import com.song1.musicno1.helpers.LatestExecutor;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.events.ExitEvent;
 import com.song1.musicno1.models.events.play.*;
-import com.song1.musicno1.models.play.Audio;
-import com.song1.musicno1.models.play.Player;
-import com.song1.musicno1.models.play.Playlist;
+import com.song1.musicno1.models.play.*;
+import com.song1.musicno1.stores.PlayerStore;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 import de.akquinet.android.androlog.Log;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,13 +24,13 @@ import java.util.Map;
  */
 public class PlayService extends Service {
   protected LatestExecutor   playExecutor;
-  protected Player           currentPlayer;
+  protected OldPlayer        currentPlayer;
   protected SetPlaylistEvent waitingEvent;
   protected LatestExecutor   volumeExecutor;
 
-  protected Map<String, Playlist> playlistMap = Maps.newHashMap();
-  protected Map<String, Player>   playerMap   = Maps.newHashMap();
-  protected Handler               handler     = new Handler();
+  protected Map<String, Playlist>  playlistMap = Maps.newHashMap();
+  protected Map<String, OldPlayer> playerMap   = Maps.newHashMap();
+  protected Handler                handler     = new Handler();
 
   protected Runnable timerRunnable;
   protected int      timerValue;
@@ -48,6 +48,8 @@ public class PlayService extends Service {
     playExecutor = new LatestExecutor();
     volumeExecutor = new LatestExecutor();
     isActivityExited = false;
+
+    PlayerStore.INSTANCE.setLocalPlayer(new LocalPlayer(this));
   }
 
   @Override
@@ -95,13 +97,13 @@ public class PlayService extends Service {
 
   }
 
-  private void onPlayerOccupied(Player player) {
+  private void onPlayerOccupied(OldPlayer player) {
     if (player == currentPlayer) {
       postEvent(new CurrentPlayerOccupiedEvent());
     }
   }
 
-  private void playNext(Player player) {
+  private void playNext(OldPlayer player) {
     playExecutor.submit(() -> {
       Playlist playlist = playlistMap.get(player.getId());
       if (playlist != null) {
@@ -117,7 +119,7 @@ public class PlayService extends Service {
 
   @Subscribe
   public void setPlaylist(SetPlaylistEvent event) {
-    Player player = currentPlayer;
+    OldPlayer player = currentPlayer;
     if (player != null) {
       playlistMap.put(player.getId(), event.getPlaylist());
       postEvent(currentPlaylist());
@@ -132,7 +134,7 @@ public class PlayService extends Service {
   @Subscribe
   public void play(PlayEvent event) {
     playExecutor.submit(() -> {
-      Player player = currentPlayer;
+      OldPlayer player = currentPlayer;
       if (player != null) {
         Playlist playlist = playlistMap.get(player.getId());
         if (playlist != null) {
@@ -149,7 +151,7 @@ public class PlayService extends Service {
 
   @Subscribe
   public void rePlay(Event.RePlayEvent event) {
-    Player player = currentPlayer;
+    OldPlayer player = currentPlayer;
     if (player != null) {
       Playlist playlist = playlistMap.get(player.getId());
       if (playlist != null) {
@@ -162,8 +164,8 @@ public class PlayService extends Service {
   @Subscribe
   public void resume(ResumeEvent event) {
     playExecutor.submit(() -> {
-      Player player = currentPlayer;
-      if (player != null && player.getState() == Player.PAUSED) {
+      OldPlayer player = currentPlayer;
+      if (player != null && player.getState() == OldPlayer.PAUSED) {
         player.play();
       }
     });
@@ -172,7 +174,7 @@ public class PlayService extends Service {
   @Subscribe
   public void pause(PauseEvent event) {
     playExecutor.submit(() -> {
-      Player player = currentPlayer;
+      OldPlayer player = currentPlayer;
       if (player != null) {
         player.pause();
       }
@@ -182,7 +184,7 @@ public class PlayService extends Service {
   @Subscribe
   public void seek(SeekEvent event) {
     playExecutor.submit(() -> {
-      Player player = currentPlayer;
+      OldPlayer player = currentPlayer;
       if (player != null) {
         player.seek(event.getSeekTo());
       }
@@ -191,7 +193,7 @@ public class PlayService extends Service {
 
   @Subscribe
   public void next(NextEvent event) {
-    Player player = currentPlayer;
+    OldPlayer player = currentPlayer;
     if (player != null) {
       Playlist playlist = playlistMap.get(player.getId());
       if (playlist != null) {
@@ -203,7 +205,7 @@ public class PlayService extends Service {
 
   @Subscribe
   public void previous(PreviousEvent event) {
-    Player player = currentPlayer;
+    OldPlayer player = currentPlayer;
     if (player != null) {
       Playlist playlist = playlistMap.get(player.getId());
       if (playlist != null) {
@@ -215,7 +217,7 @@ public class PlayService extends Service {
 
   @Subscribe
   public void nextPlayMode(NextPlayModeEvent event) {
-    Player player = currentPlayer;
+    OldPlayer player = currentPlayer;
     if (player != null) {
       player.nextPlayMode();
       postEvent(currentPlayerPlayMode());
@@ -230,7 +232,7 @@ public class PlayService extends Service {
 
   @Produce
   public PositionEvent currentPlayerPosition() {
-    Player player = currentPlayer;
+    OldPlayer player = currentPlayer;
     if (player != null) {
       return new PositionEvent(player.getCurrentAudio(), player.getPosition(), player.getDuration());
     }
@@ -239,7 +241,7 @@ public class PlayService extends Service {
 
   @Produce
   public CurrentPlayerStateEvent currentPlayerState() {
-    Player player = currentPlayer;
+    OldPlayer player = currentPlayer;
     if (player != null) {
       return new CurrentPlayerStateEvent(player.getState());
     }
@@ -248,7 +250,7 @@ public class PlayService extends Service {
 
   @Produce
   public CurrentPlayerEvent currentPlayer() {
-    Player player = currentPlayer;
+    OldPlayer player = currentPlayer;
     if (player != null) {
       return new CurrentPlayerEvent(player);
     }
@@ -257,7 +259,7 @@ public class PlayService extends Service {
 
   @Produce
   public CurrentPlaylistEvent currentPlaylist() {
-    Player player = currentPlayer;
+    OldPlayer player = currentPlayer;
     if (player != null) {
       Playlist playlist = playlistMap.get(player.getId());
       if (playlist != null) {
@@ -271,14 +273,14 @@ public class PlayService extends Service {
 
   @Produce
   public PlayModeEvent currentPlayerPlayMode() {
-    Player player = currentPlayer;
+    OldPlayer player = currentPlayer;
     if (player != null) {
       return new PlayModeEvent(player.getPlayMode());
     }
     return null;
   }
 
-  public void setCurrentPlayer(Player currentPlayer) {
+  public void setCurrentPlayer(OldPlayer currentPlayer) {
     this.currentPlayer = currentPlayer;
     postEvent(currentPlayer());
     postEvent(currentPlaylist());
@@ -300,7 +302,7 @@ public class PlayService extends Service {
   }
 
   private void updateVolume(UpdateVolumeEvent event) {
-    Player player = currentPlayer;
+    OldPlayer player = currentPlayer;
     if (player != null) {
       volumeExecutor.submit(() -> {
         if (event != null) {
@@ -360,8 +362,9 @@ public class PlayService extends Service {
   }
 
   private void stopAllPlayers() {
-    for (Player player : playerMap.values()) {
-      new Thread(() -> player.stop()).start();
+    List<Player> playerList = PlayerStore.INSTANCE.getPlayerList();
+    for (Player player : playerList) {
+      new Thread(() ->  player.release()).start();
     }
   }
 

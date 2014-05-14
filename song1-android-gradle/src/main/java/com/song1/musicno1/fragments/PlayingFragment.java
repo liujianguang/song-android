@@ -16,18 +16,14 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.song1.musicno1.R;
-import com.song1.musicno1.event.Event;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.FavoriteAudio;
 import com.song1.musicno1.models.WifiModel;
 import com.song1.musicno1.models.events.play.*;
-import com.song1.musicno1.models.play.Audio;
-import com.song1.musicno1.models.play.Player;
-import com.song1.musicno1.models.play.Players;
-import com.song1.musicno1.models.play.Volume;
+import com.song1.musicno1.models.play.*;
+import com.song1.musicno1.stores.PlayerStore;
 import com.song1.musicno1.ui.IocTextView;
 import com.song1.musicno1.util.DeviceUtil;
-import com.song1.musicno1.util.ToastUtil;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.CirclePageIndicator;
 import de.akquinet.android.androlog.Log;
@@ -41,7 +37,7 @@ import java.util.List;
 public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, WifiModel.ScanListener {
   protected int   state;
   protected Audio currentAudio;
-  private int playMode = Player.MODE_REPEAT_ALL;
+  private int playMode = OldPlayer.MODE_REPEAT_ALL;
 
   @InjectView(R.id.volume_bar)    SeekBar             volumeBar;
   @InjectView(R.id.play)          ImageButton         playBtn;
@@ -85,18 +81,59 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     favoriteBtn.setEnabled(false);
     volumeMinButton.setEnabled(false);
     volumeMaxButton.setEnabled(false);
+
+    updatePlayerState(null);
+    updatePlayingAudio(null);
+  }
+
+  @Subscribe
+  public void updatePlayingAudio(PlayerStore.PlayerPlayingAudioChangedEvent event) {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+
+    if (currentPlayer == null) return;
+
+    currentAudio = currentPlayer.getPlayingAudio();
+    setFavoriteBtn();
+    volumeMinButton.setEnabled(true);
+    volumeMaxButton.setEnabled(true);
+    favoriteBtn.setEnabled(currentAudio != null && currentAudio.canFavorite());
+  }
+
+  @Subscribe
+  public void updatePlayerState(PlayerStore.PlayerStateChangedEvent event) {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+
+    if (currentPlayer == null) return;
+
+    state = currentPlayer.getState();
+    switch (state) {
+      case Player.State.PAUSED:
+      case Player.State.STOPPED:
+        playBtn.setImageResource(R.drawable.play_disable);
+        playBtn.setEnabled(true);
+        setEnabled(true);
+        break;
+      case Player.State.PLAYING:
+        playBtn.setImageResource(R.drawable.stop_disable);
+        playBtn.setEnabled(true);
+        setEnabled(true);
+        break;
+      case Player.State.PREPARING:
+        playBtn.setEnabled(false);
+        setEnabled(false);
+    }
   }
 
   @Override
   public void onPause() {
-    Log.d(this,"onResume...");
+    Log.d(this, "onResume...");
     super.onPause();
     MainBus.unregister(this);
   }
 
   @Override
   public void onResume() {
-    Log.d(this,"onResume...");
+    Log.d(this, "onResume...");
     super.onResume();
     MainBus.register(this);
   }
@@ -126,23 +163,24 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
   public void onCurrentPlayerStateChanged(CurrentPlayerStateEvent event) {
     state = event.state;
     switch (event.state) {
-      case Player.PAUSED:
-      case Player.STOPPED:
+      case OldPlayer.PAUSED:
+      case OldPlayer.STOPPED:
         playBtn.setImageResource(R.drawable.play_disable);
         playBtn.setEnabled(true);
         setEnabled(true);
         break;
-      case Player.PLAYING:
+      case OldPlayer.PLAYING:
         playBtn.setImageResource(R.drawable.stop_disable);
         playBtn.setEnabled(true);
         setEnabled(true);
         break;
-      case Player.PREPARING:
+      case OldPlayer.PREPARING:
         playBtn.setEnabled(false);
         setEnabled(false);
     }
   }
-  private void setEnabled(boolean enabled){
+
+  private void setEnabled(boolean enabled) {
     playButton.setEnabled(enabled);
     prevButton.setEnabled(enabled);
     nextButton.setEnabled(enabled);
@@ -151,7 +189,7 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
 
   @Subscribe
   public void onCurrentPlayerVolumeChanged(VolumeEvent event) {
-    Log.d(this,"onCurrentPlayerVolumeChanged...");
+    Log.d(this, "onCurrentPlayerVolumeChanged...");
     setFavoriteBtn();
     Volume volume = event.getVolume();
     volumeBar.setMax(volume.getMax());
@@ -167,17 +205,17 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
   @OnClick(R.id.play)
   public void onPlayClick() {
     switch (state) {
-      case Player.PLAYING:
+      case Player.State.PLAYING:
         Players.pause();
         break;
-      case Player.PAUSED:
+      case Player.State.PAUSED:
         Players.resume();
         break;
-      case Player.STOPPED:
+      case Player.State.STOPPED:
         //ToastUtil.show(getActivity(),currentAudio + "");
-        if (playMode == Player.MODE_NORMAL){
+        if (playMode == OldPlayer.MODE_NORMAL) {
           Players.rePlay();
-        }else{
+        } else {
           Players.play();
         }
     }
@@ -229,7 +267,8 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     favoriteBtn.setEnabled(currentAudio != null && currentAudio.canFavorite());
 
   }
-  private void setFavoriteBtn(){
+
+  private void setFavoriteBtn() {
     if (currentAudio != null) {
       if (currentAudio.canFavorite()) {
         if (FavoriteAudio.isFavorite(currentAudio)) {
@@ -276,10 +315,10 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
   public void scanResult(List<ScanResult> scanResults) {
     List<String> ssidList = DeviceUtil.filterScanResultList(scanResults);
     newDeviceCount = ssidList.size();
-    if (newDeviceCount != 0){
+    if (newDeviceCount != 0) {
       deviceNumView.setText(newDeviceCount + "");
       deviceNumView.setVisibility(View.VISIBLE);
-    }else{
+    } else {
       deviceNumView.setVisibility(View.GONE);
     }
   }

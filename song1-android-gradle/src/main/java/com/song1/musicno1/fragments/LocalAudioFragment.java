@@ -28,6 +28,7 @@ import com.song1.musicno1.models.LocalAudioStore;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.models.play.Playlist;
+import com.song1.musicno1.stores.PlayerStore;
 import com.song1.musicno1.util.ToastUtil;
 import de.akquinet.android.androlog.Log;
 
@@ -270,7 +271,7 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     Audio audio = getDataItem(position); // 为什么 header view 要影响 position????
     Playlist playlist = new Playlist(List8.newList(getDataList()), audio);
-    Players.setPlaylist(playlist);
+    Players.setPlaylist(playlist, getFragmentManager());
   }
 
   public void setAlbum(Album album) {
