@@ -10,10 +10,6 @@ import com.song1.musicno1.stores.PlayerStore;
  * Created by windless on 3/28/14.
  */
 public class Players {
-  public static void play() {
-    MainBus.post(new PlayEvent());
-  }
-
   public static void playWithAudio(Audio audio) {
     Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
     if (currentPlayer != null) {
@@ -33,10 +29,6 @@ public class Players {
     if (currentPlayer != null) {
       currentPlayer.seekTo(seekTo);
     }
-  }
-
-  public static void setPlaylist(Playlist playlist) {
-
   }
 
   public static void setPlaylist(Playlist playlist, FragmentManager fragmentManager) {
@@ -98,8 +90,5 @@ public class Players {
     if (currentPlayer != null) {
       currentPlayer.resume();
     }
-  }
-
-  public static void rePlay() {
   }
 }

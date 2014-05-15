@@ -63,6 +63,6 @@ public class MiguSongListDetailFragment extends ListFragment<Audio> implements A
   @Override
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     Playlist playlist = new Playlist(List8.newList(getDataList()), getDataItem(position));
-    Players.setPlaylist(playlist);
+    Players.setPlaylist(playlist, getFragmentManager());
   }
 }

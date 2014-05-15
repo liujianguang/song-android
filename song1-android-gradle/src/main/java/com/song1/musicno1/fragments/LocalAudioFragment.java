@@ -175,9 +175,9 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
     playAllLayout.setOnClickListener((view) -> {
       List<Audio> dataList = getDataList();
       if (dataList.size() > 0) {
-//        Random random = new Random();
-//        int randomIndex = random.nextInt(dataList.size());
-        Players.setPlaylist(new Playlist(List8.newList(dataList), dataList.get(0)));
+        Random random = new Random();
+        int randomIndex = random.nextInt(dataList.size());
+        Players.setPlaylist(new Playlist(List8.newList(dataList), dataList.get(randomIndex)), getFragmentManager());
       }
     });
     if (album == null && artist == null) {

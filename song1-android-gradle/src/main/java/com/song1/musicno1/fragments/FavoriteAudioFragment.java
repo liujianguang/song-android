@@ -1,7 +1,6 @@
 package com.song1.musicno1.fragments;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -25,7 +24,6 @@ import java.util.List;
 public class FavoriteAudioFragment extends ListFragment<Audio> implements AdapterView.OnItemClickListener {
   private Favorite favorite;
 
-
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
@@ -33,12 +31,6 @@ public class FavoriteAudioFragment extends ListFragment<Audio> implements Adapte
       setTitle(favorite.name);
     }
     getListView().setOnItemClickListener(this);
-  }
-
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View view = super.onCreateView(inflater,container,savedInstanceState);
-    return view;
   }
 
   @Override
@@ -83,7 +75,7 @@ public class FavoriteAudioFragment extends ListFragment<Audio> implements Adapte
   @Override
   public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
     Playlist playlist = new Playlist(List8.newList(getDataList()), getDataItem(i));
-    Players.setPlaylist(playlist);
+    Players.setPlaylist(playlist, getFragmentManager());
   }
 
   public void setFavorite(Favorite favorite) {

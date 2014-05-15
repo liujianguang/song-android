@@ -102,7 +102,7 @@ public class MediaContainerFragment extends ListFragment<Object> implements Adap
           .map((object) -> (Audio) object);
       Audio audio = (Audio) node;
       Playlist playlist = new Playlist(audios, audio);
-      Players.setPlaylist(playlist);
+      Players.setPlaylist(playlist, getFragmentManager());
     }
   }
 

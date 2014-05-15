@@ -194,11 +194,6 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
         Players.resume();
         break;
       case Player.State.STOPPED:
-        if (playMode == OldPlayer.MODE_NORMAL) {
-          Players.rePlay();
-        } else {
-          Players.play();
-        }
     }
   }
 

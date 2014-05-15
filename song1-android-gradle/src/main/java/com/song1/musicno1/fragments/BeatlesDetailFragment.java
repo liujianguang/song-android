@@ -63,6 +63,6 @@ public class BeatlesDetailFragment extends BaseFragment implements AdapterView.O
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     Audio audio = adapter.getDataItem(position);
     Playlist playlist = new Playlist(List8.newList(audios), audio);
-    Players.setPlaylist(playlist);
+    Players.setPlaylist(playlist, getFragmentManager());
   }
 }

@@ -92,6 +92,6 @@ public class MiguAlbumDetailFragment extends PageLoadFragment<SongInfo> implemen
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     Audio audio = adapter.getDataItem(position);
     Playlist playlist = new Playlist(List8.newList(adapter.getDataList()), audio);
-    Players.setPlaylist(playlist);
+    Players.setPlaylist(playlist, getFragmentManager());
   }
 }
