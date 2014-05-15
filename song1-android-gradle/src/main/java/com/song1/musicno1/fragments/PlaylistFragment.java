@@ -84,7 +84,7 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemClic
       public View getView(int i, View view, ViewGroup viewGroup) {
         ViewHolder holder;
         if (view == null) {
-          view = View.inflate(getActivity(), R.layout.item_text, null);
+          view = View.inflate(getActivity(), R.layout.item_playlist_item, null);
           holder = new ViewHolder();
           holder.inject(view);
           view.setTag(holder);
@@ -96,7 +96,7 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemClic
         if (audio == playingAudio) {
           holder.currentAudioImageView.setVisibility(View.VISIBLE);
         } else {
-          holder.currentAudioImageView.setVisibility(View.GONE);
+          holder.currentAudioImageView.setVisibility(View.INVISIBLE);
         }
         holder.title.setText(audio.getTitle());
 
