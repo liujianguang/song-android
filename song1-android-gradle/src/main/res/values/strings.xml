@@ -203,7 +203,7 @@
   <string name="current_player_is_occupied">当前设备已被占用</string>
   <string name="test">测试</string>
   <string name="confirm_delete">确定要删除吗？</string>
-  <string name="playAllAudios">播放所有歌曲</string>
+  <string name="playAllAudios">随机播放所有歌曲</string>
   <string name="allAudios">共%s首歌曲</string>
   <string name="randomPlay">随机播放</string>
   <string name="setting_timer">设置关闭时间</string>
@@ -264,5 +264,6 @@
     <item>X</item>
     <item>Y</item>
     <item>Z</item>
+    <item>"#"</item>
   </array>
 </resources>
