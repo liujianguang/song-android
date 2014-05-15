@@ -109,7 +109,7 @@ public class PlayService extends Service {
         if (playlist.getCurrentAudio() == null) {
           player.stop();
         } else {
-          play(new PlayEvent());
+          player.play(playlist.getCurrentAudio());
         }
       }
     });
