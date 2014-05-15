@@ -146,8 +146,11 @@ public class LocalPlayer implements Player, MediaPlayer.OnCompletionListener, Me
 
   @Override
   public int getPosition() {
-    if (mediaPlayer.isPlaying()) {
-      position = mediaPlayer.getCurrentPosition();
+    try {
+      if (mediaPlayer.isPlaying()) {
+        position = mediaPlayer.getCurrentPosition();
+      }
+    } catch (IllegalStateException ignored) {
     }
     return position;
   }

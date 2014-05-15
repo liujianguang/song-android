@@ -21,10 +21,6 @@ import com.song1.musicno1.helpers.AlbumArtHelper;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.TimeHelper;
 import com.song1.musicno1.models.LocalAudioStore;
-import com.song1.musicno1.models.events.play.CurrentPlayerEvent;
-import com.song1.musicno1.models.events.play.CurrentPlayerStateEvent;
-import com.song1.musicno1.models.events.play.PlayModeEvent;
-import com.song1.musicno1.models.events.play.PositionEvent;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.OldPlayer;
 import com.song1.musicno1.models.play.Player;
@@ -168,36 +164,6 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
     handler.removeCallbacks(positionRunnable);
   }
 
-  @Subscribe
-  public void onPositionChanged(PositionEvent event) {
-    positionSeeker.setMax(0);
-    positionSeeker.setProgress(0);
-    Audio audio = event.getAudio();
-    if (playingAudio != audio) {
-      playingAudio = audio;
-      if (playingAudio == null) {
-        Picasso.with(getActivity()).load(R.drawable.default_album_art).transform(new RoundedTransformation()).into(albumArtImageView);
-      } else {
-        AlbumArtHelper.loadAlbumArtRounded(
-            getActivity(),
-            playingAudio.getAlbumArt(localAudioStore),
-            albumArtImageView,
-            R.drawable.default_album_art
-        );
-      }
-      positionSeeker.setEnabled(event.getAudio() != null);
-    }
-
-    positionSeeker.setMax(event.getDuration());
-    positionSeeker.setProgress(event.getPosition());
-    durationView.setText(TimeHelper.milli2str(event.getDuration()));
-  }
-
-  @Subscribe
-  public void onPlayModeChanged(PlayModeEvent event) {
-    updatePlayModeBtn(event.getPlayMode());
-  }
-
   private void updatePlayModeBtn(int playMode) {
     switch (playMode) {
       case OldPlayer.MODE_NORMAL:
@@ -212,24 +178,6 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
       case OldPlayer.MODE_SHUFFLE:
         playModeBtn.setImageResource(R.drawable.ic_play_mode_random);
     }
-  }
-
-  @Subscribe
-  public void onPlayStateChanged(CurrentPlayerStateEvent event) {
-    if (event.state == OldPlayer.PLAYING) {
-      if (rotation != null) {
-        rotation.cancel();
-      }
-      newRotationAnimator();
-      rotation.start();
-    } else {
-      rotation.cancel();
-    }
-  }
-
-  @Subscribe
-  public void onCurrentPlayerChanged(CurrentPlayerEvent event) {
-    updatePlayModeBtn(event.getCurrentPlayer().getPlayMode());
   }
 
   @OnClick(R.id.album_art)

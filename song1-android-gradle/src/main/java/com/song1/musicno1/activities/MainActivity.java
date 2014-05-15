@@ -25,9 +25,7 @@ import com.song1.musicno1.helpers.ViewHelper;
 import com.song1.musicno1.models.events.ExitEvent;
 import com.song1.musicno1.models.events.play.ActivityExitEvent;
 import com.song1.musicno1.models.events.play.CurrentPlayerOccupiedEvent;
-import com.song1.musicno1.models.events.play.UpdateVolumeEvent;
 import com.song1.musicno1.models.play.Player;
-import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.services.HttpService;
 import com.song1.musicno1.services.PlayService;
 import com.song1.musicno1.services.UpnpService;
@@ -207,7 +205,6 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
   @Override
   public void onPanelExpanded(View panel) {
     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-    MainBus.post(new UpdateVolumeEvent());
   }
 
   @Override

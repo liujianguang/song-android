@@ -2,8 +2,6 @@ package com.song1.musicno1.models.play;
 
 import android.support.v4.app.FragmentManager;
 import com.song1.musicno1.fragments.DeviceFragment;
-import com.song1.musicno1.helpers.MainBus;
-import com.song1.musicno1.models.events.play.PlayEvent;
 import com.song1.musicno1.stores.PlayerStore;
 
 /**

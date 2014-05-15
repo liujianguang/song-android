@@ -11,22 +11,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.BaseAdapter;
 import com.song1.musicno1.adapter.DataAdapter;
-import com.song1.musicno1.entity.AudioGroup;
-import com.song1.musicno1.event.Event;
 import com.song1.musicno1.helpers.MainBus;
-import com.song1.musicno1.models.events.play.CurrentPlaylistEvent;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.models.play.Playlist;
 import com.song1.musicno1.stores.PlayerStore;
 import com.squareup.otto.Subscribe;
-
-import java.util.List;
 
 /**
  * Created by windless on 4/1/14.

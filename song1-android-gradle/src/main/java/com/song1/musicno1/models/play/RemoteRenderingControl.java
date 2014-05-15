@@ -1,4 +1,4 @@
-package com.song1.musicno1.models.events.play;
+package com.song1.musicno1.models.play;
 
 import com.song1.musicno1.models.play.RendererException;
 import com.song1.musicno1.models.play.RenderingControl;

@@ -99,6 +99,12 @@ public enum PlayerStore implements Player.Callback {
 
   }
 
+  public void clear() {
+    playerMap.clear();
+    currentPlayer = null;
+    localPlayer = null;
+  }
+
   /*
    ********************* events **************************
    */

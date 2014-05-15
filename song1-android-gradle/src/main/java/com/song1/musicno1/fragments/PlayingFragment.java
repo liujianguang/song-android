@@ -179,11 +179,6 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     nextButton.setEnabled(enabled);
   }
 
-  @Subscribe
-  public void onPlayModeChanged(PlayModeEvent event) {
-    playMode = event.getPlayMode();
-  }
-
   @OnClick(R.id.play)
   public void onPlayClick() {
     switch (state) {

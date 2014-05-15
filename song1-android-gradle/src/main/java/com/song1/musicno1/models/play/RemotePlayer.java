@@ -1,7 +1,6 @@
 package com.song1.musicno1.models.play;
 
 import com.google.common.base.Strings;
-import com.song1.musicno1.models.events.play.RemoteRenderingControl;
 import com.song1.musicno1.services.HttpService;
 import de.akquinet.android.androlog.Log;
 import org.cybergarage.upnp.Device;
