@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.AudioAdapter;
 import com.song1.musicno1.adapter.DataAdapter;
+import com.song1.musicno1.dialogs.MediaScannerDialog;
 import com.song1.musicno1.fragments.base.DataFragment;
 import com.song1.musicno1.helpers.List8;
 import com.song1.musicno1.models.LocalAudioStore;
@@ -37,6 +38,7 @@ public class LocalAudiosWithIndexFragment extends DataFragment<Audio> implements
 
   private int index = 0;
   protected int audiosCount;
+  private boolean isLoaded = false;
 
   @Override
   protected List<Audio> onLoad(int loadPage) {
@@ -82,22 +84,31 @@ public class LocalAudiosWithIndexFragment extends DataFragment<Audio> implements
 
   @Override
   protected void showContent() {
+    isLoaded = true;
+
     loadingView.setVisibility(View.GONE);
     listView.setVisibility(View.VISIBLE);
     indexView.setVisibility(View.VISIBLE);
     audioTotalTextView.setText(getString(R.string.allAudios, audiosCount));
+    getActivity().invalidateOptionsMenu();
   }
 
   @Override
   protected void showLoading() {
+    isLoaded = false;
     loadingView.setVisibility(View.VISIBLE);
     listView.setVisibility(View.GONE);
     indexView.setVisibility(View.GONE);
+    getActivity().invalidateOptionsMenu();
   }
 
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.local_audio, menu);
+    if (isLoaded) {
+      inflater.inflate(R.menu.local_audio, menu);
+    } else {
+      inflater.inflate(R.menu.no_menu, menu);
+    }
     super.onCreateOptionsMenu(menu, inflater);
   }
 
@@ -105,6 +116,13 @@ public class LocalAudiosWithIndexFragment extends DataFragment<Audio> implements
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.refresh:
+        MediaScannerDialog mediaScannerDialog = new MediaScannerDialog();
+        mediaScannerDialog.onDismiss((isFinish) -> {
+          if (isFinish) {
+            reload();
+          }
+        });
+        mediaScannerDialog.show(getFragmentManager(), "Scanner");
         return true;
     }
     return super.onOptionsItemSelected(item);
