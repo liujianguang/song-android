@@ -1,6 +1,8 @@
 package com.song1.musicno1.fragments;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -31,6 +33,7 @@ public class FavoriteAudioFragment extends ListFragment<Audio> implements Adapte
       setTitle(favorite.name);
     }
     getListView().setOnItemClickListener(this);
+    setHasOptionsMenu(true);
   }
 
   @Override
@@ -41,6 +44,12 @@ public class FavoriteAudioFragment extends ListFragment<Audio> implements Adapte
     } else {
       return List8.newList(favorite.audios()).map((favoriteAudio) -> favoriteAudio.toAudio());
     }
+  }
+
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.no_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
   }
 
   @Override

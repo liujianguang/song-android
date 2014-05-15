@@ -1,6 +1,8 @@
 package com.song1.musicno1.fragments;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -72,6 +74,13 @@ public class MediaContainerFragment extends ListFragment<Object> implements Adap
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     getListView().setOnItemClickListener(this);
+    setHasOptionsMenu(true);
+  }
+
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.no_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
   }
 
   @Override
