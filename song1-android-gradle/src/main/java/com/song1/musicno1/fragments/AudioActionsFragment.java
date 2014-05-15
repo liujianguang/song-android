@@ -81,8 +81,6 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
     positionSeeker.setEnabled(false);
     positionSeeker.setOnSeekBarChangeListener(this);
 
-    newRotationAnimator();
-
     updatePlayerInfo(null);
   }
 
@@ -92,8 +90,7 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
     rotation.setRepeatMode(ValueAnimator.RESTART);
     rotation.setInterpolator(new LinearInterpolator());
     rotation.setDuration(30000);
-    rotation.addUpdateListener(animation -> rotationStart = (float) animation.getAnimatedValue()
-    );
+    rotation.addUpdateListener(animation -> rotationStart = (float) animation.getAnimatedValue());
   }
 
   @Subscribe
@@ -118,7 +115,18 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
       } else {
         handler.removeCallbacks(positionRunnable);
 
-        rotation.cancel();
+        if (rotation != null) {
+          rotation.cancel();
+        }
+      }
+
+      switch (state) {
+        case Player.State.PLAYING:
+        case Player.State.PAUSED:
+          positionSeeker.setEnabled(true);
+          break;
+        default:
+          positionSeeker.setEnabled(false);
       }
     }
   }
