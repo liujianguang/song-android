@@ -1,6 +1,7 @@
 package com.song1.musicno1.models.play;
 
 import com.google.common.base.Strings;
+import com.song1.musicno1.helpers.LatestExecutor;
 import com.song1.musicno1.services.HttpService;
 import de.akquinet.android.androlog.Log;
 import org.cybergarage.upnp.Device;
@@ -8,8 +9,6 @@ import org.cybergarage.upnp.Service;
 import org.cybergarage.upnp.std.av.renderer.AVTransport;
 import org.cybergarage.upnp.std.av.renderer.RenderingControl;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 
 /**
@@ -20,17 +19,17 @@ public class RemotePlayer implements Player {
 
   protected final RemoteRenderingControl renderingControl;
   protected final Device                 device;
-  protected final ExecutorService        playExecutor;
-  protected final ExecutorService        volumeExecutors;
+  protected final LatestExecutor         playExecutor;
+  protected final LatestExecutor         volumeExecutors;
 
-  protected     RemoteRenderer renderer = null;
-  private final Object         lock     = new Object();
+  protected RemoteRenderer renderer = null;
 
   protected Playlist playlist;
   private   int      volume;
   protected int      state;
   protected Callback callback;
   protected Audio    playingAudio;
+  private   Audio    checkingPlayingAudio;
   private   int      duration;
   private   int      position;
   private   Thread   positionThread;
@@ -44,9 +43,9 @@ public class RemotePlayer implements Player {
           duration = positionInfo.getDuration();
           Log.d(this, "update position: " + position + " - " + duration);
 
-          if (playingAudio != null &&
-              playingAudio.getRemotePlayUrl() != null &&
-              !playingAudio.getRemotePlayUrl().equals(positionInfo.getUri())) {
+          if (checkingPlayingAudio != null &&
+              checkingPlayingAudio.getRemotePlayUrl() != null &&
+              !checkingPlayingAudio.getRemotePlayUrl().equals(positionInfo.getUri())) {
             setState(State.STOPPED);
             if (callback != null) {
               callback.onOccupied(this);
@@ -87,8 +86,8 @@ public class RemotePlayer implements Player {
     this.device = device;
     this.renderer = renderer;
     this.renderingControl = renderingControl;
-    playExecutor = Executors.newFixedThreadPool(1);
-    volumeExecutors = Executors.newFixedThreadPool(1);
+    playExecutor = new LatestExecutor();
+    volumeExecutors = new LatestExecutor();
     try {
       volume = renderingControl.getVolume().getCurrent();
     } catch (RendererException ignored) {
@@ -118,27 +117,27 @@ public class RemotePlayer implements Player {
 
   @Override
   public void playWithAudio(Audio audio) {
-    duration = 0;
-    position = 0;
-
-    if (audio == null) {
-      stop();
-      return;
-    }
-
-
-    if (playlist != null) {
-      playlist.setCurrentAudio(audio);
-    }
-    setPlayingAudio(audio);
-
-    setState(State.PREPARING);
-
-    if (Strings.isNullOrEmpty(audio.getRemotePlayUrl()) && audio.getFrom() == Audio.LOCAL) {
-      audio.setRemotePlayUrl(HttpService.instance().share(audio.getLocalPlayUri()));
-    }
     try {
       playExecutor.submit(() -> {
+        duration = 0;
+        position = 0;
+
+        if (audio == null) {
+          stop();
+          return;
+        }
+
+        if (playlist != null) {
+          playlist.setCurrentAudio(audio);
+        }
+
+        setPlayingAudio(audio);
+        setState(State.PREPARING);
+        checkingPlayingAudio = audio;
+
+        if (Strings.isNullOrEmpty(audio.getRemotePlayUrl()) && audio.getFrom() == Audio.LOCAL) {
+          audio.setRemotePlayUrl(HttpService.instance().share(audio.getLocalPlayUri()));
+        }
         try {
           renderer.setUri(audio.getRemotePlayUrl());
           renderer.play();
@@ -359,30 +358,26 @@ public class RemotePlayer implements Player {
   }
 
   private void stopPositionThread() {
-    synchronized (lock) {
-      if (positionThread != null) {
-        positionThread.interrupt();
-        try {
-          positionThread.join();
-        } catch (InterruptedException ignored) {
-        }
+    if (positionThread != null) {
+      positionThread.interrupt();
+      try {
+        positionThread.join();
+      } catch (InterruptedException ignored) {
       }
     }
   }
 
   private void startPositionThread() {
-    synchronized (lock) {
-      if (positionThread != null) {
-        positionThread.interrupt();
-        try {
-          positionThread.join();
-        } catch (InterruptedException ignored) {
-        }
+    if (positionThread != null) {
+      positionThread.interrupt();
+      try {
+        positionThread.join();
+      } catch (InterruptedException ignored) {
       }
-
-      positionThread = new Thread(runnable);
-      positionThread.start();
     }
+
+    positionThread = new Thread(runnable);
+    positionThread.start();
   }
 
   private void checkStatus(int completeState, CheckRunnable runnable) {

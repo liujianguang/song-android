@@ -26,7 +26,6 @@ import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.NetworkHelp;
 import com.song1.musicno1.models.WifiModel;
 import com.song1.musicno1.models.events.upnp.SearchDeviceEvent;
-import com.song1.musicno1.models.play.OldPlayer;
 import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.stores.PlayerStore;
 import com.song1.musicno1.ui.SlingUpDialog;
@@ -95,7 +94,6 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
   @Subscribe
   public void updatePlayerList(PlayerStore.PlayerListChangedEvent event) {
     List<Player> players = PlayerStore.INSTANCE.getPlayerList();
-    players.add(null);
     playerAdapter.setDataList(players);
     playerAdapter.notifyDataSetChanged();
   }
@@ -114,9 +112,7 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
           holder = (ViewHolder) view.getTag();
         }
 
-        Player player = getDataItem(i);
-
-        if (player == null) {
+        if (i == getCount() - 1) {
           holder.imageView.setImageResource(R.drawable.addnewdevice_ic_butoon_normal);
           holder.textView.setTextColor(Color.WHITE);
           holder.textView.setText(getString(R.string.newDevice));
@@ -128,6 +124,7 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
             holder.deviceNumView.setVisibility(View.GONE);
           }
         } else {
+          Player player = getDataItem(i);
           String[] strArr = player.getName().split("-");
           String name = strArr[0].trim();
           int imgNormalResId = R.drawable.systemdefault_ic_butoon_nor;
@@ -155,6 +152,11 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
           holder.deviceNumView.setVisibility(View.GONE);
         }
         return view;
+      }
+
+      @Override
+      public int getCount() {
+        return super.getCount() + 1;
       }
     };
   }
@@ -199,12 +201,11 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
 
   @Override
   public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-    Player player = playerAdapter.getDataItem(i);
-    if (player == null) {
+    if (i == playerAdapter.getCount() - 1) {
       DeviceListDialog deviceListDialog = new DeviceListDialog();
       deviceListDialog.show(getFragmentManager(), "deviceListDialog");
     } else {
-      currentPlayer = player;
+      currentPlayer = playerAdapter.getDataItem(i);
       PlayerStore.INSTANCE.setCurrentPlayer(currentPlayer);
       playerAdapter.notifyDataSetChanged();
       handler.postDelayed(() -> dismiss(), 300);

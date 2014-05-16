@@ -141,9 +141,6 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
       playingAudio = currentPlayer.getPlayingAudio();
       if (playingAudio == null) {
         Picasso.with(getActivity()).load(R.drawable.default_album_art).transform(new RoundedTransformation()).into(albumArtImageView);
-        positionSeeker.setMax(0);
-        positionSeeker.setProgress(0);
-        durationView.setText(TimeHelper.secondToString(0));
       } else {
         AlbumArtHelper.loadAlbumArtRounded(
             getActivity(),
@@ -152,6 +149,10 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
             R.drawable.default_album_art
         );
       }
+      positionSeeker.setMax(0);
+      positionSeeker.setProgress(0);
+      durationView.setText(TimeHelper.secondToString(0));
+
       positionSeeker.setEnabled(playingAudio != null);
     }
   }
