@@ -17,13 +17,14 @@ public class LocalPlayer implements Player, MediaPlayer.OnCompletionListener, Me
   protected final MediaPlayer     mediaPlayer;
   protected final ExecutorService executor;
   protected final Context         context;
-  protected final AudioManager audioManager;
-  protected Playlist playlist;
-  protected int      state;
-  protected Callback callback;
-  protected Audio    playingAudio;
-  protected int      position;
-  protected int      duration;
+  protected final AudioManager    audioManager;
+  protected       Playlist        playlist;
+  protected       int             state;
+  protected       Callback        callback;
+  protected       Audio           playingAudio;
+  protected       int             position;
+  protected       int             duration;
+  protected       int             playMode;
 
   public LocalPlayer(Context context) {
     this.context = context;
@@ -69,7 +70,7 @@ public class LocalPlayer implements Player, MediaPlayer.OnCompletionListener, Me
     if (playlist != null) {
       playlist.setCurrentAudio(audio);
     }
-    
+
     setPlayingAudio(audio);
     setState(State.PREPARING);
     try {
@@ -121,7 +122,7 @@ public class LocalPlayer implements Player, MediaPlayer.OnCompletionListener, Me
   @Override
   public void next() {
     if (playlist != null) {
-      playlist.next(0);
+      playlist.next(playMode);
       playWithAudio(playlist.getCurrentAudio());
     }
   }
@@ -129,7 +130,7 @@ public class LocalPlayer implements Player, MediaPlayer.OnCompletionListener, Me
   @Override
   public void previous() {
     if (playlist != null) {
-      playlist.previous();
+      playlist.previous(playMode);
       playWithAudio(playlist.getCurrentAudio());
     }
   }
@@ -205,6 +206,23 @@ public class LocalPlayer implements Player, MediaPlayer.OnCompletionListener, Me
       setVolume = 0;
     }
     setVolume(setVolume, showPanel);
+  }
+
+  @Override
+  public void setPlayMode(int playMode) {
+    this.playMode = playMode;
+  }
+
+  @Override
+  public int getPlayMode() {
+    return playMode;
+  }
+
+  @Override
+  public void nextPlayMode() {
+    int index = PlayMode.MODES.indexOf(playMode);
+    index = (index + 1) % PlayMode.MODES.size();
+    playMode = PlayMode.MODES.get(index);
   }
 
   private void setState(int state) {

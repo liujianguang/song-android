@@ -21,7 +21,7 @@ public class RemotePlayer implements Player {
   protected final RemoteRenderingControl renderingControl;
   protected final Device                 device;
   protected final ExecutorService        playExecutor;
-  protected final ExecutorService volumeExecutors;
+  protected final ExecutorService        volumeExecutors;
 
   protected     RemoteRenderer renderer = null;
   private final Object         lock     = new Object();
@@ -72,6 +72,7 @@ public class RemotePlayer implements Player {
       }
     }
   };
+  protected int playMode;
 
   public static RemotePlayer newInstance(Device device) {
     Service av = device.getService(AVTransport.SERVICE_TYPE);
@@ -234,7 +235,7 @@ public class RemotePlayer implements Player {
   @Override
   public void next() {
     if (playlist != null) {
-      playlist.next(0);
+      playlist.next(playMode);
       playWithAudio(playlist.getCurrentAudio());
     }
   }
@@ -242,7 +243,7 @@ public class RemotePlayer implements Player {
   @Override
   public void previous() {
     if (playlist != null) {
-      playlist.previous();
+      playlist.previous(playMode);
       playWithAudio(playlist.getCurrentAudio());
     }
   }
@@ -312,6 +313,23 @@ public class RemotePlayer implements Player {
       volume = 0;
     }
     setVolume(volume, false);
+  }
+
+  @Override
+  public void setPlayMode(int playMode) {
+    this.playMode = playMode;
+  }
+
+  @Override
+  public int getPlayMode() {
+    return playMode;
+  }
+
+  @Override
+  public void nextPlayMode() {
+    int index = PlayMode.MODES.indexOf(playMode);
+    index = (index + 1) % PlayMode.MODES.size();
+    playMode = PlayMode.MODES.get(index);
   }
 
   private void setState(int state) {

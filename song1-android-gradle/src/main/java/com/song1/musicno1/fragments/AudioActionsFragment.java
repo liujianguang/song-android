@@ -91,8 +91,17 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
 
   @Subscribe
   public void updatePlayerInfo(PlayerStore.CurrentPlayerChangedEvent event) {
-    updatePlayerState(null);
-    updatePlayingAudio(null);
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+
+    if (currentPlayer == null) {
+      playModeBtn.setVisibility(View.GONE);
+      positionSeeker.setEnabled(false);
+      Picasso.with(getActivity()).load(R.drawable.default_album_art).transform(new RoundedTransformation()).into(albumArtImageView);
+    } else {
+      updatePlayerState(null);
+      updatePlayingAudio(null);
+      updatePlayMode();
+    }
   }
 
   @Subscribe
@@ -164,19 +173,25 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
     handler.removeCallbacks(positionRunnable);
   }
 
-  private void updatePlayModeBtn(int playMode) {
-    switch (playMode) {
-      case OldPlayer.MODE_NORMAL:
-        playModeBtn.setImageResource(R.drawable.ic_play_mode_normal);
-        break;
-      case OldPlayer.MODE_REPEAT_ALL:
-        playModeBtn.setImageResource(R.drawable.ic_play_mode_repeat_all);
-        break;
-      case OldPlayer.MODE_REPEAT_ONE:
-        playModeBtn.setImageResource(R.drawable.ic_play_mode_repeat_one);
-        break;
-      case OldPlayer.MODE_SHUFFLE:
-        playModeBtn.setImageResource(R.drawable.ic_play_mode_random);
+  private void updatePlayMode() {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (currentPlayer != null) {
+      playModeBtn.setVisibility(View.VISIBLE);
+
+      int playMode = currentPlayer.getPlayMode();
+      switch (playMode) {
+        case Player.PlayMode.NORMAL:
+          playModeBtn.setImageResource(R.drawable.ic_play_mode_normal);
+          break;
+        case Player.PlayMode.REPEAT_ALL:
+          playModeBtn.setImageResource(R.drawable.ic_play_mode_repeat_all);
+          break;
+        case Player.PlayMode.REPEAT_ONE:
+          playModeBtn.setImageResource(R.drawable.ic_play_mode_repeat_one);
+          break;
+        case Player.PlayMode.SHUFFLE:
+          playModeBtn.setImageResource(R.drawable.ic_play_mode_random);
+      }
     }
   }
 
@@ -207,5 +222,6 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
   @OnClick(R.id.play_mode)
   public void onPlayModeClick() {
     Players.nextPlayMode();
+    updatePlayMode();
   }
 }

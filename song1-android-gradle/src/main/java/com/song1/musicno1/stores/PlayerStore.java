@@ -75,7 +75,7 @@ public enum PlayerStore implements Player.Callback {
   public void onCompletion(Player player, boolean isError) {
     Playlist playlist = player.getPlaylist();
     if (playlist != null) {
-      playlist.autoNext(OldPlayer.MODE_NORMAL);
+      playlist.autoNext(player.getPlayMode());
       player.playWithAudio(playlist.getCurrentAudio());
     }
   }

@@ -81,6 +81,10 @@ public class Players {
   }
 
   public static void nextPlayMode() {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (currentPlayer != null) {
+      currentPlayer.nextPlayMode();
+    }
   }
 
   public static void resume() {

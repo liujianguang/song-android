@@ -1,9 +1,7 @@
 package com.song1.musicno1.models.play;
 
-import com.google.common.collect.Lists;
 import com.song1.musicno1.helpers.List8;
 
-import java.util.LinkedList;
 import java.util.Random;
 
 /**
@@ -12,7 +10,6 @@ import java.util.Random;
 public class Playlist {
   protected List8<Audio> audios;
   protected Audio        currentAudio;
-  protected LinkedList<Audio> historyStack = Lists.newLinkedList();
 
   public Playlist() {
   }
@@ -25,7 +22,7 @@ public class Playlist {
   public void next(int playMode) {
     if (audios.size() == 0) return;
 
-    if (playMode != OldPlayer.MODE_SHUFFLE) {
+    if (playMode != Player.PlayMode.SHUFFLE) {
       int i = audios.indexOf(currentAudio);
       i++;
       if (i >= audios.size()) {
@@ -58,31 +55,38 @@ public class Playlist {
     int i = audios.indexOf(currentAudio);
     i++;
     switch (playMode) {
-      case OldPlayer.MODE_NORMAL:
+      case Player.PlayMode.NORMAL:
         if (i >= audios.size()) {
           currentAudio = null;
         } else {
           setCurrentAudio(audios.get(i));
         }
         break;
-      case OldPlayer.MODE_REPEAT_ALL:
+      case Player.PlayMode.REPEAT_ALL:
         if (i >= audios.size()) {
           i = 0;
         }
         setCurrentAudio(audios.get(i));
         break;
-      case OldPlayer.MODE_SHUFFLE:
+      case Player.PlayMode.SHUFFLE:
         randomNext();
     }
   }
 
-  public void previous() {
-    if (historyStack.size() == 0) {
-      currentAudio = null;
+  public void previous(int playMode) {
+    if (playMode == Player.PlayMode.SHUFFLE) {
+      randomNext();
     } else {
-      currentAudio = historyStack.pop();
+      int i = audios.indexOf(currentAudio);
+      i--;
+      if (i < 0) {
+        i = audios.size() - 1;
+      }
+      Audio audio = audios.get(i);
+      if (audio != null) {
+        setCurrentAudio(audio);
+      }
     }
-
   }
 
   public Audio getCurrentAudio() {
@@ -90,9 +94,6 @@ public class Playlist {
   }
 
   public void setCurrentAudio(Audio audio) {
-    if (currentAudio != null) {
-      historyStack.addFirst(currentAudio);
-    }
     currentAudio = audio;
   }
 

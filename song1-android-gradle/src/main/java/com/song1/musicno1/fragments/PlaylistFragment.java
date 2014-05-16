@@ -21,14 +21,15 @@ import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.models.play.Playlist;
 import com.song1.musicno1.stores.PlayerStore;
 import com.squareup.otto.Subscribe;
+import de.akquinet.android.androlog.Log;
 
 /**
  * Created by windless on 4/1/14.
  */
 public class PlaylistFragment extends Fragment implements AdapterView.OnItemClickListener {
-  protected Playlist                       playlist;
-  private   DataAdapter<Audio>             audiosAdapter;
-  private   Audio                          playingAudio;
+  protected Playlist           playlist;
+  private   DataAdapter<Audio> audiosAdapter;
+  private   Audio              playingAudio;
 
   @InjectView(R.id.list) ListView listView;
 
