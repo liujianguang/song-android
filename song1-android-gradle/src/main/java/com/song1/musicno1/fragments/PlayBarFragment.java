@@ -15,6 +15,7 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import com.google.common.base.Strings;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.dialogs.TimerDialog;
@@ -164,11 +165,21 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
         topSubtitleView.setText("");
         Picasso.with(getActivity()).load(R.drawable.default_album_art_small).transform(new RoundedTransformation()).into(albumArtImageView);
       } else {
+        String artist = playingAudio.getArtist();
+        if (Strings.isNullOrEmpty(artist)) {
+          artist = getString(R.string.unknown);
+        }
+
+        String album = playingAudio.getAlbum();
+        if (Strings.isNullOrEmpty(album)) {
+          album = getString(R.string.unknown);
+        }
+
         bottomTitleView.setText(playingAudio.getTitle());
-        bottomSubtitleView.setText(playingAudio.getArtist() + " - " + playingAudio.getAlbum());
+        bottomSubtitleView.setText(artist + " - " + album);
 
         topTitleView.setText(playingAudio.getTitle());
-        topSubtitleView.setText(playingAudio.getArtist() + " - " + playingAudio.getAlbum());
+        topSubtitleView.setText(artist + " - " + album);
         AlbumArtHelper.loadAlbumArtRounded(
             getActivity(),
             playingAudio.getAlbumArt(localAudioStore),

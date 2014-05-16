@@ -39,7 +39,9 @@ public enum PlayerStore implements Player.Callback {
   }
 
   public void removePlayerById(String id) {
+    Log.d(this, "Try to remove " + id);
     if (playerMap.containsKey(id)) {
+      Log.d(this, "Removed " + id);
       Player player = playerMap.remove(id);
       player.release();
     }

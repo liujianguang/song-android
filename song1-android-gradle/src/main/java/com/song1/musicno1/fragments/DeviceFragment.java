@@ -90,7 +90,6 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
     gridView.setAdapter(playerAdapter);
     gridView.setOnItemClickListener(this);
 
-    updatePlayerList(null);
   }
 
   @Subscribe
@@ -171,6 +170,8 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
       }
     }).onDisconnected(() -> currentNetworkView.setText(R.string.not_network))
         .register(getActivity());
+
+    updatePlayerList(null);
   }
 
   @Override
