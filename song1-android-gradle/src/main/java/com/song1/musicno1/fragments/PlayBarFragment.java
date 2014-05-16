@@ -26,6 +26,7 @@ import com.song1.musicno1.models.WifiModel;
 import com.song1.musicno1.models.events.play.TimerEvent;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Player;
+import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.stores.PlayerStore;
 import com.song1.musicno1.ui.IocTextView;
 import com.song1.musicno1.util.DeviceUtil;
@@ -204,18 +205,15 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
 
   @OnClick(R.id.bottom_play)
   public void onPlayButtonClick() {
-    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
-
-    if (currentPlayer == null) return;
-
     switch (state) {
       case Player.State.PLAYING:
-        currentPlayer.pause();
+        Players.pause();
         break;
       case Player.State.PAUSED:
-        currentPlayer.resume();
+        Players.resume();
         break;
       case Player.State.STOPPED:
+        Players.play();
     }
   }
 

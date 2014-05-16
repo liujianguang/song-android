@@ -1,6 +1,5 @@
 package com.song1.musicno1.activities;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -17,6 +16,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.song1.musicno1.App;
 import com.song1.musicno1.R;
+import com.song1.musicno1.dialogs.AlertDialog;
 import com.song1.musicno1.dialogs.PromptDialog;
 import com.song1.musicno1.event.Event;
 import com.song1.musicno1.fragments.*;
@@ -106,12 +106,10 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
 
   @Subscribe
   public void onCurrentPlayerOccupied(CurrentPlayerOccupiedEvent event) {
-    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setMessage(R.string.current_player_is_occupied);
-    builder.setTitle(R.string.notice);
-    builder.setNegativeButton(android.R.string.ok, (dialog, which) -> {
-    });
-    builder.create().show();
+    AlertDialog dialog = new AlertDialog();
+    dialog.setMessage(getString(R.string.current_player_is_occupied));
+    dialog.setTitle(getString(R.string.notice));
+    dialog.show(getSupportFragmentManager(), "alert");
   }
 
   @Override

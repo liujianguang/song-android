@@ -93,4 +93,14 @@ public class Players {
       currentPlayer.resume();
     }
   }
+
+  public static void play() {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (currentPlayer != null) {
+      Playlist playlist = currentPlayer.getPlaylist();
+      if (playlist != null) {
+        currentPlayer.playWithAudio(playlist.getCurrentAudio());
+      }
+    }
+  }
 }

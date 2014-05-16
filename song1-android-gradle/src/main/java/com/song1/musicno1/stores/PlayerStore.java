@@ -3,8 +3,8 @@ package com.song1.musicno1.stores;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.song1.musicno1.helpers.MainBus;
+import com.song1.musicno1.models.events.play.CurrentPlayerOccupiedEvent;
 import com.song1.musicno1.models.play.Audio;
-import com.song1.musicno1.models.play.OldPlayer;
 import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.play.Playlist;
 import de.akquinet.android.androlog.Log;
@@ -96,7 +96,9 @@ public enum PlayerStore implements Player.Callback {
 
   @Override
   public void onOccupied(Player player) {
-
+    if (player == currentPlayer) {
+      MainBus.post(new CurrentPlayerOccupiedEvent());
+    }
   }
 
   public void clear() {

@@ -189,6 +189,7 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
         Players.resume();
         break;
       case Player.State.STOPPED:
+        Players.play();
     }
   }
 
