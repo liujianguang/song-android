@@ -73,8 +73,6 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
     localAudioStore = new LocalAudioStore(getActivity());
     positionSeeker.setEnabled(false);
     positionSeeker.setOnSeekBarChangeListener(this);
-
-    updatePlayerInfo(null);
   }
 
   private void newRotationAnimator() {
@@ -168,6 +166,7 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
   public void onResume() {
     super.onResume();
     MainBus.register(this);
+    updatePlayerInfo(null);
   }
 
   @Override

@@ -46,8 +46,6 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemClic
     audiosAdapter = newAdapter();
     listView.setAdapter(audiosAdapter);
     listView.setOnItemClickListener(this);
-
-    updatePlayerInfo(null);
   }
 
   @Subscribe
@@ -110,6 +108,7 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemClic
   public void onResume() {
     super.onResume();
     MainBus.register(this);
+    updatePlayerInfo(null);
   }
 
   @Override

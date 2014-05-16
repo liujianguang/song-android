@@ -143,6 +143,9 @@ public class RemotePlayer implements Player {
           renderer.setUri(audio.getRemotePlayUrl());
           renderer.play();
           checkStatus(State.PLAYING, () -> !renderer.isPlaying());
+          if (state == State.STOPPED) {
+            stop();
+          }
         } catch (RendererException e) {
           setState(State.STOPPED);
           error();

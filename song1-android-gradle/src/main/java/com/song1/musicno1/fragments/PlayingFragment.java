@@ -71,8 +71,6 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     wifiModel = new WifiModel(getActivity());
     wifiModel.setScanListener(this);
     wifiModel.scan();
-
-    updatePlayerInfo(null);
   }
 
   public void updateVolume() {
@@ -170,6 +168,7 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
   public void onResume() {
     super.onResume();
     MainBus.register(this);
+    updatePlayerInfo(null);
   }
 
   @Override

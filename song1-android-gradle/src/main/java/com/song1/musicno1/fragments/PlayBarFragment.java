@@ -88,8 +88,6 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
     wifiModel = new WifiModel(getActivity());
     wifiModel.setScanListener(this);
     wifiModel.scan();
-
-    updatePlayerInfo(null);
   }
 
   @Subscribe
@@ -192,6 +190,7 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
   public void onResume() {
     super.onResume();
     MainBus.register(this);
+    updatePlayerInfo(null);
   }
 
   @Override

@@ -60,7 +60,6 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
     super.onCreate(savedInstanceState);
     Log.init();
     App.inject(this);
-    MainBus.register(this);
 
     setContentView(R.layout.activity_main);
     ButterKnife.inject(this);
@@ -98,10 +97,21 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
   }
 
   @Override
+  protected void onStart() {
+    super.onStart();
+    MainBus.register(this);
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+    MainBus.unregister(this);
+  }
+
+  @Override
   protected void onDestroy() {
     super.onDestroy();
     MainBus.post(new ActivityExitEvent());
-    MainBus.unregister(this);
     Log.d(this, "Main activity destroyed");
   }
 
