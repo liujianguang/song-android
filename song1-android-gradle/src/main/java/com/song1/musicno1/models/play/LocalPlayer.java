@@ -13,7 +13,7 @@ import java.util.concurrent.RejectedExecutionException;
 /**
  * Created by windless on 14-5-14.
  */
-public class LocalPlayer implements Player, MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnSeekCompleteListener {
+public class LocalPlayer implements Player, MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnSeekCompleteListener, MediaPlayer.OnErrorListener {
   protected final MediaPlayer     mediaPlayer;
   protected final ExecutorService executor;
   protected final Context         context;
@@ -25,6 +25,7 @@ public class LocalPlayer implements Player, MediaPlayer.OnCompletionListener, Me
   protected       int             position;
   protected       int             duration;
   protected       int             playMode;
+  protected       boolean         isError;
 
   public LocalPlayer(Context context) {
     this.context = context;
@@ -32,6 +33,7 @@ public class LocalPlayer implements Player, MediaPlayer.OnCompletionListener, Me
     mediaPlayer.setOnCompletionListener(this);
     mediaPlayer.setOnSeekCompleteListener(this);
     mediaPlayer.setOnPreparedListener(this);
+    mediaPlayer.setOnErrorListener(this);
     executor = Executors.newFixedThreadPool(1);
     audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
   }
@@ -59,6 +61,7 @@ public class LocalPlayer implements Player, MediaPlayer.OnCompletionListener, Me
 
   @Override
   public void playWithAudio(Audio audio) {
+    isError = false;
     if (audio == null) {
       duration = 0;
       position = 0;
@@ -241,9 +244,9 @@ public class LocalPlayer implements Player, MediaPlayer.OnCompletionListener, Me
 
   @Override
   public void onCompletion(MediaPlayer mediaPlayer) {
+    setState(State.STOPPED);
     if (callback != null) {
-      boolean noError = false;
-      callback.onCompletion(this, noError);
+      callback.onCompletion(this, isError);
     }
   }
 
@@ -258,5 +261,11 @@ public class LocalPlayer implements Player, MediaPlayer.OnCompletionListener, Me
   public void onSeekComplete(MediaPlayer mediaPlayer) {
     mediaPlayer.start();
     setState(State.PLAYING);
+  }
+
+  @Override
+  public boolean onError(MediaPlayer mediaPlayer, int what, int extra) {
+    isError = true;
+    return false;
   }
 }

@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.song1.musicno1.App;
@@ -239,6 +240,11 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
 
   public void showPlayBar() {
     playingSectionView.setVisibility(View.VISIBLE);
+  }
+
+  @Subscribe
+  public void onPlayError(PlayerStore.PlayErrorEvent event) {
+    Toast.makeText(this, getString(R.string.invalid_audio, event.getAudio().getTitle()), Toast.LENGTH_LONG).show();
   }
 
   @Subscribe

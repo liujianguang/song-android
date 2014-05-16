@@ -73,10 +73,14 @@ public enum PlayerStore implements Player.Callback {
 
   @Override
   public void onCompletion(Player player, boolean isError) {
-    Playlist playlist = player.getPlaylist();
-    if (playlist != null) {
-      playlist.autoNext(player.getPlayMode());
-      player.playWithAudio(playlist.getCurrentAudio());
+    if (isError) {
+      MainBus.post(new PlayErrorEvent(player.getPlayingAudio()));
+    } else {
+      Playlist playlist = player.getPlaylist();
+      if (playlist != null) {
+        playlist.autoNext(player.getPlayMode());
+        player.playWithAudio(playlist.getCurrentAudio());
+      }
     }
   }
 
@@ -127,5 +131,17 @@ public enum PlayerStore implements Player.Callback {
   }
 
   public static class PlayerModeChangedEvent {
+  }
+
+  public class PlayErrorEvent {
+    protected final Audio audio;
+
+    public PlayErrorEvent(Audio audio) {
+      this.audio = audio;
+    }
+
+    public Audio getAudio() {
+      return audio;
+    }
   }
 }

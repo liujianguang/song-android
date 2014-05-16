@@ -143,9 +143,9 @@ public class RemotePlayer implements Player {
           renderer.setUri(audio.getRemotePlayUrl());
           renderer.play();
           checkStatus(State.PLAYING, () -> !renderer.isPlaying());
-          setState(State.PLAYING);
         } catch (RendererException e) {
           setState(State.STOPPED);
+          error();
         }
       });
     } catch (RejectedExecutionException ignored) {
@@ -395,12 +395,18 @@ public class RemotePlayer implements Player {
       }
       if (i > TIMEOUT) {
         setState(State.STOPPED);
+        error();
       } else {
         setState(completeState);
       }
     } catch (RendererException e) {
       setState(State.STOPPED);
+      error();
     }
+  }
+
+  private void error() {
+    if (callback != null) callback.onCompletion(this, true);
   }
 
   private boolean checkPosition(int seekTo) {

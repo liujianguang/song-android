@@ -128,10 +128,12 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
       favoriteBtn.setEnabled(false);
     } else {
       favoriteBtn.setEnabled(currentAudio.canFavorite());
-      if (FavoriteAudio.isFavorite(currentAudio)) {
-        favoriteBtn.setImageResource(R.drawable.ic_red_heat_added);
-      } else {
-        favoriteBtn.setImageResource(R.drawable.ic_red_heart);
+      if (currentAudio.canFavorite()) {
+        if (FavoriteAudio.isFavorite(currentAudio)) {
+          favoriteBtn.setImageResource(R.drawable.ic_red_heat_added);
+        } else {
+          favoriteBtn.setImageResource(R.drawable.ic_red_heart);
+        }
       }
     }
   }
