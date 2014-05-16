@@ -16,7 +16,7 @@ import java.util.concurrent.RejectedExecutionException;
  * Created by windless on 14-5-14.
  */
 public class RemotePlayer implements Player {
-  private final static int TIMEOUT = 20;
+  private final static int TIMEOUT = 10;
 
   protected final RemoteRenderingControl renderingControl;
   protected final Device                 device;
@@ -391,7 +391,7 @@ public class RemotePlayer implements Player {
       while (i <= TIMEOUT && state == State.PREPARING && runnable.check()) {
         i++;
         try {
-          Thread.sleep(500);
+          Thread.sleep(1000);
         } catch (InterruptedException e) {
           return;
         }
