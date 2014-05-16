@@ -125,4 +125,7 @@ public enum PlayerStore implements Player.Callback {
 
   public class CurrentPlayerChangedEvent {
   }
+
+  public static class PlayerModeChangedEvent {
+  }
 }

@@ -2,7 +2,6 @@ package com.song1.musicno1.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,14 +16,13 @@ import com.song1.musicno1.R;
 import com.song1.musicno1.dialogs.FavoritesDialog;
 import com.song1.musicno1.dialogs.PromptDialog;
 import com.song1.musicno1.entity.AudioGroup;
-import com.song1.musicno1.event.Event;
-import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.TimeHelper;
 import com.song1.musicno1.models.FavoriteAudio;
 import com.song1.musicno1.models.LocalAudioStore;
 import com.song1.musicno1.models.play.Audio;
+import com.song1.musicno1.models.play.Player;
+import com.song1.musicno1.stores.PlayerStore;
 import com.song1.musicno1.util.Global;
-import com.song1.musicno1.util.ToastUtil;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
@@ -40,7 +38,6 @@ public class AudioAdapter extends DataAdapter<Audio> {
   LocalAudioStore localAudioStore;
 
   protected Audio selectedAudio;
-  Fragment fragment;
 
   FragmentActivity activity;
 
@@ -48,10 +45,6 @@ public class AudioAdapter extends DataAdapter<Audio> {
     super(context);
     activity = (FragmentActivity) context;
     localAudioStore = new LocalAudioStore(context);
-  }
-
-  public void setFragment(Fragment fragment) {
-    this.fragment = fragment;
   }
 
   private Map<String, Integer> mapGroupPosition = Maps.newHashMap();
@@ -127,20 +120,19 @@ public class AudioAdapter extends DataAdapter<Audio> {
       holder.redHeartBtn.setTag(audio);
       holder.title.setText(audio.getTitle());
       holder.art.setText(audio.getArtist() + "-" + audio.getAlbum());
-      holder.currentImageView.setVisibility(View.GONE);
 
-      if (audio == playingAudio) {
+      if (audio.isEqual(playingAudio)) {
         holder.currentImageView.setVisibility(View.VISIBLE);
+      } else {
+        holder.currentImageView.setVisibility(View.GONE);
       }
 
       if (selectedAudio == audio) {
         holder.menu.setVisibility(View.VISIBLE);
-        Drawable drawableNormal = context.getResources().getDrawable(R.drawable.ic_heart_normal);
-        Drawable drawableChoose = context.getResources().getDrawable(R.drawable.ic_heart_choose);
         if (FavoriteAudio.isFavorite(audio)) {
-          holder.redHeartBtn.setCompoundDrawablesWithIntrinsicBounds(null, drawableChoose, null, null);
+          holder.redHeartBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_choose, 0, 0);
         } else {
-          holder.redHeartBtn.setCompoundDrawablesWithIntrinsicBounds(null, drawableNormal, null, null);
+          holder.redHeartBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_normal, 0, 0);
         }
       } else {
         holder.menu.setVisibility(View.GONE);
@@ -149,13 +141,17 @@ public class AudioAdapter extends DataAdapter<Audio> {
     return view;
   }
 
-  static Audio playingAudio;
+  private Audio playingAudio;
 
   @Subscribe
-  public void playingAudio(Event.PlayingAudioEvent event) {
-    playingAudio = event.getAudio();
+  public void updatePlayingAudio(PlayerStore.PlayerPlayingAudioChangedEvent event) {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (currentPlayer != null) {
+      playingAudio = currentPlayer.getPlayingAudio();
+    } else {
+      playingAudio = null;
+    }
     notifyDataSetChanged();
-    ///ToastUtil.show(context,"audio : " + playingAudio);
   }
 
   @Override
@@ -185,7 +181,6 @@ public class AudioAdapter extends DataAdapter<Audio> {
     @InjectView(R.id.menu_btn)              ImageButton menuBtn;
     @InjectView(R.id.red_heart)             Button      redHeartBtn;
     @InjectView(R.id.add_to)                Button      addToBtn;
-    //@InjectView(R.id.tune)      ImageView   tuneImg;
     @InjectView(R.id.art)                   TextView    art;
     @InjectView(R.id.currentAudioImageView) ImageView   currentImageView;
 
@@ -231,7 +226,6 @@ public class AudioAdapter extends DataAdapter<Audio> {
     public void lookInfo(View view) {
       if (context instanceof FragmentActivity) {
         FragmentActivity activity = (FragmentActivity) context;
-//        if (detailDialog == null){
         detailDialog = new PromptDialog(context);
         detailViewHolder = new AudioDetailViewHolder();
         detailDialog.setTitle(R.string.songInfo);
@@ -239,7 +233,6 @@ public class AudioAdapter extends DataAdapter<Audio> {
         detailDialog.setConfirmText(R.string.update);
         detailDialog.setClickListener(detailViewHolder);
         detailDialog.setCustomView(detailViewHolder.view);
-//        }
         detailViewHolder.setData(audio);
         detailDialog.show(activity.getSupportFragmentManager(), "AudioDetail");
       }
@@ -248,7 +241,6 @@ public class AudioAdapter extends DataAdapter<Audio> {
 
     @OnClick(R.id.delete)
     public void delete(View view) {
-      //ToastUtil.show(context, audio.getLocalPlayUri());
       FragmentActivity activity = (FragmentActivity) context;
       PromptDialog dialog = new PromptDialog(context);
       dialog.setTitle(R.string.notice)
@@ -257,16 +249,14 @@ public class AudioAdapter extends DataAdapter<Audio> {
             @Override
             public void onClick(View view) {
               if (localAudioStore.deleteAudio(audio)) {
-                //ToastUtil.show(context,"删除成功!");
                 remove(audio);
               } else {
-                //ToastUtil.show(context,"删除失败!");
               }
               notifyDataSetChanged();
               dialog.dismiss();
             }
           });
-      dialog.show(activity.getSupportFragmentManager(),"deleteDialog");
+      dialog.show(activity.getSupportFragmentManager(), "deleteDialog");
     }
 
     private void showFavoritesDialog(Audio audio) {

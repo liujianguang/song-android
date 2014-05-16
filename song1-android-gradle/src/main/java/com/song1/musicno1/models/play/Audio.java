@@ -126,4 +126,9 @@ public class Audio {
   public void setSize(long size) {
     this.size = size;
   }
+
+  public boolean isEqual(Audio audio) {
+    return audio != null && id.equals(audio.getId()) && from == audio.from;
+
+  }
 }

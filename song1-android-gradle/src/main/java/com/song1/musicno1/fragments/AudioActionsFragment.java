@@ -100,7 +100,7 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
     } else {
       updatePlayerState(null);
       updatePlayingAudio(null);
-      updatePlayMode();
+      updatePlayMode(null);
     }
   }
 
@@ -173,7 +173,8 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
     handler.removeCallbacks(positionRunnable);
   }
 
-  private void updatePlayMode() {
+  @Subscribe
+  public void updatePlayMode(PlayerStore.PlayerModeChangedEvent event) {
     Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
     if (currentPlayer != null) {
       playModeBtn.setVisibility(View.VISIBLE);
@@ -222,6 +223,6 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
   @OnClick(R.id.play_mode)
   public void onPlayModeClick() {
     Players.nextPlayMode();
-    updatePlayMode();
+    updatePlayMode(null);
   }
 }

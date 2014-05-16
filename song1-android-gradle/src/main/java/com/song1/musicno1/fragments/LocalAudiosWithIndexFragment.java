@@ -14,6 +14,7 @@ import com.song1.musicno1.adapter.DataAdapter;
 import com.song1.musicno1.dialogs.MediaScannerDialog;
 import com.song1.musicno1.fragments.base.DataFragment;
 import com.song1.musicno1.helpers.List8;
+import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.LocalAudioStore;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Players;
@@ -21,7 +22,6 @@ import com.song1.musicno1.models.play.Playlist;
 import com.song1.musicno1.util.AudioUtil;
 
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by windless on 14-5-15.
@@ -71,14 +71,25 @@ public class LocalAudiosWithIndexFragment extends DataFragment<Audio> implements
     indexView.setText(sb.toString());
 
     setHasOptionsMenu(true);
+    MainBus.register(audioAdapter);
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    audioAdapter.updatePlayingAudio(null);
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    MainBus.unregister(audioAdapter);
   }
 
   public void playAll() {
     List<Audio> dataList = getDataList();
     if (dataList.size() > 0) {
-      Random random = new Random();
-      int randomIndex = random.nextInt(dataList.size());
-      Players.setPlaylist(new Playlist(List8.newList(dataList), dataList.get(randomIndex)), getFragmentManager());
+      Players.randomPlay(new Playlist(List8.newList(dataList), dataList.get(0)), getFragmentManager());
     }
   }
 

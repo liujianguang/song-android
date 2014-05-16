@@ -2,6 +2,7 @@ package com.song1.musicno1.models.play;
 
 import android.support.v4.app.FragmentManager;
 import com.song1.musicno1.fragments.DeviceFragment;
+import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.stores.PlayerStore;
 
 /**
@@ -101,6 +102,28 @@ public class Players {
       if (playlist != null) {
         currentPlayer.playWithAudio(playlist.getCurrentAudio());
       }
+    }
+  }
+
+  public static void randomPlay(Playlist playlist, FragmentManager fragmentManager) {
+    playlist.autoNext(Player.PlayMode.SHUFFLE);
+
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (currentPlayer == null) {
+      DeviceFragment fragment = new DeviceFragment();
+      fragment.onClose(() -> {
+        Player newPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+        if (newPlayer != null) {
+          newPlayer.setPlaylist(playlist);
+          newPlayer.setPlayMode(Player.PlayMode.SHUFFLE);
+          MainBus.post(new PlayerStore.PlayerModeChangedEvent());
+        }
+      });
+      fragment.show(fragmentManager, "Device");
+    } else {
+      currentPlayer.setPlaylist(playlist);
+      currentPlayer.setPlayMode(Player.PlayMode.SHUFFLE);
+      MainBus.post(new PlayerStore.PlayerModeChangedEvent());
     }
   }
 }
