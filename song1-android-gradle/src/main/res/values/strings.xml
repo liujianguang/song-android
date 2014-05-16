@@ -232,6 +232,7 @@
   <string name="prepare_for_scanning">正在准备扫描…</string>
   <string name="scan">扫描</string>
   <string name="need_to_scan">是否开始扫描</string>
+  <string name="scanning_please_wait">正在扫描，请稍候...</string>
   <array name="timer_values">
     <item>关闭</item>
     <item>15分钟</item>

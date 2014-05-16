@@ -27,45 +27,19 @@
 
   <LinearLayout
       android:id="@+id/scanning"
+      android:padding="8dp"
       android:visibility="gone"
       android:orientation="vertical"
       android:layout_width="300dp"
       android:layout_height="wrap_content">
-
+    <ProgressBar
+        android:layout_gravity="center_horizontal"
+        android:layout_width="50dp"
+        android:layout_height="50dp"/>
     <TextView
-        android:id="@+id/info"
-        android:padding="16dp"
-        android:text="@string/prepare_for_scanning"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"/>
-
-    <TextView
-        android:id="@+id/count"
-        android:visibility="gone"
-        android:layout_gravity="right"
-        android:layout_marginRight="8dp"
+        android:text="@string/scanning_please_wait"
+        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <android.support.v4.widget.ContentLoadingProgressBar
-        android:id="@+id/progress"
-        android:visibility="gone"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        style="?android:progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <View
-        android:background="@color/dark_green"
-        android:layout_width="match_parent"
-        android:layout_height="0.1dp"/>
-
-    <Button
-        android:id="@+id/cancel_scan"
-        style="@style/buttonStyle"
-        android:text="@android:string/cancel"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
   </LinearLayout>
 </LinearLayout>
