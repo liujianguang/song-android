@@ -15,10 +15,10 @@ import com.song1.musicno1.R;
 import com.song1.musicno1.entity.DeviceConfig;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.WifiModel;
-import com.song1.musicno1.models.events.upnp.DeviceChangeEvent;
 import com.song1.musicno1.models.events.upnp.SearchDeviceEvent;
-import com.song1.musicno1.models.play.OldPlayer;
+import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.setting.RemoteSetting;
+import com.song1.musicno1.stores.PlayerStore;
 import com.squareup.otto.Subscribe;
 import de.akquinet.android.androlog.Log;
 import org.cybergarage.upnp.std.av.renderer.MediaRenderer;
@@ -160,6 +160,7 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
         deviceNameEdit.setText(deviceName);
         deviceNameEdit.setSelection(deviceName.length());
       }
+
       @Override
       public void onNothingSelected(AdapterView<?> adapterView) {
         System.out.println("onNothingSelected...");
@@ -336,7 +337,7 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
     new Thread(new Runnable() {
       @Override
       public void run() {
-        while(!isFind){
+        while (!isFind) {
           System.out.println("search*************************************************");
           MainBus.post(new SearchDeviceEvent(MediaRenderer.DEVICE_TYPE));
           try {
@@ -350,11 +351,11 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
   }
 
   boolean isFind = false;
-  @Subscribe
-  public void onDeviceChanged(DeviceChangeEvent event) {
-    System.out.println("receiver*************************************************");
 
-    List<OldPlayer> players = Lists.newArrayList(event.players);
+  @Subscribe
+  public void onPlayerAdded(PlayerStore.PlayerListChangedEvent event) {
+    List<Player> players = PlayerStore.INSTANCE.getPlayerList();
+
     String tempId;
     if (deviceSSID.startsWith("yy")) {
       tempId = deviceSSID.substring(2, deviceSSID.length());
@@ -362,7 +363,7 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
       tempId = deviceSSID.substring(deviceSSID.indexOf("-") + 1, deviceSSID.indexOf("ONE"));
     }
 
-    for (OldPlayer player : players) {
+    for (Player player : players) {
       String id = player.getId();
       System.out.println("id : " + id);
       System.out.println("tempId : " + tempId.toLowerCase());
@@ -372,9 +373,5 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
         break;
       }
     }
-    System.out.println("isFind : " + isFind);
-//    if (!isFind) {
-//      search();
-//    }
   }
 }
