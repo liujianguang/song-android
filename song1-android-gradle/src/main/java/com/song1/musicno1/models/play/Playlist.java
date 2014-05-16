@@ -53,7 +53,7 @@ public class Playlist {
 
   public void autoNext(int playMode) {
     int i = audios.indexOf(currentAudio);
-    //i++;
+    i++;
     switch (playMode) {
       case Player.PlayMode.NORMAL:
         if (i >= audios.size()) {
