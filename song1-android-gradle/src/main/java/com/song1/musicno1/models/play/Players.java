@@ -100,6 +100,9 @@ public class Players {
     if (currentPlayer != null) {
       Playlist playlist = currentPlayer.getPlaylist();
       if (playlist != null) {
+        if (playlist.getCurrentAudio() == null && playlist.getAudios().size() > 0) {
+          playlist.setCurrentAudio(playlist.getAudios().get(0));
+        }
         currentPlayer.playWithAudio(playlist.getCurrentAudio());
       }
     }
