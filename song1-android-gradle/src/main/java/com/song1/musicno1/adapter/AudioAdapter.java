@@ -154,6 +154,11 @@ public class AudioAdapter extends DataAdapter<Audio> {
     notifyDataSetChanged();
   }
 
+  @Subscribe
+  public void updatePlayerInfo(PlayerStore.CurrentPlayerChangedEvent event) {
+    updatePlayingAudio(null);
+  }
+
   @Override
   public boolean isEnabled(int position) {
     Object obj = getDataItem(position);
