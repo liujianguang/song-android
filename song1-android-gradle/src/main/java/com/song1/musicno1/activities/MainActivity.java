@@ -203,6 +203,7 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
   @Override
   public void onPanelExpanded(View panel) {
     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    playingFragment.updatePlayerInfo(null);
   }
 
   @Override
