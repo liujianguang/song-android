@@ -203,7 +203,7 @@
   <string name="current_player_is_occupied">当前设备已被占用</string>
   <string name="test">测试</string>
   <string name="confirm_delete">确定要删除吗？</string>
-  <string name="playAllAudios">播放所有歌曲</string>
+  <string name="playAllAudios">随机播放所有歌曲</string>
   <string name="allAudios">共%s首歌曲</string>
   <string name="randomPlay">随机播放</string>
   <string name="setting_timer">设置关闭时间</string>
@@ -228,6 +228,11 @@
   <string name="path">保存路径:&#160;</string>
   <string name="update">修 改</string>
   <string name="close">关 闭</string>
+  <string name="scanning_file">正在扫描: %s</string>
+  <string name="prepare_for_scanning">正在准备扫描…</string>
+  <string name="scan">扫描</string>
+  <string name="need_to_scan">是否开始扫描</string>
+  <string name="scanning_please_wait">正在扫描，请稍候...</string>
   <array name="timer_values">
     <item>关闭</item>
     <item>15分钟</item>
@@ -264,5 +269,6 @@
     <item>X</item>
     <item>Y</item>
     <item>Z</item>
+    <item>"#"</item>
   </array>
 </resources>

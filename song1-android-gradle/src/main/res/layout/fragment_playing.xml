@@ -31,7 +31,7 @@
     <ImageButton
         android:id="@+id/favorite"
         android:layout_weight="1"
-        android:src="@drawable/favortie_disable"
+        android:src="@drawable/favorite_disable"
         android:background="@null"
         android:layout_width="70dp"
         android:layout_height="70dp"/>
@@ -70,7 +70,6 @@
       <ImageButton
           android:id="@+id/player_list"
           android:src="@drawable/ic_device_list_large_nor"
-          android:layout_weight="1"
           android:background="@null"
           android:layout_width="70dp"
           android:layout_height="70dp"/>
@@ -81,7 +80,7 @@
           android:gravity="center"
           android:layout_marginTop="12dp"
           android:layout_marginLeft="35dp"
-          android:text="0"/>
+          />
     </RelativeLayout>
 
   </LinearLayout>

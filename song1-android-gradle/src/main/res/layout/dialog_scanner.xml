@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+  <include layout="@layout/top_title"/>
+
+  <LinearLayout
+      android:id="@+id/notice"
+      android:orientation="vertical"
+      android:layout_width="300dp"
+      android:layout_height="wrap_content">
+
+    <TextView
+        android:padding="16dp"
+        android:gravity="center"
+        android:textSize="@dimen/text_size_normal"
+        android:text="@string/need_to_scan"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"/>
+
+    <include layout="@layout/bottom_button"/>
+
+  </LinearLayout>
+
+  <LinearLayout
+      android:id="@+id/scanning"
+      android:padding="8dp"
+      android:visibility="gone"
+      android:orientation="vertical"
+      android:layout_width="300dp"
+      android:layout_height="wrap_content">
+    <ProgressBar
+        android:layout_gravity="center_horizontal"
+        android:layout_width="50dp"
+        android:layout_height="50dp"/>
+    <TextView
+        android:text="@string/scanning_please_wait"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+  </LinearLayout>
+</LinearLayout>

@@ -19,16 +19,16 @@ import butterknife.InjectView;
 import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.BaseAdapter;
+import com.song1.musicno1.adapter.DataAdapter;
 import com.song1.musicno1.constants.Constants;
 import com.song1.musicno1.dialogs.DeviceListDialog;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.NetworkHelp;
 import com.song1.musicno1.models.WifiModel;
-import com.song1.musicno1.models.events.play.CurrentPlayerEvent;
-import com.song1.musicno1.models.events.play.SelectPlayerEvent;
-import com.song1.musicno1.models.events.upnp.DeviceChangeEvent;
 import com.song1.musicno1.models.events.upnp.SearchDeviceEvent;
+import com.song1.musicno1.models.play.OldPlayer;
 import com.song1.musicno1.models.play.Player;
+import com.song1.musicno1.stores.PlayerStore;
 import com.song1.musicno1.ui.SlingUpDialog;
 import com.song1.musicno1.util.DeviceUtil;
 import com.squareup.otto.Subscribe;
@@ -41,16 +41,22 @@ import java.util.List;
  */
 public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemClickListener, WifiModel.ScanListener {
 
-  protected                         NetworkHelp                     networkHelp;
-  protected                         Player                          selectedPlayer;
-  @InjectView(R.id.gridView)        GridView                        gridView;
-  @InjectView(R.id.current_network) TextView                        currentNetworkView;
-  private                           BaseAdapter<Player, ViewHolder> adapter;
-  private                           WifiManager                     wifi;
+  protected                         NetworkHelp networkHelp;
+  @InjectView(R.id.gridView)        GridView    gridView;
+  @InjectView(R.id.current_network) TextView    currentNetworkView;
+  private                           WifiManager wifi;
+
+  private DataAdapter<Player> playerAdapter;
+  private Player              currentPlayer;
 
   private Handler handler = new Handler();
+  private Runnable onClose;
 
-  List<String> nameList;
+  public void onClose(Runnable onClose) {
+    this.onClose = onClose;
+  }
+
+  List<String>  nameList;
   List<Integer> icoNormalList;
   List<Integer> icoSelectedList;
 
@@ -65,13 +71,7 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-
     MainBus.post(new SearchDeviceEvent(MediaRenderer.DEVICE_TYPE));
-
-    newAdapter();
-
-    gridView.setAdapter(adapter);
-    gridView.setOnItemClickListener(this);
 
     networkHelp = new NetworkHelp();
     wifi = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
@@ -79,31 +79,56 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
     nameList = Lists.newArrayList(getResources().getStringArray(R.array.deviceNames));
     icoNormalList = Lists.newArrayList(Constants.DEVICE_IOC_NORMAL);
     icoSelectedList = Lists.newArrayList(Constants.DEVICE_IOC_SELECTED);
-    System.out.println("nameList : " + nameList);
 
     wifiModel = new WifiModel(getActivity());
     wifiModel.setScanListener(this);
     wifiModel.scan();
+
+    playerAdapter = newAdapter();
+    currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+
+    gridView.setAdapter(playerAdapter);
+    gridView.setOnItemClickListener(this);
+
+    updatePlayerList(null);
   }
 
-  private void newAdapter() {
-    adapter = new BaseAdapter<Player, ViewHolder>(getActivity(), R.layout.item_device)
-        .bind(() -> new ViewHolder())
-        .setData((i, player, holder) -> {
-          if (player == null) {
-            holder.imageView.setImageResource(R.drawable.addnewdevice_ic_butoon_normal);
-            holder.textView.setTextColor(Color.WHITE);
-            holder.textView.setText(getString(R.string.newDevice));
-            if (newDeviceCount != 0){
-              holder.deviceNumView.setText(newDeviceCount + "");
-              holder.deviceNumView.setText(newDeviceCount + "");
-              holder.deviceNumView.setVisibility(View.VISIBLE);
-            }else{
-              holder.deviceNumView.setVisibility(View.GONE);
-            }
+  @Subscribe
+  public void updatePlayerList(PlayerStore.PlayerListChangedEvent event) {
+    List<Player> players = PlayerStore.INSTANCE.getPlayerList();
+    players.add(null);
+    playerAdapter.setDataList(players);
+    playerAdapter.notifyDataSetChanged();
+  }
 
-            return;
+  private DataAdapter<Player> newAdapter() {
+    return new DataAdapter<Player>(getActivity()) {
+      @Override
+      public View getView(int i, View view, ViewGroup viewGroup) {
+        ViewHolder holder;
+        if (view == null) {
+          view = View.inflate(getActivity(), R.layout.item_device, null);
+          holder = new ViewHolder();
+          holder.inject(view);
+          view.setTag(holder);
+        } else {
+          holder = (ViewHolder) view.getTag();
+        }
+
+        Player player = getDataItem(i);
+
+        if (player == null) {
+          holder.imageView.setImageResource(R.drawable.addnewdevice_ic_butoon_normal);
+          holder.textView.setTextColor(Color.WHITE);
+          holder.textView.setText(getString(R.string.newDevice));
+          if (newDeviceCount != 0) {
+            holder.deviceNumView.setText(newDeviceCount + "");
+            holder.deviceNumView.setText(newDeviceCount + "");
+            holder.deviceNumView.setVisibility(View.VISIBLE);
+          } else {
+            holder.deviceNumView.setVisibility(View.GONE);
           }
+        } else {
           String[] strArr = player.getName().split("-");
           String name = strArr[0].trim();
           int imgNormalResId = R.drawable.systemdefault_ic_butoon_nor;
@@ -111,15 +136,15 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
           int position = nameList.indexOf(name);
           System.out.println("name position : " + position);
 
-          if (player.getName().equals(getString(R.string.this_phone))){
+          if (player.getName().equals(getString(R.string.this_phone))) {
             imgNormalResId = R.drawable.player_ic_butoon_nor;
             imgSelectedResId = R.drawable.player_ic_butoon_press;
-          } else if (position != -1){
+          } else if (position != -1) {
             imgNormalResId = icoNormalList.get(position);
             imgSelectedResId = icoSelectedList.get(position);
           }
 
-          if (player == selectedPlayer) {
+          if (player == currentPlayer) {
             holder.imageView.setImageResource(imgSelectedResId);
 
             holder.textView.setTextColor(Color.RED);
@@ -129,7 +154,10 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
           }
           holder.textView.setText(name);
           holder.deviceNumView.setVisibility(View.GONE);
-        });
+        }
+        return view;
+      }
+    };
   }
 
   @Override
@@ -139,7 +167,7 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
     networkHelp.onConnected(() -> {
       WifiInfo info = wifi.getConnectionInfo();
       if (info != null) {
-        currentNetworkView.setText(info.getSSID().replaceAll("\"",""));
+        currentNetworkView.setText(info.getSSID().replaceAll("\"", ""));
       }
     }).onDisconnected(() -> currentNetworkView.setText(R.string.not_network))
         .register(getActivity());
@@ -156,54 +184,43 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
   public void onDestroy() {
     super.onDestroy();
     wifiModel.stop();
+    if (onClose != null) {
+      onClose.run();
+    }
   }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.frament_device_list, null);
+    View view = inflater.inflate(R.layout.frament_device_list, container, false);
     ButterKnife.inject(this, view);
     return view;
   }
 
-  @Subscribe
-  public void onDeviceChanged(DeviceChangeEvent event) {
-    List<Player> players = Lists.newArrayList(event.players);
-    players.add(null);
-    adapter.setList(players);
-    adapter.notifyDataSetChanged();
-  }
-
   @Override
   public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-    Player player = adapter.getElement(i);
+    Player player = playerAdapter.getDataItem(i);
     if (player == null) {
       DeviceListDialog deviceListDialog = new DeviceListDialog();
       deviceListDialog.show(getFragmentManager(), "deviceListDialog");
     } else {
-      MainBus.post(new SelectPlayerEvent(player));
-      selectedPlayer = player;
-      adapter.notifyDataSetChanged();
-      handler.postDelayed(() -> dismiss(), 100);
+      currentPlayer = player;
+      PlayerStore.INSTANCE.setCurrentPlayer(currentPlayer);
+      playerAdapter.notifyDataSetChanged();
+      handler.postDelayed(() -> dismiss(), 300);
     }
-  }
-
-  @Subscribe
-  public void selectPlayer(CurrentPlayerEvent event) {
-    selectedPlayer = event.getCurrentPlayer();
-    adapter.notifyDataSetChanged();
   }
 
   @Override
   public void scanResult(List<ScanResult> scanResults) {
     List<String> ssidList = DeviceUtil.filterScanResultList(scanResults);
     newDeviceCount = ssidList.size();
-    adapter.notifyDataSetChanged();
+    playerAdapter.notifyDataSetChanged();
   }
 
   class ViewHolder extends BaseAdapter.ViewHolder {
-    @InjectView(R.id.text)  TextView  textView;
-    @InjectView(R.id.image) ImageView imageView;
-    @InjectView(R.id.deviceNumView) TextView deviceNumView;
+    @InjectView(R.id.text)          TextView  textView;
+    @InjectView(R.id.image)         ImageView imageView;
+    @InjectView(R.id.deviceNumView) TextView  deviceNumView;
 
     @Override
     public void inject(View view) {

@@ -2,6 +2,7 @@ package com.song1.musicno1.fragments;
 
 import android.net.wifi.ScanResult;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -22,10 +23,11 @@ import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.TimeHelper;
 import com.song1.musicno1.models.LocalAudioStore;
 import com.song1.musicno1.models.WifiModel;
-import com.song1.musicno1.models.events.play.*;
+import com.song1.musicno1.models.events.play.TimerEvent;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.play.Players;
+import com.song1.musicno1.stores.PlayerStore;
 import com.song1.musicno1.ui.IocTextView;
 import com.song1.musicno1.util.DeviceUtil;
 import com.song1.musicno1.util.RoundedTransformation;
@@ -53,13 +55,24 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
   @InjectView(R.id.timer_time)         TextView           timerTextView;
   @InjectView(R.id.deviceNumView)      IocTextView        deviceNumView;
 
-  private int playMode = Player.MODE_REPEAT_ALL;
-
   LocalAudioStore localAudioStore;
   protected int timerValue;
 
   WifiModel wifiModel;
   int newDeviceCount = 0;
+
+  private Handler  handler          = new Handler();
+  private Runnable positionRunnable = new Runnable() {
+    @Override
+    public void run() {
+      Player player = PlayerStore.INSTANCE.getCurrentPlayer();
+      if (player != null) {
+        positionBar.setMax(player.getDuration());
+        positionBar.setProgress(player.getPosition());
+      }
+      handler.postDelayed(this, 1000);
+    }
+  };
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
@@ -74,6 +87,88 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
     wifiModel = new WifiModel(getActivity());
     wifiModel.setScanListener(this);
     wifiModel.scan();
+
+    updatePlayerInfo(null);
+  }
+
+  @Subscribe
+  public void updatePlayerInfo(PlayerStore.CurrentPlayerChangedEvent event) {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (currentPlayer == null) {
+      handler.removeCallbacks(positionRunnable);
+      bottomTitleView.setText("");
+      bottomSubtitleView.setText("");
+      topTitleView.setText("");
+      topSubtitleView.setText("");
+      bottomPlayBtn.setEnabled(false);
+
+      positionBar.setProgress(0);
+      refreshLayout.setRefreshing(false);
+      albumArtImageView.setImageResource(R.drawable.default_album_art_small);
+    } else {
+      bottomPlayBtn.setEnabled(true);
+      updatePlayerState(null);
+      updatePlayingAudio(null);
+    }
+  }
+
+  @Subscribe
+  public void updatePlayerState(PlayerStore.PlayerStateChangedEvent event) {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (currentPlayer != null) {
+      state = currentPlayer.getState();
+      switch (state) {
+        case Player.State.PAUSED:
+        case Player.State.STOPPED:
+          bottomPlayBtn.setImageResource(R.drawable.ic_play_large);
+          bottomPlayBtn.setEnabled(true);
+          positionBar.setVisibility(View.VISIBLE);
+          refreshLayout.setRefreshing(false);
+          break;
+        case Player.State.PLAYING:
+          bottomPlayBtn.setImageResource(R.drawable.ic_pause_large);
+          bottomPlayBtn.setEnabled(true);
+          positionBar.setVisibility(View.VISIBLE);
+          refreshLayout.setRefreshing(false);
+          break;
+        case Player.State.PREPARING:
+          bottomPlayBtn.setEnabled(false);
+          positionBar.setVisibility(View.GONE);
+          refreshLayout.setRefreshing(true);
+      }
+
+      if (state == Player.State.PLAYING) {
+        handler.post(positionRunnable);
+      } else {
+        handler.removeCallbacks(positionRunnable);
+      }
+    }
+  }
+
+  @Subscribe
+  public void updatePlayingAudio(PlayerStore.PlayerPlayingAudioChangedEvent event) {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (currentPlayer != null) {
+      Audio playingAudio = currentPlayer.getPlayingAudio();
+      if (playingAudio == null) {
+        bottomTitleView.setText("");
+        bottomSubtitleView.setText("");
+        topTitleView.setText("");
+        topSubtitleView.setText("");
+        Picasso.with(getActivity()).load(R.drawable.default_album_art_small).transform(new RoundedTransformation()).into(albumArtImageView);
+      } else {
+        bottomTitleView.setText(playingAudio.getTitle());
+        bottomSubtitleView.setText(playingAudio.getArtist() + " - " + playingAudio.getAlbum());
+
+        topTitleView.setText(playingAudio.getTitle());
+        topSubtitleView.setText(playingAudio.getArtist() + " - " + playingAudio.getAlbum());
+        AlbumArtHelper.loadAlbumArtRounded(
+            getActivity(),
+            playingAudio.getAlbumArt(localAudioStore),
+            albumArtImageView,
+            R.drawable.default_album_art_small);
+      }
+    }
   }
 
   @Override
@@ -100,6 +195,7 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
   public void onDestroy() {
     super.onDestroy();
     wifiModel.stop();
+    handler.removeCallbacks(positionRunnable);
   }
 
   @OnClick(R.id.bottom_player_list)
@@ -111,94 +207,14 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
   @OnClick(R.id.bottom_play)
   public void onPlayButtonClick() {
     switch (state) {
-      case Player.PLAYING:
+      case Player.State.PLAYING:
         Players.pause();
         break;
-      case Player.PAUSED:
+      case Player.State.PAUSED:
         Players.resume();
         break;
-      case Player.STOPPED:
-        if (playMode == Player.MODE_NORMAL){
-          Players.rePlay();
-        }else{
-          Players.play();
-        }
-    }
-  }
-
-
-  @Subscribe
-  public void onPlayModeChanged(PlayModeEvent event) {
-    playMode = event.getPlayMode();
-    //ToastUtil.show(getActivity(),event.getPlayMode()+"");
-  }
-
-  @Subscribe
-  public void onPlayerSelected(CurrentPlayerEvent event) {
-    if (event.getCurrentPlayer() != null && !event.getCurrentPlayer().getId().equals("0")) {
-      playerListBtn.setImageResource(R.drawable.ic_player_selected);
-    } else {
-      playerListBtn.setImageResource(R.drawable.ic_device_list_nor);
-    }
-  }
-
-  @Subscribe
-  public void onCurrentPlayerStateChanged(CurrentPlayerStateEvent event) {
-    state = event.state;
-    switch (event.state) {
-
-      case Player.STOPPED:
-        //onCurrentPositionChanged(new PositionEvent(null,0,0));
-      case Player.PAUSED:
-        bottomPlayBtn.setImageResource(R.drawable.play_small_disable);
-        bottomPlayBtn.setEnabled(true);
-        positionBar.setVisibility(View.VISIBLE);
-        refreshLayout.setRefreshing(false);
-        break;
-      case Player.PLAYING:
-        bottomPlayBtn.setImageResource(R.drawable.stop_small_disable);
-        bottomPlayBtn.setEnabled(true);
-        positionBar.setVisibility(View.VISIBLE);
-        refreshLayout.setRefreshing(false);
-        break;
-      case Player.PREPARING:
-        bottomPlayBtn.setEnabled(false);
-        positionBar.setVisibility(View.GONE);
-        refreshLayout.setRefreshing(true);
-    }
-  }
-
-  @Subscribe
-  public void onCurrentPositionChanged(PositionEvent event) {
-    Audio audio = event.getAudio();
-    if (event.getAudio() == null) {
-      bottomTitleView.setText("");
-      bottomSubtitleView.setText("");
-      topTitleView.setText("");
-      topSubtitleView.setText("");
-      Picasso.with(getActivity()).load(R.drawable.default_album_art_small).transform(new RoundedTransformation()).into(albumArtImageView);
-    } else {
-      if (bottomTitleView.getText() == null) {
-        bottomTitleView.setText(event.getAudio().getTitle());
-        topTitleView.setText(event.getAudio().getTitle());
-      } else if (!bottomTitleView.getText().toString().equals(event.getAudio().getTitle())) {
-        bottomTitleView.setText(event.getAudio().getTitle());
-        bottomSubtitleView.setText(event.getAudio().getArtist());
-
-        topTitleView.setText(event.getAudio().getTitle());
-        topSubtitleView.setText(event.getAudio().getArtist());
-
-        bottomSubtitleView.setText(event.getAudio().getArtist() + " -- " + event.getAudio().getAlbum());
-        topSubtitleView.setText(event.getAudio().getArtist() + " -- " + event.getAudio().getAlbum());
-
-        AlbumArtHelper.loadAlbumArtRounded(
-            getActivity(),
-            audio.getAlbumArt(localAudioStore),
-            albumArtImageView,
-            R.drawable.default_album_art_small);
-      }
-      positionBar.setMax(event.getDuration());
-      positionBar.setProgress(event.getPosition());
+      case Player.State.STOPPED:
+        Players.play();
     }
   }
 
@@ -224,11 +240,6 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
   }
 
   @Subscribe
-  public void onShowDeviceFragment(ShowDeviceFragmentEvent event) {
-    showPlayerList();
-  }
-
-  @Subscribe
   public void timerCountDown(TimerEvent event) {
     timerValue = event.getTimerValue();
     if (event.getTimerValue() == 0) {
@@ -243,10 +254,10 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
   public void scanResult(List<ScanResult> scanResults) {
     List<String> ssidList = DeviceUtil.filterScanResultList(scanResults);
     newDeviceCount = ssidList.size();
-    if (newDeviceCount != 0){
+    if (newDeviceCount != 0) {
       deviceNumView.setText(newDeviceCount + "");
       deviceNumView.setVisibility(View.VISIBLE);
-    }else{
+    } else {
       deviceNumView.setVisibility(View.GONE);
     }
   }

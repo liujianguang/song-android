@@ -5,10 +5,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
-import android.util.TypedValue;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -17,7 +17,6 @@ import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.fragments.base.BaseFragment;
 import com.song1.musicno1.ui.ArrowView;
-import com.song1.musicno1.util.ToastUtil;
 
 import javax.inject.Inject;
 import java.lang.reflect.Field;
@@ -44,68 +43,63 @@ public class LocalAudioContainerFragment extends BaseFragment implements ViewPag
   @InjectView(R.id.pager)        ViewPager viewPager;
 
   @OnClick(R.id.songButton)
-  public void onSongButtonClick(){
+  public void onSongButtonClick() {
     viewPager.setCurrentItem(0);
   }
+
   @OnClick(R.id.albumButton)
-  public void onAlbumButton(){
+  public void onAlbumButton() {
     viewPager.setCurrentItem(1);
   }
+
   @OnClick(R.id.artistButton)
-  public void onArtistButtonClick(){
+  public void onArtistButtonClick() {
     viewPager.setCurrentItem(2);
   }
+
   FragmentAdapter adapter;
 
-  public FragmentPagerAdapter getAdapter(){
+  public FragmentPagerAdapter getAdapter() {
     return adapter;
   }
-  public ViewPager getViewPager(){
+
+  public ViewPager getViewPager() {
     return viewPager;
   }
+
   @Inject
   public LocalAudioContainerFragment() {
   }
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
-    System.out.println("onCreate....");
     super.onCreate(savedInstanceState);
+    LocalAudiosWithIndexFragment localAudioFragment = new LocalAudiosWithIndexFragment();
     fragments = Lists.newArrayList(
         localAudioFragment,
         localAlbumFragment,
         localArtistFragment
     );
     adapter = new FragmentAdapter(getChildFragmentManager());
-    //ToastUtil.show(getActivity(),"LocalAudioContainerFragment...");
   }
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
-    System.out.println("onActivityCreated...");
     super.onActivityCreated(savedInstanceState);
     setTitle(getString(R.string.local_source));
     viewPager.setAdapter(adapter);
     viewPager.setOnPageChangeListener(this);
-    if (currentButton == null){
+    if (currentButton == null) {
       currentButton = songButton;
     }
     arrowView.setFristPoint(currentButton);
-    //setHasOptionsMenu(true);
   }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    System.out.println("onCreateView....");
     View view = inflater.inflate(R.layout.fragment_local_audio, container, false);
     ButterKnife.inject(this, view);
     return view;
-  }
-
-  @Override
-  public void onResume() {
-    System.out.println("onResume...");
-    super.onResume();
   }
 
   @Override
@@ -113,26 +107,26 @@ public class LocalAudioContainerFragment extends BaseFragment implements ViewPag
   }
 
   Button currentButton = null;
+
   @Override
   public void onPageSelected(int position) {
-    System.out.println("onPageSelected..." + position);
-     switch (position){
-       case 0:
-         currentButton = songButton;
-         break;
-       case 1:
-         currentButton = albumButton;
-         break;
-       case 2:
-         currentButton = artistButton;
-         break;
-     }
+    switch (position) {
+      case 0:
+        currentButton = songButton;
+        break;
+      case 1:
+        currentButton = albumButton;
+        break;
+      case 2:
+        currentButton = artistButton;
+        break;
+    }
     if (currentButton != null) {
       songButton.setTextColor(Color.BLACK);
       albumButton.setTextColor(Color.BLACK);
       artistButton.setTextColor(Color.BLACK);
       currentButton.setTextColor(Color.WHITE);
-      if (arrowView.isReady()){
+      if (arrowView.isReady()) {
         arrowView.move(currentButton);
       }
     }

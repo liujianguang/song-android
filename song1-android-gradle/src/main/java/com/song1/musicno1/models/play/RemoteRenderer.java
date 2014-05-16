@@ -13,12 +13,16 @@ import org.cybergarage.upnp.std.av.renderer.AVTransport;
  * Created by windless on 3/26/14.
  */
 public class RemoteRenderer implements Renderer {
-  private final Device  device;
-  private final Service av;
+  private Device  device;
+  private Service av;
 
   public RemoteRenderer(Device device) {
     this.device = device;
     av = device.getService(AVTransport.SERVICE_TYPE);
+  }
+
+  public RemoteRenderer(Service av) {
+    this.av = av;
   }
 
   @Override

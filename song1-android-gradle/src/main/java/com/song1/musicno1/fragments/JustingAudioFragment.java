@@ -64,6 +64,6 @@ public class JustingAudioFragment extends BaseFragment implements AdapterView.On
 
   @Override
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    Players.setPlaylist(new Playlist(normalAudios, normalAudios.get(position)));
+    Players.setPlaylist(new Playlist(normalAudios, normalAudios.get(position)), getFragmentManager());
   }
 }

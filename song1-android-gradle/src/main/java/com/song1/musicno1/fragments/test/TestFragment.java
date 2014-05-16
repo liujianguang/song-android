@@ -1,25 +1,15 @@
 package com.song1.musicno1.fragments.test;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.fragments.base.BaseFragment;
-import com.song1.musicno1.helpers.MainBus;
-import com.song1.musicno1.models.events.upnp.DeviceChangeEvent;
-import com.song1.musicno1.models.events.upnp.SearchDeviceEvent;
-import com.song1.musicno1.models.play.Player;
-import com.squareup.otto.Subscribe;
 import org.cybergarage.upnp.Device;
 import org.cybergarage.upnp.device.DeviceChangeListener;
 import org.cybergarage.upnp.std.av.controller.MediaController;
-import org.cybergarage.upnp.std.av.renderer.MediaRenderer;
-
-import java.util.List;
 
 /**
  * Created by leovo on 2014/5/5.

@@ -28,6 +28,7 @@ import com.song1.musicno1.models.LocalAudioStore;
 import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.models.play.Playlist;
+import com.song1.musicno1.stores.PlayerStore;
 import com.song1.musicno1.util.ToastUtil;
 import de.akquinet.android.androlog.Log;
 
@@ -91,20 +92,13 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
     } else {
       audioList = localAudioStore.getAudiosWithIndex();
       audioTotal = localAudioStore.audios_count();
-//      audioList = Lists.newArrayList();
-//      for (Audio audio :audioList){
-//        System.out.println("*************" + audio.getTitle());
-//      }
     }
     return audioList;
   }
 
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    System.out.println("onCreateOptionMenu...");
-    if (album == null && artist == null) {
-      inflater.inflate(R.menu.local_audio, menu);
-    }
+    inflater.inflate(R.menu.local_audio, menu);
     super.onCreateOptionsMenu(menu, inflater);
   }
 
@@ -139,24 +133,9 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
     super.showContent();
 
     if (isDataEmpty()) {
-//      if (playHeaderView != null) {
-      // getListView().removeHeaderView(playHeaderView);
       playHeaderView.setVisibility(View.GONE);
-//      }
     } else {
       playHeaderView.setVisibility(View.VISIBLE);
-//      if (playHeaderView == null) {
-//        playHeaderView = View.inflate(getActivity(), R.layout.header_local_audio, null);
-//        playHeaderView.setOnClickListener((view) -> {
-//          List<Audio> dataList = getDataList();
-//          if (dataList.size() > 0) {
-//            Random random = new Random();
-//            int randomIndex = random.nextInt(dataList.size());
-//            Players.setPlaylist(new Playlist(List8.newList(dataList), dataList.get(randomIndex)));
-//          }
-//        });
-//        getListView().addHeaderView(playHeaderView);
-//      }
       String str = String.format(getString(R.string.allAudios), audioTotal);
       audioTotalTextView.setText(str);
     }
@@ -174,9 +153,9 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
     playAllLayout.setOnClickListener((view) -> {
       List<Audio> dataList = getDataList();
       if (dataList.size() > 0) {
-//        Random random = new Random();
-//        int randomIndex = random.nextInt(dataList.size());
-        Players.setPlaylist(new Playlist(List8.newList(dataList), dataList.get(0)));
+        Random random = new Random();
+        int randomIndex = random.nextInt(dataList.size());
+        Players.setPlaylist(new Playlist(List8.newList(dataList), dataList.get(randomIndex)), getFragmentManager());
       }
     });
     if (album == null && artist == null) {
@@ -185,21 +164,8 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
     return root;
   }
 
-  @Override
-  public void onResume() {
-    super.onResume();
-    Log.d(this, "onResume...");
-  }
-
-  @Override
-  public void onPause() {
-    super.onPause();
-    Log.d(this, "onPause...");
-  }
-
   private View createNumberNegative() {
     List<String> chars = Lists.newArrayList(getResources().getStringArray(R.array.chars));
-    chars.add("#");
     LinearLayout linearLayout = new LinearLayout(getActivity());
     linearLayout.setBackgroundColor(Color.GRAY);
     AnimatorProxy.wrap(linearLayout).setAlpha(120);
@@ -250,7 +216,10 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     getListView().setOnItemClickListener(this);
-    setHasOptionsMenu(true);
+
+    if (album == null && artist == null) {
+      setHasOptionsMenu(true);
+    }
 
     IntentFilter intentFilter = new IntentFilter(Intent.ACTION_MEDIA_SCANNER_STARTED);
     intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
@@ -270,7 +239,7 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     Audio audio = getDataItem(position); // 为什么 header view 要影响 position????
     Playlist playlist = new Playlist(List8.newList(getDataList()), audio);
-    Players.setPlaylist(playlist);
+    Players.setPlaylist(playlist, getFragmentManager());
   }
 
   public void setAlbum(Album album) {

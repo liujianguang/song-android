@@ -1,4 +1,4 @@
-package com.song1.musicno1.models.events.play;
+package com.song1.musicno1.models.play;
 
 import com.song1.musicno1.models.play.RendererException;
 import com.song1.musicno1.models.play.RenderingControl;
@@ -13,11 +13,15 @@ import org.cybergarage.upnp.Service;
  * Created by windless on 14-4-9.
  */
 public class RemoteRenderingControl implements RenderingControl {
-  protected final Service renderingControl;
-  protected       int     volume;
+  protected Service renderingControl;
+  protected int     volume;
 
   public RemoteRenderingControl(Device device) {
     renderingControl = device.getService(org.cybergarage.upnp.std.av.renderer.RenderingControl.SERVICE_TYPE);
+  }
+
+  public RemoteRenderingControl(Service renderingControl) {
+    this.renderingControl = renderingControl;
   }
 
   @Override
@@ -51,9 +55,6 @@ public class RemoteRenderingControl implements RenderingControl {
     action.setArgumentValue(org.cybergarage.upnp.std.av.renderer.RenderingControl.DESIREDVOLUME, volume);
 
     if (!action.postControlAction()) throw new RendererException("");
-
-    this.volume = volume;
-    Log.d(this, "Set volume: " + volume);
   }
 
   @Override
@@ -77,6 +78,7 @@ public class RemoteRenderingControl implements RenderingControl {
 
   @Override
   public Volume getVolume() throws RendererException {
+    updateVolume();
     return new Volume(volume, 100);
   }
 }
