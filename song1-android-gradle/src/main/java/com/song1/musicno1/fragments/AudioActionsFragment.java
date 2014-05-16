@@ -21,10 +21,7 @@ import com.song1.musicno1.helpers.AlbumArtHelper;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.TimeHelper;
 import com.song1.musicno1.models.LocalAudioStore;
-import com.song1.musicno1.models.play.Audio;
-import com.song1.musicno1.models.play.OldPlayer;
-import com.song1.musicno1.models.play.Player;
-import com.song1.musicno1.models.play.Players;
+import com.song1.musicno1.models.play.*;
 import com.song1.musicno1.stores.PlayerStore;
 import com.song1.musicno1.util.RoundedTransformation;
 import com.squareup.otto.Subscribe;
@@ -96,6 +93,9 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
     if (currentPlayer == null) {
       playModeBtn.setVisibility(View.GONE);
       positionSeeker.setEnabled(false);
+      positionSeeker.setMax(0);
+      positionSeeker.setProgress(0);
+      durationView.setText(TimeHelper.secondToString(0));
       Picasso.with(getActivity()).load(R.drawable.default_album_art).transform(new RoundedTransformation()).into(albumArtImageView);
     } else {
       updatePlayerState(null);
@@ -143,6 +143,9 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
       playingAudio = currentPlayer.getPlayingAudio();
       if (playingAudio == null) {
         Picasso.with(getActivity()).load(R.drawable.default_album_art).transform(new RoundedTransformation()).into(albumArtImageView);
+        positionSeeker.setMax(0);
+        positionSeeker.setProgress(0);
+        durationView.setText(TimeHelper.secondToString(0));
       } else {
         AlbumArtHelper.loadAlbumArtRounded(
             getActivity(),

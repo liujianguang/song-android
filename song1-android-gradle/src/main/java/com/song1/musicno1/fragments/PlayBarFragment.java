@@ -25,6 +25,7 @@ import com.song1.musicno1.models.LocalAudioStore;
 import com.song1.musicno1.models.WifiModel;
 import com.song1.musicno1.models.events.play.TimerEvent;
 import com.song1.musicno1.models.play.Audio;
+import com.song1.musicno1.models.play.LocalPlayer;
 import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.stores.PlayerStore;
@@ -105,7 +106,15 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
       positionBar.setProgress(0);
       refreshLayout.setRefreshing(false);
       albumArtImageView.setImageResource(R.drawable.default_album_art_small);
+
+      playerListBtn.setImageResource(R.drawable.ic_device_list);
     } else {
+      if (currentPlayer instanceof LocalPlayer) {
+        playerListBtn.setImageResource(R.drawable.ic_device_list);
+      } else {
+        playerListBtn.setImageResource(R.drawable.ic_device_list_selected);
+      }
+
       bottomPlayBtn.setEnabled(true);
       updatePlayerState(null);
       updatePlayingAudio(null);

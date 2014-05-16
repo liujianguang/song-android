@@ -17,17 +17,14 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import com.song1.musicno1.R;
 import com.song1.musicno1.helpers.MainBus;
-import com.song1.musicno1.models.Favorite;
 import com.song1.musicno1.models.FavoriteAudio;
 import com.song1.musicno1.models.WifiModel;
-import com.song1.musicno1.models.events.play.*;
 import com.song1.musicno1.models.play.*;
 import com.song1.musicno1.stores.PlayerStore;
 import com.song1.musicno1.ui.IocTextView;
 import com.song1.musicno1.util.DeviceUtil;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.CirclePageIndicator;
-import de.akquinet.android.androlog.Log;
 
 import java.util.List;
 
@@ -98,6 +95,7 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
       volumeMinButton.setEnabled(false);
       volumeMaxButton.setEnabled(false);
       volumeBar.setEnabled(false);
+      playerListBtn.setImageResource(R.drawable.ic_device_list_large);
     } else {
       favoriteBtn.setEnabled(true);
       prevButton.setEnabled(true);
@@ -106,6 +104,12 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
       volumeMinButton.setEnabled(true);
       volumeMaxButton.setEnabled(true);
       volumeBar.setEnabled(true);
+
+      if (currentPlayer instanceof LocalPlayer) {
+        playerListBtn.setImageResource(R.drawable.ic_device_list_large);
+      } else {
+        playerListBtn.setImageResource(R.drawable.ic_device_list_large_selected);
+      }
 
       updateVolume();
       updatePlayerState(null);
