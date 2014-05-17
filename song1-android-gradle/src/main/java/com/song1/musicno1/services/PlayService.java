@@ -1,9 +1,11 @@
 package com.song1.musicno1.services;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.PowerManager;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.events.ExitEvent;
 import com.song1.musicno1.models.events.play.StartTimerEvent;
@@ -22,8 +24,9 @@ import java.util.List;
 public class PlayService extends Service {
   protected Handler handler = new Handler();
 
-  protected Runnable timerRunnable;
-  protected int      timerValue;
+  protected Runnable              timerRunnable;
+  protected int                   timerValue;
+  private   PowerManager.WakeLock wakeLock;
 
   @Override
   public IBinder onBind(Intent intent) {
@@ -35,12 +38,18 @@ public class PlayService extends Service {
     super.onCreate();
     MainBus.register(this);
     PlayerStore.INSTANCE.setLocalPlayer(new LocalPlayer(this));
+
+    PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+    wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "player_service");
+    wakeLock.acquire();
   }
 
   @Override
   public void onDestroy() {
     super.onDestroy();
     MainBus.unregister(this);
+    wakeLock.release();
+
     stopAllPlayers();
     if (timerRunnable != null) {
       handler.removeCallbacks(timerRunnable);

@@ -75,6 +75,7 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
       handler.postDelayed(this, 1000);
     }
   };
+  protected boolean isDeviceFragmentShow;
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
@@ -219,7 +220,11 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
 
   @OnClick(R.id.bottom_player_list)
   public void showPlayerList() {
+    if (isDeviceFragmentShow) return;
+
+    isDeviceFragmentShow = true;
     DeviceFragment deviceFragment = new DeviceFragment();
+    deviceFragment.onClose(() -> isDeviceFragmentShow = false);
     deviceFragment.show(getFragmentManager(), "deviceFragment");
   }
 

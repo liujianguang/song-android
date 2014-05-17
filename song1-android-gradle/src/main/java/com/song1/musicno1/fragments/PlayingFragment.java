@@ -49,7 +49,8 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
   @InjectView(R.id.volume_max)    ImageButton         volumeMaxButton;
 
   WifiModel wifiModel;
-  int newDeviceCount = 0;
+  int       newDeviceCount = 0;
+  protected boolean isDeviceFragmentShow;
 
 
   @Override
@@ -199,7 +200,11 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
 
   @OnClick(R.id.player_list)
   public void onPlayerListClick() {
+    if (isDeviceFragmentShow) return;
+
+    isDeviceFragmentShow = true;
     DeviceFragment deviceFragment = new DeviceFragment();
+    deviceFragment.onClose(() -> isDeviceFragmentShow = false);
     deviceFragment.show(getFragmentManager(), "deviceFragment");
   }
 

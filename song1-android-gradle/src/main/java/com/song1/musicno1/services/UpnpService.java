@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
+import android.os.PowerManager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.song1.musicno1.App;
@@ -44,6 +45,7 @@ public class UpnpService extends Service implements DeviceChangeListener {
   private WifiManager.MulticastLock lock;
 
   private Map<String, com.song1.musicno1.models.play.MediaServer> mediaServerMap = Maps.newHashMap();
+  protected PowerManager.WakeLock wakeLock;
 
   @Override
 
@@ -65,6 +67,10 @@ public class UpnpService extends Service implements DeviceChangeListener {
     lock = wifiManager.createMulticastLock("com.song1.musicno1.upnpservice");
     lock.acquire();
 
+    PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+    wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "upnp_service");
+    wakeLock.acquire();
+
     networkHelp = new NetworkHelp();
     networkHelp.onConnected(() -> startController())
         .onDisconnected(() -> stopController())
@@ -79,6 +85,7 @@ public class UpnpService extends Service implements DeviceChangeListener {
     lock.release();
     stopController();
     executorService.shutdown();
+    wakeLock.release();
     Log.d(this, "Exit UPnP Service");
   }
 

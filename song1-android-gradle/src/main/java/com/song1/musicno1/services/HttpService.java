@@ -4,11 +4,13 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 import com.song1.musicno1.App;
@@ -36,7 +38,8 @@ public class HttpService extends Service {
 
   private WifiManager.WifiLock wifi_lock;
 
-  @Inject WifiManager wifiManager;
+  @Inject   WifiManager           wifiManager;
+  protected PowerManager.WakeLock wakeLock;
 
   @Override
   public IBinder onBind(Intent intent) {
@@ -76,6 +79,10 @@ public class HttpService extends Service {
 
     wifi_lock = wifiManager.createWifiLock("HTTP");
     wifi_lock.acquire();
+
+    PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+    wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "http_service");
+    wakeLock.acquire();
 
     boolean isStarted = false;
     int count = 0;
@@ -132,6 +139,7 @@ public class HttpService extends Service {
     _instance = null;
     wifi_lock.release();
     wifi_lock = null;
+    wakeLock.release();
 
     NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     manager.cancel(0);
