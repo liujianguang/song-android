@@ -187,6 +187,7 @@ public class DeviceFragment extends SlingUpDialog implements AdapterView.OnItemC
   public void onDestroy() {
     super.onDestroy();
     wifiModel.stop();
+    gridView.setAdapter(null);
     if (onClose != null) {
       onClose.run();
     }
