@@ -44,6 +44,9 @@ public enum PlayerStore implements Player.Callback {
       Log.d(this, "Removed " + id);
       Player player = playerMap.remove(id);
       player.release();
+      if (player == currentPlayer) {
+        setCurrentPlayer(null);
+      }
     }
     MainBus.post(new PlayerListChangedEvent());
   }

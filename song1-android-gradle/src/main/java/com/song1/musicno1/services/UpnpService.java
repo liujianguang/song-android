@@ -24,6 +24,7 @@ import org.cybergarage.upnp.device.DeviceChangeListener;
 import org.cybergarage.upnp.std.av.controller.MediaController;
 import org.cybergarage.upnp.std.av.renderer.MediaRenderer;
 import org.cybergarage.upnp.std.av.server.MediaServer;
+import org.cybergarage.util.Debug;
 
 import javax.inject.Inject;
 import java.util.Map;
@@ -71,6 +72,7 @@ public class UpnpService extends Service implements DeviceChangeListener {
     wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "upnp_service");
     wakeLock.acquire();
 
+    Debug.on();
     networkHelp = new NetworkHelp();
     networkHelp.onConnected(() -> startController())
         .onDisconnected(() -> stopController())
