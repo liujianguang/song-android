@@ -64,7 +64,9 @@ public enum PlayerStore implements Player.Callback {
 
   public List<Player> getPlayerList() {
     List<Player> playerList = Lists.newArrayList();
-    playerList.add(localPlayer);
+    if (localPlayer != null) {
+      playerList.add(localPlayer);
+    }
     playerList.addAll(playerMap.values());
     return playerList;
   }
