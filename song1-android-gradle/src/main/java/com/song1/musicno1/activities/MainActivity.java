@@ -258,11 +258,6 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
   }
 
   @Subscribe
-  public void onExit(ExitEvent event) {
-    finish();
-  }
-
-  @Subscribe
   public void showExitDailog(Event.ShowExitDialogEvent event) {
     PromptDialog dialog = new PromptDialog(this);
     dialog.setTitle(R.string.notice).setMessage(R.string.exitMsg).setCancelClick(new View.OnClickListener() {

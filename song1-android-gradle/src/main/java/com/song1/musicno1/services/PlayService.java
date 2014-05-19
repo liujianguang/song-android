@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
+import com.song1.musicno1.activities.BaseActivity;
+import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.events.ExitEvent;
 import com.song1.musicno1.models.events.play.StartTimerEvent;
@@ -49,6 +51,8 @@ public class PlayService extends Service {
     super.onDestroy();
     MainBus.unregister(this);
     wakeLock.release();
+
+    sendBroadcast(new Intent(BaseActivity.FINISH_INTENT));
 
     stopAllPlayers();
     if (timerRunnable != null) {
