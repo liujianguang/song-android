@@ -46,8 +46,9 @@ public class RemotePlayer implements Player {
           if (checkingPlayingAudio != null &&
               checkingPlayingAudio.getRemotePlayUrl() != null &&
               !checkingPlayingAudio.getRemotePlayUrl().equals(positionInfo.getUri())) {
-            setState(State.STOPPED);
+            state = State.STOPPED;
             if (callback != null) {
+              callback.onStateChanged(this, state);
               callback.onOccupied(this);
             }
             return;
@@ -55,8 +56,9 @@ public class RemotePlayer implements Player {
 
           if (positionInfo.getPosition() != 0 &&
               positionInfo.getDuration() == positionInfo.getPosition()) {
-            setState(State.STOPPED);
+            state = State.STOPPED;
             if (callback != null) {
+              callback.onStateChanged(this, state);
               callback.onCompletion(this, false);
             }
           }
