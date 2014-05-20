@@ -1,41 +1,34 @@
 package com.song1.musicno1.dialogs;
 
-import android.content.*;
-import android.net.Uri;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.song1.musicno1.R;
+import com.song1.musicno1.models.MediaScanService;
+import de.akquinet.android.androlog.Log;
+
+import java.io.File;
 
 /**
  * Created by windless on 14-5-15.
  */
-public class MediaScannerDialog extends DialogFragment {
-  @InjectView(R.id.title)    TextView titleView;
-  @InjectView(R.id.scanning) View     scanningView;
-  @InjectView(R.id.notice)   View     noticeView;
+public class MediaScannerDialog extends DialogFragment implements MediaScanService.Callback {
+  @InjectView(R.id.title)         TextView titleView;
+  @InjectView(R.id.scanning)      View     scanningView;
+  @InjectView(R.id.notice)        View     noticeView;
+  @InjectView(R.id.scanning_file) TextView scanningFileTextView;
 
   private boolean isFinish = false;
-  protected Callback callback;
-
-
-  BroadcastReceiver refreshReceiver = new BroadcastReceiver() {
-    @Override
-    public void onReceive(Context context, Intent intent) {
-      String action = intent.getAction();
-      if (Intent.ACTION_MEDIA_SCANNER_FINISHED.equals(action)) {
-        isFinish = true;
-        dismiss();
-      }
-    }
-  };
+  protected Callback         callback;
+  protected MediaScanService mediaScanService;
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
@@ -43,18 +36,14 @@ public class MediaScannerDialog extends DialogFragment {
     getDialog().setCanceledOnTouchOutside(false);
     titleView.setText(R.string.scan);
 
-    IntentFilter intentFilter = new IntentFilter(Intent.ACTION_MEDIA_SCANNER_STARTED);
-    intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
-    intentFilter.addDataScheme("file");
-    getActivity().registerReceiver(refreshReceiver, intentFilter);
-
+    mediaScanService = new MediaScanService(getActivity());
   }
 
   public void onDismiss(Callback callback) {
     this.callback = callback;
   }
 
-  @OnClick(R.id.cancel)
+  @OnClick(value = {R.id.cancel, R.id.cancel_scan})
   public void cancel() {
     dismiss();
   }
@@ -63,7 +52,8 @@ public class MediaScannerDialog extends DialogFragment {
   public void startScanning() {
     noticeView.setVisibility(View.GONE);
     scanningView.setVisibility(View.VISIBLE);
-    getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory().getAbsolutePath())));
+    titleView.setText(R.string.sanning);
+    mediaScanService.connect(this);
   }
 
   @Override
@@ -76,10 +66,32 @@ public class MediaScannerDialog extends DialogFragment {
   @Override
   public void onDismiss(DialogInterface dialog) {
     super.onDismiss(dialog);
-    getActivity().unregisterReceiver(refreshReceiver);
+    if (mediaScanService != null) {
+      mediaScanService.disconnect();
+    }
+
     if (callback != null) {
       callback.onDismiss(isFinish);
     }
+  }
+
+  @Override
+  public void onConnected(MediaScanService service) {
+    service.scanAll();
+  }
+
+  @Override
+  public void onProgress(File file) {
+    Log.d(this, "Scanning " + file.getAbsolutePath());
+    scanningFileTextView.setText(file.getAbsolutePath());
+  }
+
+  @Override
+  public void onCompletion(int added, int removed) {
+    Log.d(this, "Scanning finished added: " + added + " removed: " + removed);
+    isFinish = true;
+    dismiss();
+    Toast.makeText(getActivity(), String.format(getString(R.string.scan_compltion), added, removed), Toast.LENGTH_LONG).show();
   }
 
   public interface Callback {
