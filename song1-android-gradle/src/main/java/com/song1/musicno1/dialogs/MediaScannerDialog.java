@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -64,6 +63,20 @@ public class MediaScannerDialog extends DialogFragment implements MediaScanServi
   }
 
   @Override
+  public void onStart() {
+    super.onStart();
+    if (mediaScanService.isCancelled()) {
+      dismiss();
+    }
+  }
+
+  @Override
+  public void onStop() {
+    super.onStop();
+    mediaScanService.disconnect();
+  }
+
+  @Override
   public void onDismiss(DialogInterface dialog) {
     super.onDismiss(dialog);
     if (mediaScanService != null) {
@@ -91,7 +104,6 @@ public class MediaScannerDialog extends DialogFragment implements MediaScanServi
     Log.d(this, "Scanning finished added: " + added + " removed: " + removed);
     isFinish = true;
     dismiss();
-    Toast.makeText(getActivity(), String.format(getString(R.string.scan_compltion), added, removed), Toast.LENGTH_LONG).show();
   }
 
   public interface Callback {
