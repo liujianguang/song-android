@@ -98,7 +98,7 @@
         android:layout_weight="1"
         android:drawablePadding="-8dp"
         android:layout_gravity="center_vertical"
-        android:drawableTop="@drawable/audio_detail"
+        android:drawableTop="@drawable/ic_audio_info"
         android:layout_width="0dp"
         android:layout_height="wrap_content"/>
     <Button
