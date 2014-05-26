@@ -47,10 +47,10 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
 
     List<Audio> audioList;
     if (album != null) {
-      audioList = localAudioStore.get_audios_by_album(album);
+      audioList = album.getAudios();
       audioTotal = audioList.size();
     } else if (artist != null) {
-      audioList = localAudioStore.audios_by_artist(artist);
+      audioList = artist.audios;
       audioTotal = audioList.size();
     } else {
       audioList = localAudioStore.getAudiosWithIndex();

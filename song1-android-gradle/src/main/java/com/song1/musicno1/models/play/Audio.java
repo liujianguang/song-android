@@ -21,8 +21,8 @@ public class Audio {
   private String localPlayUri;
   private String albumArt;
   private String mimiType;
-  private long duration;
-  private long size;
+  private long   duration;
+  private long   size;
 
   public String getRemotePlayUrl() {
     return remotePlayUrl;
@@ -130,5 +130,9 @@ public class Audio {
   public boolean isEqual(Audio audio) {
     return audio != null && id.equals(audio.getId()) && from == audio.from;
 
+  }
+
+  public String getAlbumArt() {
+    return albumArt;
   }
 }

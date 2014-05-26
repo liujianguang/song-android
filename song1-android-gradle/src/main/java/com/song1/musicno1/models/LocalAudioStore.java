@@ -5,6 +5,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.song1.musicno1.R;
 import com.song1.musicno1.entity.Album;
 import com.song1.musicno1.entity.Artist;
@@ -12,9 +14,11 @@ import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.util.AudioUtil;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static android.provider.BaseColumns._ID;
 import static android.provider.MediaStore.Audio.AudioColumns.*;
@@ -22,9 +26,12 @@ import static android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 import static android.provider.MediaStore.Audio.Media.TITLE;
 import static android.provider.MediaStore.MediaColumns.DATA;
 
+@Singleton
 public class LocalAudioStore {
-  private final   ContentResolver contentResolver;
-  protected final Context         context;
+  private final ContentResolver contentResolver;
+  private final Context         context;
+
+  private List<Audio> audios;
 
   @Inject
   public LocalAudioStore(Context context) {
@@ -32,23 +39,29 @@ public class LocalAudioStore {
     this.contentResolver = context.getContentResolver();
   }
 
-  public List<Audio> getAll() {
+  public void cleanCache() {
+    audios = null;
+  }
+
+  synchronized public List<Audio> getAll() {
+    if (audios != null) return audios;
 
     Cursor cursor = contentResolver.query(
         EXTERNAL_CONTENT_URI,
-        new String[]{TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE,SIZE},
+        new String[]{TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE, SIZE},
         MIME_TYPE + " IN (?,?,?,?,?)",
         new String[]{"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac", "audio/x-ms-wma"},
         TITLE
     );
     if (cursor == null) return null;
-    return parse_audios(cursor);
+    audios = parse_audios(cursor);
+    return audios;
   }
 
   public List<Audio> audios(String col, String selection) {
     Cursor cursor = contentResolver.query(
         EXTERNAL_CONTENT_URI,
-        new String[]{TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE,SIZE},
+        new String[]{TITLE, DURATION, ARTIST, _ID, ALBUM, DATA, ALBUM_ID, MIME_TYPE, SIZE},
         MIME_TYPE + " IN (?,?,?,?,?) AND " + col + "=?",
         new String[]{"audio/mpeg", "audio/wav", "audio/x-wav", "audio/flac", "audio/x-ms-wma", selection},
         TITLE
@@ -56,6 +69,39 @@ public class LocalAudioStore {
 
     if (cursor == null) return null;
     return parse_audios(cursor);
+  }
+
+  public List<Album> getAlbums() {
+    List<Audio> audios = getAll();
+    Map<String, Album> albums = Maps.newTreeMap();
+    for (Audio audio : audios) {
+      Album album = albums.get(audio.getAlbum());
+      if (album == null) {
+        album = new Album();
+        album.title = audio.getAlbum();
+        album.album_art = audio.getAlbumArt(this);
+        albums.put(album.title, album);
+      }
+
+      album.addAudio(audio);
+    }
+
+    return Lists.newArrayList(albums.values());
+  }
+
+  public List<Artist> getArtists() {
+    List<Audio> all = getAll();
+    Map<String, Artist> artistMap = Maps.newTreeMap();
+    for (Audio audio : all) {
+      Artist artist = artistMap.get(audio.getArtist());
+      if (artist == null) {
+        artist = new Artist();
+        artist.name = audio.getArtist();
+        artist.addAudio(audio);
+        artistMap.put(artist.name, artist);
+      }
+    }
+    return Lists.newArrayList(artistMap.values());
   }
 
   public List<Audio> getAudiosWithIndex() {
@@ -116,37 +162,39 @@ public class LocalAudioStore {
     return album_path;
   }
 
-  public Audio update(Audio audio){
+  public Audio update(Audio audio) {
     File file = new File(audio.getLocalPlayUri());
     File newFile = null;
-    if (file.exists()){
+    if (file.exists()) {
       System.out.println("fileName : " + file.getName());
       String name = file.getName();
-      String extend = name.substring(name.lastIndexOf("."),name.length());
+      String extend = name.substring(name.lastIndexOf("."), name.length());
       newFile = new File(file.getParent() + "/" + audio.getTitle() + extend);
       System.out.println("extend : " + extend);
       file.renameTo(newFile);
 
       ContentValues values = new ContentValues();
-      values.put(TITLE,audio.getTitle());
-      values.put(DATA,newFile.getPath());
-      int count = contentResolver.update(EXTERNAL_CONTENT_URI,values,_ID + " = ?",new String[]{audio.getId() + ""});
+      values.put(TITLE, audio.getTitle());
+      values.put(DATA, newFile.getPath());
+      int count = contentResolver.update(EXTERNAL_CONTENT_URI, values, _ID + " = ?", new String[]{audio.getId() + ""});
 
       audio.setLocalPlayUri(newFile.getPath());
       return audio;
-    }else{
+    } else {
       deleteAudio(audio);
       return null;
     }
   }
-  public boolean deleteAudio(Audio audio){
-    int count = contentResolver.delete(EXTERNAL_CONTENT_URI,_ID + " = ?",new String[]{audio.getId() + ""});
+
+  public boolean deleteAudio(Audio audio) {
+    int count = contentResolver.delete(EXTERNAL_CONTENT_URI, _ID + " = ?", new String[]{audio.getId() + ""});
     File file = new File(audio.getLocalPlayUri());
-    if (file.exists()){
+    if (file.exists()) {
       file.delete();
     }
     return count > 0 ? true : false;
   }
+
   public int audios_count() {
     Cursor cursor = contentResolver.query(
         EXTERNAL_CONTENT_URI,
@@ -218,7 +266,7 @@ public class LocalAudioStore {
             MediaStore.Audio.Albums.ARTIST,
             MediaStore.Audio.Albums.NUMBER_OF_SONGS
         },
-        null, null, MediaStore.Audio.Albums.ALBUM
+        MediaStore.Audio.Albums.NUMBER_OF_SONGS + " > 0", null, MediaStore.Audio.Albums.ALBUM
     );
     if (cursor == null) return null;
 

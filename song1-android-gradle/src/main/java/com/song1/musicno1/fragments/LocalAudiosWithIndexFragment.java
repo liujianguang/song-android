@@ -8,6 +8,7 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.google.common.collect.Lists;
+import com.song1.musicno1.App;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.AudioAdapter;
 import com.song1.musicno1.adapter.DataAdapter;
@@ -20,7 +21,6 @@ import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.models.play.Playlist;
 import com.song1.musicno1.util.AudioUtil;
-import de.akquinet.android.androlog.Log;
 
 import java.util.List;
 
@@ -40,12 +40,11 @@ public class LocalAudiosWithIndexFragment extends DataFragment<Audio> implements
   private int index = 0;
   protected int audiosCount;
   private boolean isLoaded = false;
+  protected LocalAudioStore localAudioStore;
 
   @Override
   protected List<Audio> onLoad(int loadPage) {
     setTotalPage(1);
-
-    LocalAudioStore localAudioStore = new LocalAudioStore(getActivity());
     List<Audio> audios = localAudioStore.getAll();
     audiosCount = audios.size();
     return AudioUtil.doAudioGroup(audios);
@@ -55,6 +54,12 @@ public class LocalAudiosWithIndexFragment extends DataFragment<Audio> implements
   protected DataAdapter<Audio> newAdapter() {
     audioAdapter = new AudioAdapter(getActivity());
     return audioAdapter;
+  }
+
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    localAudioStore = App.get(LocalAudioStore.class);
   }
 
   @Override
@@ -131,6 +136,7 @@ public class LocalAudiosWithIndexFragment extends DataFragment<Audio> implements
         MediaScannerDialog mediaScannerDialog = new MediaScannerDialog();
         mediaScannerDialog.onDismiss((isFinish) -> {
           if (isFinish) {
+            localAudioStore.cleanCache();
             reload();
           }
         });

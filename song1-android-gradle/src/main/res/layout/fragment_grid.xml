@@ -11,8 +11,8 @@
       android:scrollbarAlwaysDrawHorizontalTrack="true"
       android:scrollbarAlwaysDrawVerticalTrack="true"
       android:padding="5dp"
-      android:minWidth="130dp"
-      android:numColumns="auto_fit"
+      android:minWidth="100dp"
+      android:numColumns="3"
       android:stretchMode="columnWidth"
       android:horizontalSpacing="5dp"
       android:verticalSpacing="5dp"/>

@@ -35,7 +35,7 @@ public class LocalArtistFragment extends ListFragment<Artist> implements Adapter
   @Override
   protected List<Artist> onLoad(int loadPage) {
     setTotalPage(1);
-    return localAudioStore.all_artists();
+    return localAudioStore.getArtists();
   }
 
   @Override

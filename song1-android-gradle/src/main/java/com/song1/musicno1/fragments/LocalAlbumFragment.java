@@ -34,7 +34,7 @@ public class LocalAlbumFragment extends GridFragment<Album> implements AdapterVi
 
   @Override
   protected List<Album> onLoad(int loadPage) {
-    return localAudioStore.all_albums();
+    return localAudioStore.getAlbums();
   }
 
   @Override

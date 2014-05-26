@@ -6,6 +6,7 @@ import android.net.wifi.WifiManager;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.fragments.LocalAudioContainerFragment;
 import com.song1.musicno1.fragments.LocalAudioFragment;
+import com.song1.musicno1.models.LocalAudioStore;
 import com.song1.musicno1.services.HttpService;
 import com.song1.musicno1.services.UpnpService;
 import dagger.Module;
@@ -21,7 +22,8 @@ import dagger.Provides;
         HttpService.class,
 
         LocalAudioContainerFragment.class,
-        LocalAudioFragment.class
+        LocalAudioFragment.class,
+        LocalAudioStore.class
     },
     library = true
 )
