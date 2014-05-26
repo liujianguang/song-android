@@ -20,6 +20,7 @@ import com.song1.musicno1.models.play.Audio;
 import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.models.play.Playlist;
 import com.song1.musicno1.util.AudioUtil;
+import de.akquinet.android.androlog.Log;
 
 import java.util.List;
 
@@ -147,6 +148,7 @@ public class LocalAudiosWithIndexFragment extends DataFragment<Audio> implements
     View headerView = View.inflate(getActivity(), R.layout.item_local_header, null);
     audioTotalTextView = (TextView) headerView.findViewById(R.id.audioTotal);
     listView.addHeaderView(headerView);
+
     return view;
   }
 

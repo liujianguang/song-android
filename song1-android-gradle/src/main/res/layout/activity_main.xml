@@ -8,16 +8,23 @@
     android:layout_height="match_parent"
     android:id="@+id/drawer">
 
+
   <com.song1.musicno1.vender.SlidingUpPanelLayout
       android:id="@+id/sling_up"
       android:layout_width="match_parent"
       android:layout_height="match_parent">
 
     <LinearLayout
-        android:paddingTop="46dp"
+        android:paddingTop="?android:attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+      <View
+          android:background="@color/line"
+          android:layout_width="match_parent"
+          android:layout_height="0.5dp"/>
+
       <LinearLayout
           android:id="@+id/main"
           android:layout_width="match_parent"

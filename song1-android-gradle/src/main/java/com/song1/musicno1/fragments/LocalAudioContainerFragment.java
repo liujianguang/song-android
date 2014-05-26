@@ -1,6 +1,5 @@
 package com.song1.musicno1.fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,14 +8,12 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.RadioGroup;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
 import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.fragments.base.BaseFragment;
-import com.song1.musicno1.ui.ArrowView;
 
 import javax.inject.Inject;
 import java.lang.reflect.Field;
@@ -27,7 +24,7 @@ import java.util.List;
  * Date: 14-2-7
  * Time: PM2:01
  */
-public class LocalAudioContainerFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
+public class LocalAudioContainerFragment extends BaseFragment implements ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener {
   List<Integer> titles = Lists.newArrayList(R.string.song, R.string.album, R.string.artist);
 
   List<Fragment> fragments;
@@ -36,28 +33,12 @@ public class LocalAudioContainerFragment extends BaseFragment implements ViewPag
   @Inject LocalAlbumFragment  localAlbumFragment;
   @Inject LocalArtistFragment localArtistFragment;
 
-  @InjectView(R.id.songButton)   Button    songButton;
-  @InjectView(R.id.albumButton)  Button    albumButton;
-  @InjectView(R.id.artistButton) Button    artistButton;
-  @InjectView(R.id.arrow)        ArrowView arrowView;
-  @InjectView(R.id.pager)        ViewPager viewPager;
-
-  @OnClick(R.id.songButton)
-  public void onSongButtonClick() {
-    viewPager.setCurrentItem(0);
-  }
-
-  @OnClick(R.id.albumButton)
-  public void onAlbumButton() {
-    viewPager.setCurrentItem(1);
-  }
-
-  @OnClick(R.id.artistButton)
-  public void onArtistButtonClick() {
-    viewPager.setCurrentItem(2);
-  }
+  @InjectView(R.id.pager)           ViewPager  viewPager;
+  @InjectView(R.id.segment_control) RadioGroup segmentControl;
 
   FragmentAdapter adapter;
+
+  int selectedSegmentId = R.id.songButton;
 
   public FragmentPagerAdapter getAdapter() {
     return adapter;
@@ -89,10 +70,9 @@ public class LocalAudioContainerFragment extends BaseFragment implements ViewPag
     setTitle(getString(R.string.local_source));
     viewPager.setAdapter(adapter);
     viewPager.setOnPageChangeListener(this);
-    if (currentButton == null) {
-      currentButton = songButton;
-    }
-    arrowView.setFristPoint(currentButton);
+
+    segmentControl.check(selectedSegmentId);
+    segmentControl.setOnCheckedChangeListener(this);
   }
 
   @Override
@@ -106,35 +86,40 @@ public class LocalAudioContainerFragment extends BaseFragment implements ViewPag
   public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
   }
 
-  Button currentButton = null;
-
   @Override
   public void onPageSelected(int position) {
+    segmentControl.setOnCheckedChangeListener(null);
     switch (position) {
       case 0:
-        currentButton = songButton;
+        segmentControl.check(R.id.songButton);
         break;
       case 1:
-        currentButton = albumButton;
+        segmentControl.check(R.id.albumButton);
         break;
       case 2:
-        currentButton = artistButton;
+        segmentControl.check(R.id.artistButton);
         break;
     }
-    if (currentButton != null) {
-      songButton.setTextColor(Color.BLACK);
-      albumButton.setTextColor(Color.BLACK);
-      artistButton.setTextColor(Color.BLACK);
-      currentButton.setTextColor(Color.WHITE);
-      if (arrowView.isReady()) {
-        arrowView.move(currentButton);
-      }
-    }
+    segmentControl.setOnCheckedChangeListener(this);
   }
 
   @Override
   public void onPageScrollStateChanged(int state) {
 
+  }
+
+  @Override
+  public void onCheckedChanged(RadioGroup radioGroup, int i) {
+    switch (i) {
+      case R.id.songButton:
+        viewPager.setCurrentItem(0);
+        break;
+      case R.id.albumButton:
+        viewPager.setCurrentItem(1);
+        break;
+      case R.id.artistButton:
+        viewPager.setCurrentItem(2);
+    }
   }
 
   class FragmentAdapter extends FragmentPagerAdapter {
