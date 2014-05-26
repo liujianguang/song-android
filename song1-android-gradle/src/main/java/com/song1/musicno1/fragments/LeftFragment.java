@@ -11,7 +11,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.song1.musicno1.App;
@@ -21,7 +20,6 @@ import com.song1.musicno1.adapter.NavigationAdapter;
 import com.song1.musicno1.dialogs.LoadingDialog;
 import com.song1.musicno1.fragments.base.BaseFragment;
 import com.song1.musicno1.fragments.download.DownLoadManagerFragment;
-import com.song1.musicno1.fragments.test.*;
 import com.song1.musicno1.fragments.test.TestFragment;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.events.ExitEvent;
@@ -52,6 +50,7 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
   NavigationAdapter adapter;
 
   private Handler handler = new Handler();
+  private int currentId;
 
   @Inject
   public LeftFragment() {
@@ -85,18 +84,9 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
 //    items.add(R.string.beatles_music);
 //    items.add(R.string.justing);
 
-    iconList.add(-1);
-    iconList.add(R.drawable.menu_ic_localmusic);
-    //iconList.add(R.drawable.menu_ic_download);
-    iconList.add(R.drawable.menu_ic_sincetheplaylist);
-    iconList.add(R.drawable.menu_ic_like);
-    iconList.add(-1);
-    iconList.add(R.drawable.menu_ic_migu);
-    iconList.add(R.drawable.menu_ic_beatle);
-    iconList.add(R.drawable.menu_ic_justing);
-
     adapter.setChannels(items);
-    adapter.setIcons(iconList);
+    adapter.setCurrentChannel(adapter.getItem(1));
+    adapter.notifyDataSetChanged();
     listView.setOnItemClickListener(this);
     mainActivity = (MainActivity) getActivity();
 
@@ -151,6 +141,8 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
   @Override
   public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
     Object obj = adapter.getItem(position);
+    adapter.setCurrentChannel(obj);
+    adapter.notifyDataSetChanged();
     int resId;
     if (obj instanceof Integer) {
       resId = Integer.parseInt(obj.toString());

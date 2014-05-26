@@ -4,9 +4,11 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.Optional;
 import com.google.common.collect.Lists;
 import com.song1.musicno1.R;
 import com.song1.musicno1.models.play.MediaServer;
@@ -25,8 +27,8 @@ public class NavigationAdapter extends BaseAdapter {
   private   List<Object>      items;
   private   Context           context;
   private   List<Object>      channels;
-  private   List<Integer>     icons;
   protected List<MediaServer> serverList;
+  private   Object            currentChannel;
 
   public NavigationAdapter(Context context) {
     this.context = context;
@@ -35,10 +37,6 @@ public class NavigationAdapter extends BaseAdapter {
   public void setChannels(List<Object> channels) {
     this.channels = channels;
     update();
-  }
-
-  public void setIcons(List<Integer> icons) {
-    this.icons = icons;
   }
 
   private void update() {
@@ -110,6 +108,14 @@ public class NavigationAdapter extends BaseAdapter {
       MediaServer device = (MediaServer) item;
       holder.title.setText(device.getName());
     }
+
+    if (holder.flagView != null) {
+      if (currentChannel == item && position != getCount() - 1) {
+        holder.flagView.setVisibility(View.VISIBLE);
+      } else {
+        holder.flagView.setVisibility(View.INVISIBLE);
+      }
+    }
     return convertView;
   }
 
@@ -123,8 +129,14 @@ public class NavigationAdapter extends BaseAdapter {
     update();
   }
 
+  public void setCurrentChannel(Object currentChannel) {
+    this.currentChannel = currentChannel;
+  }
+
   class ViewHolder {
-    @InjectView(R.id.title) TextView title;
+    @InjectView(R.id.title) TextView  title;
+    @Optional
+    @InjectView(R.id.flag)  ImageView flagView;
 
     public ViewHolder(View view) {
       ButterKnife.inject(this, view);
