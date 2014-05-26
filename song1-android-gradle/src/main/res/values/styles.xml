@@ -24,7 +24,7 @@
   </style>
 
   <style name="ActionBarStyle" parent="Widget.AppCompat.ActionBar">
-    <item name="android:background">@color/green</item>
+    <item name="android:background">@color/bg</item>
     <item name="android:titleTextStyle">@style/ActionBarStyle.TextStyle</item>
     <item name="android:divider">@color/red</item>
   </style>
@@ -33,20 +33,10 @@
      <item name="android:popupBackground">@color/content_bg_color</item>
   </style>
   <!-- Base application theme. -->
-  <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+  <style name="AppTheme" parent="Theme.AppCompat.Light">
     <!-- Customize your theme here. -->
     <item name="android:windowNoTitle">false</item>
     <item name="android:windowActionBarOverlay">true</item>
-    <item name="android:actionBarStyle">@style/ActionBarStyle</item>
-    <item name="android:windowBackground">@color/content_bg_color</item>
-    <!--<item name="android:textColorPrimary">@color/white</item>-->
-    <!--<item name="android:textColorPrimaryInverse">@color/white</item>-->
-    <item name="android:textColor">@color/white</item>
-    <item name="android:dialogTheme">@style/dialogTheme</item>
-    <item name="android:buttonStyle">@style/buttonStyle</item>
-    <item name="android:spinnerDropDownItemStyle">@style/spinnerDropDownItemStyle</item>
-    <item name="android:popupMenuStyle">@style/popupMenuStyle</item>
-    <item name="android:seekBarStyle">@style/seekBarStyle</item>
   </style>
 
   <style name="ListItem">
