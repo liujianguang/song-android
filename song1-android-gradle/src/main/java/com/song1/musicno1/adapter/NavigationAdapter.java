@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -37,7 +36,8 @@ public class NavigationAdapter extends BaseAdapter {
     this.channels = channels;
     update();
   }
-  public void setIcons(List<Integer> icons){
+
+  public void setIcons(List<Integer> icons) {
     this.icons = icons;
   }
 
@@ -48,6 +48,9 @@ public class NavigationAdapter extends BaseAdapter {
       items.add(context.getString(R.string.shared_device));
       items.addAll(serverList);
     }
+
+    items.add("");
+    items.add(R.string.exit);
     notifyDataSetChanged();
   }
 
@@ -102,7 +105,6 @@ public class NavigationAdapter extends BaseAdapter {
       holder.title.setText(title);
     } else if (item instanceof Integer) {
       Integer stringId = (Integer) item;
-      holder.icon.setImageResource(icons.get(position));
       holder.title.setText(stringId);
     } else if (item instanceof MediaServer) {
       MediaServer device = (MediaServer) item;
@@ -122,8 +124,6 @@ public class NavigationAdapter extends BaseAdapter {
   }
 
   class ViewHolder {
-    @InjectView(R.id.icon)
-    ImageView  icon;
     @InjectView(R.id.title) TextView title;
 
     public ViewHolder(View view) {

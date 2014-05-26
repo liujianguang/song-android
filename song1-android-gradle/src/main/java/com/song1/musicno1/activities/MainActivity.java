@@ -9,9 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.view.KeyEvent;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -90,10 +88,30 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
         R.drawable.ic_navigation_drawer,
         R.string.drawer_open,
         R.string.drawer_close
-    );
+    ) {
+      @Override
+      public void onDrawerOpened(View drawerView) {
+        super.onDrawerOpened(drawerView);
+        invalidateOptionsMenu();
+      }
+
+      @Override
+      public void onDrawerClosed(View drawerView) {
+        super.onDrawerClosed(drawerView);
+        invalidateOptionsMenu();
+      }
+    };
     drawerLayout.setDrawerListener(actionBarDrawerToggle);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportActionBar().setHomeButtonEnabled(true);
+  }
+
+  @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    for (int i = 0; i < menu.size(); i++) {
+      menu.getItem(i).setVisible(!drawerLayout.isDrawerOpen(Gravity.LEFT));
+    }
+    return super.onPrepareOptionsMenu(menu);
   }
 
   @Override

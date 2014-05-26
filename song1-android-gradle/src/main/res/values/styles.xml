@@ -24,7 +24,7 @@
   </style>
 
   <style name="ActionBarStyle" parent="Widget.AppCompat.ActionBar">
-    <item name="android:background">@color/bg</item>
+    <item name="android:background">@color/white</item>
     <item name="android:titleTextStyle">@style/ActionBarStyle.TextStyle</item>
     <item name="android:divider">@color/red</item>
   </style>
@@ -36,6 +36,7 @@
   <style name="AppTheme" parent="Theme.AppCompat.Light">
     <!-- Customize your theme here. -->
     <item name="android:windowNoTitle">false</item>
+    <item name="android:actionBarStyle">@style/ActionBarStyle</item>
     <item name="android:windowActionBarOverlay">true</item>
   </style>
 

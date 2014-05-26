@@ -79,7 +79,6 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
     items.add(R.string.favorite);
     items.add(R.string.red_heart);
 
-
     //items.add(getString(R.string.cloud_source));
     //items.add(R.string.migu_title);
     //items.add(R.string.test);
@@ -155,6 +154,10 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
     int resId;
     if (obj instanceof Integer) {
       resId = Integer.parseInt(obj.toString());
+      if (resId == R.string.exit) {
+        MainBus.post(new ExitEvent());
+        return;
+      }
       showFragment(resId);
     } else if (obj instanceof MediaServer) {
       MediaServer mediaServer = (MediaServer) obj;
@@ -186,11 +189,6 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
     } else {
       runnable.run();
     }
-  }
-
-  @OnClick(R.id.btn_section)
-  public void exit() {
-    MainBus.post(new ExitEvent());
   }
 
   @Override
