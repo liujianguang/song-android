@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.song1.musicno1.R;
@@ -97,9 +98,9 @@ public class LocalAudioStore {
       if (artist == null) {
         artist = new Artist();
         artist.name = audio.getArtist();
-        artist.addAudio(audio);
         artistMap.put(artist.name, artist);
       }
+      artist.addAudio(audio);
     }
     return Lists.newArrayList(artistMap.values());
   }
@@ -118,14 +119,14 @@ public class LocalAudioStore {
       audio.setTitle(cursor.getString(cursor.getColumnIndex(TITLE)));
 
       String album = cursor.getString(cursor.getColumnIndex(ALBUM));
-      if ("<unknown>".equals(album)) {
+      if (Strings.isNullOrEmpty(album) || "<unknown>".equals(album)) {
         audio.setAlbum(context.getString(R.string.unknown));
       } else {
         audio.setAlbum(album);
       }
 
       String artist = cursor.getString(cursor.getColumnIndex(ARTIST));
-      if ("<unknown>".equals(artist)) {
+      if (Strings.isNullOrEmpty(artist) || "<unknown>".equals(artist)) {
         audio.setArtist(context.getString(R.string.unknown));
       } else {
         audio.setArtist(artist);
