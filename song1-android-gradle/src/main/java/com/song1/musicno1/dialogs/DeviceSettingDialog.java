@@ -183,6 +183,7 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
     super.onResume();
     Window window = getDialog().getWindow();
     window.setGravity(Gravity.BOTTOM);
+    getDialog().setCanceledOnTouchOutside(false);
   }
 
   @Override

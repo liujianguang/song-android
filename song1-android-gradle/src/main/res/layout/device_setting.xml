@@ -4,12 +4,13 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:gravity="center_horizontal">
+              android:gravity="center_horizontal"
+              android:background="@drawable/device_list_content_bg">
 
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="@dimen/title_height"
-      android:background="@color/title_bg_color"
+      android:background="@drawable/device_list_title_bg"
       android:gravity="center">
 
     <ImageView
@@ -26,6 +27,12 @@
         android:textColor="@color/title_text_color"
         android:text="@string/newDevice"/>
   </LinearLayout>
+
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:background="@color/title_bg_color"/>
+
 
   <LinearLayout
       android:layout_width="wrap_content"
@@ -151,14 +158,15 @@
 
   <View
       android:layout_width="match_parent"
-      android:layout_height="1dp"
+      android:layout_height="0.1dp"
       android:background="@color/title_bg_color"/>
 
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="60dp"
       android:orientation="horizontal"
-      android:gravity="center">
+      android:gravity="center"
+      android:background="@drawable/button_tool_bg">
 
     <Button
         android:id="@+id/cancle"
