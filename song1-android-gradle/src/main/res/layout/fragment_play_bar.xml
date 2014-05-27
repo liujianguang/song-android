@@ -9,7 +9,8 @@
       android:id="@+id/bottom"
       android:gravity="center_vertical"
       android:layout_width="match_parent"
-      android:layout_height="match_parent">
+      android:layout_height="match_parent"
+      android:visibility="visible">
 
     <RelativeLayout
         android:id="@+id/bottom_play_list_container"
@@ -121,7 +122,8 @@
       android:id="@+id/top"
       android:visibility="gone"
       android:layout_width="match_parent"
-      android:layout_height="match_parent">
+      android:layout_height="match_parent"
+      android:background="@drawable/play_page_title_bg">
 
     <ImageButton
         android:id="@+id/top_slide_down"

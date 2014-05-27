@@ -2,7 +2,7 @@
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <item android:drawable="@drawable/ic_previous" android:state_enabled="true"/>
+  <item android:drawable="@drawable/ic_previous_nor" android:state_enabled="true"/>
   <item android:drawable="@drawable/ic_previous_disable" android:state_enabled="false"/>
-  <item android:drawable="@drawable/ic_previous"/>
+  <item android:drawable="@drawable/ic_previous_nor"/>
 </selector>

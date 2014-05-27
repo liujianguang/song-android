@@ -9,9 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.SeekBar;
-import android.widget.Toast;
+import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -36,20 +34,21 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
   protected int   state;
   protected Audio currentAudio;
 
-  @InjectView(R.id.volume_bar)    SeekBar             volumeBar;
-  @InjectView(R.id.pager)         ViewPager           pager;
-  @InjectView(R.id.indicator)     CirclePageIndicator indicator;
-  @InjectView(R.id.favorite)      ImageButton         favoriteBtn;
-  @InjectView(R.id.player_list)   ImageButton         playerListBtn;
-  @InjectView(R.id.deviceNumView) IocTextView         deviceNumView;
-  @InjectView(R.id.previous)      ImageButton         prevButton;
-  @InjectView(R.id.play)          ImageButton         playButton;
-  @InjectView(R.id.next)          ImageButton         nextButton;
-  @InjectView(R.id.volume_min)    ImageButton         volumeMinButton;
-  @InjectView(R.id.volume_max)    ImageButton         volumeMaxButton;
+  @InjectView(R.id.volume_bar)       SeekBar     volumeBar;
+  @InjectView(R.id.pager)            ViewPager   pager;
+  //@InjectView(R.id.indicator)     CirclePageIndicator indicator;
+  @InjectView(R.id.favorite)         ImageButton favoriteBtn;
+  @InjectView(R.id.player_list)      ImageButton playerListBtn;
+  @InjectView(R.id.deviceNumView)    IocTextView deviceNumView;
+  @InjectView(R.id.previous)         ImageButton prevButton;
+  @InjectView(R.id.play)             ImageButton playButton;
+  @InjectView(R.id.next)             ImageButton nextButton;
+  @InjectView(R.id.volume_min)       ImageButton volumeMinButton;
+  @InjectView(R.id.volume_max)       ImageButton volumeMaxButton;
+  @InjectView(R.id.collectionButton) Button      collectionButton;
 
   WifiModel wifiModel;
-  int       newDeviceCount = 0;
+  int newDeviceCount = 0;
   protected boolean isDeviceFragmentShow;
 
 
@@ -65,7 +64,7 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     super.onActivityCreated(savedInstanceState);
     pager.setAdapter(new Adapter(getChildFragmentManager()));
     pager.setCurrentItem(1);
-    indicator.setViewPager(pager);
+    //indicator.setViewPager(pager);
 
     volumeBar.setOnSeekBarChangeListener(this);
 
@@ -94,7 +93,9 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
       volumeMinButton.setEnabled(false);
       volumeMaxButton.setEnabled(false);
       volumeBar.setEnabled(false);
-      playerListBtn.setImageResource(R.drawable.ic_device_list_large);
+      collectionButton.setEnabled(false);
+
+      playerListBtn.setImageResource(R.drawable.ic_sling_up);
     } else {
       favoriteBtn.setEnabled(true);
       prevButton.setEnabled(true);
@@ -104,10 +105,12 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
       volumeMaxButton.setEnabled(true);
       volumeBar.setEnabled(true);
 
+      collectionButton.setEnabled(true);
+
       if (currentPlayer instanceof LocalPlayer) {
-        playerListBtn.setImageResource(R.drawable.ic_device_list_large);
+        playerListBtn.setImageResource(R.drawable.ic_sling_up);
       } else {
-        playerListBtn.setImageResource(R.drawable.ic_device_list_large_selected);
+        playerListBtn.setImageResource(R.drawable.ic_sling_up);
       }
 
       updateVolume();
@@ -125,13 +128,17 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     currentAudio = currentPlayer.getPlayingAudio();
     if (currentAudio == null) {
       favoriteBtn.setEnabled(false);
+      collectionButton.setEnabled(false);
     } else {
       favoriteBtn.setEnabled(currentAudio.canFavorite());
+      collectionButton.setEnabled(currentAudio.canFavorite());
       if (currentAudio.canFavorite()) {
         if (FavoriteAudio.isFavorite(currentAudio)) {
           favoriteBtn.setImageResource(R.drawable.ic_red_heat_added);
+          collectionButton.setText(R.string.cancel_collection);
         } else {
           favoriteBtn.setImageResource(R.drawable.ic_red_heart);
+          collectionButton.setText(R.string.collection);
         }
       }
     }
@@ -235,15 +242,17 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
 
   }
 
-  @OnClick(R.id.favorite)
+  @OnClick(R.id.collectionButton)
   public void favorite() {
     if (currentAudio == null) return;
 
     if (FavoriteAudio.toggleRedHeart(currentAudio)) {
       favoriteBtn.setImageResource(R.drawable.ic_red_heat_selected);
+      collectionButton.setText(R.string.cancel_collection);
       Toast.makeText(getActivity(), R.string.added_to_red_heart, Toast.LENGTH_SHORT).show();
     } else {
       favoriteBtn.setImageResource(R.drawable.ic_red_heart_nor);
+      collectionButton.setText(R.string.collection);
       Toast.makeText(getActivity(), R.string.removed_frome_red_heart, Toast.LENGTH_SHORT).show();
     }
 
@@ -287,17 +296,17 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
 
     @Override
     public Fragment getItem(int position) {
-      switch (position) {
-        case 0:
-          return new PlaylistFragment();
-        default:
+//      switch (position) {
+//        case 0:
+         // return new PlaylistFragment();
+//        default:
           return new AudioActionsFragment();
-      }
+//      }
     }
 
     @Override
     public int getCount() {
-      return 2;
+      return 1;
     }
   }
 }

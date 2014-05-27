@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:roundImage="http://schemas.android.com/apk/res-auto"
              android:orientation="vertical"
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-  <com.song1.musicno1.ui.RoundImageView
+  <ImageView
       android:id="@+id/album_art"
       android:clickable="true"
       android:src="@drawable/default_album_art"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_margin="27dp"
-      roundImage:mBorderThickness="16dp"
-      roundImage:mBorderColor="#ff96af71"
+      android:scaleType="fitXY"
       android:contentDescription="@null"/>
 
   <RelativeLayout

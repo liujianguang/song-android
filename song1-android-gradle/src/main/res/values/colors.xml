@@ -13,7 +13,7 @@
   <color name="subtitle_text_color">#B1C0A4</color>
   <color name="button_disabled">#ffb5c0a8</color>
   <color name="dark_button">#344320</color>
-  <color name="seek_bar_bg">#ff7A8171</color>
+  <color name="seek_bar_bg">#ff2a2c27</color>
   <color name="number_color">#ffdbeacd</color>
   <color name="line">#ffaeaeae</color>
   <color name="segment_bg">#ff595959</color>

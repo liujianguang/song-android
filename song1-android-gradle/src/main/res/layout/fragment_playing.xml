@@ -3,15 +3,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+    android:background="@drawable/play_page_bg">
 
 
+  <!--
   <com.viewpagerindicator.CirclePageIndicator
       android:id="@+id/indicator"
       android:paddingTop="4dp"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:visibility="gone"
       />
+  -->
 
   <android.support.v4.view.ViewPager
       android:id="@+id/pager"
@@ -21,12 +25,88 @@
       android:layout_weight="1">
   </android.support.v4.view.ViewPager>
 
+
   <LinearLayout
-      android:background="@color/dark_green"
+      android:layout_width="match_parent"
+      android:layout_height="50dp"
+      android:orientation="horizontal"
+      android:gravity="center_vertical">
+    <Button
+        android:layout_weight="1"
+        android:background="@null"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/offline"
+        android:textSize="@dimen/list_item_title_text_size"
+        android:enabled="false"/>
+    <Button
+        android:id="@+id/collectionButton"
+        android:layout_weight="1"
+        android:background="@null"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/collection"
+        android:textSize="@dimen/list_item_title_text_size"/>
+    <Button
+        android:layout_weight="1"
+        android:background="@null"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/description"
+        android:enabled="false"
+        android:textSize="@dimen/list_item_title_text_size"/>
+    <Button
+        android:layout_weight="1"
+        android:background="@null"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/share"
+        android:enabled="false"
+        android:textSize="@dimen/list_item_title_text_size"/>
+  </LinearLayout>
+
+  <ImageView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:src="@drawable/line"/>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:gravity="center_vertical"
+      android:layout_height="100dp">
+
+    <ImageButton
+        android:id="@+id/previous"
+        android:layout_weight="1"
+        android:src="@drawable/ic_previous"
+        android:background="@null"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <ImageButton
+        android:id="@+id/play"
+        android:layout_weight="1"
+        android:src="@drawable/ic_play_large"
+        android:background="@null"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <ImageButton
+        android:id="@+id/next"
+        android:src="@drawable/ic_next"
+        android:layout_weight="1"
+        android:background="@null"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+  </LinearLayout>
+
+  <LinearLayout
       android:orientation="horizontal"
       android:layout_width="match_parent"
       android:gravity="center_vertical"
-      android:layout_height="70dp">
+      android:layout_height="70dp"
+      android:visibility="gone">
 
     <ImageButton
         android:id="@+id/favorite"
@@ -35,44 +115,18 @@
         android:background="@null"
         android:layout_width="70dp"
         android:layout_height="70dp"/>
-
-    <ImageButton
-        android:id="@+id/previous"
-        android:scaleType="fitCenter"
-        android:layout_weight="1"
-        android:src="@drawable/prev_disable"
-        android:background="@null"
-        android:layout_width="70dp"
-        android:layout_height="70dp"/>
-
-    <ImageButton
-        android:id="@+id/play"
-        android:scaleType="fitCenter"
-        android:layout_weight="1"
-        android:src="@drawable/play_disable"
-        android:background="@null"
-        android:layout_width="70dp"
-        android:layout_height="70dp"/>
-
-    <ImageButton
-        android:id="@+id/next"
-        android:scaleType="fitCenter"
-        android:src="@drawable/next_disable"
-        android:layout_weight="1"
-        android:background="@null"
-        android:layout_width="70dp"
-        android:layout_height="70dp"/>
-
     <RelativeLayout
       android:layout_width="wrap_content"
       android:layout_height="match_parent"
       android:layout_weight="1">
+      <!--
       <ImageButton
           android:id="@+id/player_list"
           android:src="@drawable/ic_device_list_large_nor"
           android:background="@null"
           android:layout_width="70dp"
           android:layout_height="70dp"/>
+          -->
       <com.song1.musicno1.ui.IocTextView
           android:id="@+id/deviceNumView"
           android:layout_width="20dp"
@@ -85,10 +139,14 @@
 
   </LinearLayout>
 
+  <ImageView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:src="@drawable/line"/>
   <LinearLayout
       android:id="@+id/volume_section"
       android:layout_width="match_parent"
-      android:layout_height="50dp"
+      android:layout_height="60dp"
       android:orientation="horizontal"
       android:gravity="center_vertical">
 
@@ -100,14 +158,15 @@
         android:padding="6dp"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:contentDescription="@null"/>
+        android:contentDescription="@null"
+        android:visibility="gone"/>
 
     <SeekBar
         android:id="@+id/volume_bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:paddingLeft="15dp"
+        android:paddingLeft="25dp"
         android:paddingRight="15dp"
         android:thumb="@drawable/vol_slider"/>
 
@@ -119,6 +178,15 @@
         android:padding="6dp"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:contentDescription="@null"/>
+        android:contentDescription="@null"
+        android:visibility="gone"/>
+
+    <ImageButton
+       android:id="@+id/player_list"
+       android:layout_width="60dp"
+       android:layout_height="match_parent"
+       android:src="@drawable/ic_sling_up"
+       android:background="@null"
+      />
   </LinearLayout>
 </LinearLayout>

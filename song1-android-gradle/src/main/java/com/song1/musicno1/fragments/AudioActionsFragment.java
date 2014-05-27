@@ -113,8 +113,8 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
         if (rotation != null) {
           rotation.cancel();
         }
-        newRotationAnimator();
-        rotation.start();
+        //newRotationAnimator();
+        //rotation.start();
       } else {
         handler.removeCallbacks(positionRunnable);
 
