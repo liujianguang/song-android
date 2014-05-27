@@ -300,7 +300,7 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
 //        case 0:
          // return new PlaylistFragment();
 //        default:
-          return new AudioActionsFragment();
+          return new PlaylistFragment();
 //      }
     }
 
