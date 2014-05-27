@@ -1,7 +1,5 @@
 package com.song1.musicno1.util;
 
-import java.io.File;
-
 /**
  * Created by leovo on 2014/4/9.
  */

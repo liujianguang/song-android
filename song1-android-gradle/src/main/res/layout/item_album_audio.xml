@@ -7,29 +7,20 @@
 
   <RelativeLayout
       android:id="@+id/content"
+      android:paddingLeft="8dp"
+      android:paddingRight="8dp"
       android:layout_width="match_parent"
       android:layout_height="60dp">
 
     <ImageView
         android:id="@+id/playing_flag"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:padding="8dp"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:background="@color/transparent"
         android:layout_alignParentLeft="true"
         android:layout_centerInParent="true"
-        android:src="@drawable/ic_playing_audio"
-        android:scaleType="fitCenter"
+        android:src="@drawable/ic_vol_max"
         android:visibility="gone"/>
-
-    <TextView
-        android:id="@+id/index"
-        android:visibility="gone"
-        android:textSize="@dimen/text_size_normal"
-        android:layout_centerVertical="true"
-        android:gravity="center"
-        android:layout_width="35dp"
-        android:layout_height="35dp"/>
 
     <ImageButton
         android:id="@+id/menu_btn"
@@ -37,14 +28,14 @@
         android:layout_centerVertical="true"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/ic_audio_more"
+        android:src="@drawable/more"
         android:background="@null"
         />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="40dp"
+        android:layout_marginLeft="20dp"
         android:orientation="vertical"
         android:layout_toLeftOf="@id/menu_btn">
 
@@ -59,17 +50,16 @@
           android:layout_marginTop="10dp"/>
 
       <LinearLayout
+          android:orientation="horizontal"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/lossless"
-            android:text="@string/lossless"
-            android:layout_marginRight="2dp"
-            android:textColor="@color/white"
             android:background="@color/pink"
-            android:textSize="10sp"
+            android:textColor="@color/white"
+            android:text="@string/lossless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -94,7 +84,6 @@
 
     <Button
         android:id="@+id/add_to"
-        android:textColor="@color/white"
         android:background="@null"
         android:text="@string/add_to"
         android:textSize="@dimen/text_size_small"
@@ -107,7 +96,6 @@
 
     <Button
         android:id="@+id/red_heart"
-        android:textColor="@color/white"
         android:background="@null"
         android:text="@string/red_heart"
         android:textSize="@dimen/text_size_small"
@@ -120,7 +108,6 @@
 
     <Button
         android:id="@+id/lookInfo"
-        android:textColor="@color/white"
         android:background="@null"
         android:text="@string/lookInfo"
         android:textSize="@dimen/text_size_small"
@@ -133,7 +120,6 @@
 
     <Button
         android:id="@+id/delete"
-        android:textColor="@color/white"
         android:background="@null"
         android:text="@string/delete"
         android:textSize="@dimen/text_size_small"

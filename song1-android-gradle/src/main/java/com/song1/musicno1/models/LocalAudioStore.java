@@ -136,8 +136,7 @@ public class LocalAudioStore {
       audio.setAlbumId(cursor.getString(cursor.getColumnIndex(ALBUM_ID)));
       audio.setDuration(cursor.getLong(cursor.getColumnIndex(DURATION)));
       audio.setSize(cursor.getLong(cursor.getColumnIndex(SIZE)));
-      String[] strs = cursor.getString(cursor.getColumnIndex(MIME_TYPE)).split("/");
-      audio.setMimiType(strs[1]);
+      audio.setMimeType(cursor.getString(cursor.getColumnIndex(MIME_TYPE)));
       audios.add(audio);
     }
     cursor.close();

@@ -8,28 +8,19 @@
   <RelativeLayout
       android:id="@+id/content"
       android:layout_width="match_parent"
+      android:paddingLeft="4dp"
+      android:paddingRight="4dp"
       android:layout_height="60dp">
 
     <ImageView
         android:id="@+id/playing_flag"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:padding="8dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:background="@color/transparent"
         android:layout_alignParentLeft="true"
         android:layout_centerInParent="true"
         android:src="@drawable/ic_playing_audio"
-        android:scaleType="fitCenter"
         android:visibility="gone"/>
-
-    <TextView
-        android:id="@+id/index"
-        android:visibility="gone"
-        android:textSize="@dimen/text_size_normal"
-        android:layout_centerVertical="true"
-        android:gravity="center"
-        android:layout_width="35dp"
-        android:layout_height="35dp"/>
 
     <ImageButton
         android:id="@+id/menu_btn"
@@ -44,7 +35,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="40dp"
+        android:layout_marginLeft="24dp"
         android:orientation="vertical"
         android:layout_toLeftOf="@id/menu_btn">
 

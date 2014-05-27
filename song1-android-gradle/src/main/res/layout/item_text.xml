@@ -17,7 +17,7 @@
       android:layout_height="wrap_content"/>
 
   <ImageView
-      android:id="@+id/currentAudioImageView"
+      android:id="@+id/playing_flag"
       android:layout_width="15dp"
       android:layout_height="15dp"
       android:background="@color/transparent"

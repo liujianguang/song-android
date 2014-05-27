@@ -10,7 +10,7 @@ import butterknife.InjectView;
 import com.google.common.collect.Lists;
 import com.song1.musicno1.App;
 import com.song1.musicno1.R;
-import com.song1.musicno1.adapter.AudioAdapter;
+import com.song1.musicno1.adapter.AudioWithIndexAdapter;
 import com.song1.musicno1.adapter.DataAdapter;
 import com.song1.musicno1.dialogs.MediaScannerDialog;
 import com.song1.musicno1.fragments.base.DataFragment;
@@ -34,8 +34,8 @@ public class LocalAudiosWithIndexFragment extends DataFragment<Audio> implements
 
   TextView audioTotalTextView;
 
-  private AudioAdapter audioAdapter;
-  private List<String> indexStrings;
+  private AudioWithIndexAdapter audioAdapter;
+  private List<String>          indexStrings;
 
   private int index = 0;
   protected int audiosCount;
@@ -52,7 +52,7 @@ public class LocalAudiosWithIndexFragment extends DataFragment<Audio> implements
 
   @Override
   protected DataAdapter<Audio> newAdapter() {
-    audioAdapter = new AudioAdapter(getActivity());
+    audioAdapter = new AudioWithIndexAdapter(getActivity());
     return audioAdapter;
   }
 

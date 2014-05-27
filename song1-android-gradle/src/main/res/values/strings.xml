@@ -236,6 +236,10 @@
   <string name="invalid_audio">无法播放 %s</string>
   <string name="scan_compltion">扫描完成，新增歌曲%1$d首，删除歌曲%2$d首</string>
   <string name="sanning">正在扫描</string>
+  <string name="lossless">无损</string>
+  <string name="delete_failed">删除失败</string>
+  <string name="audio_info">歌曲信息</string>
+  <string name="audio_total">共%s首</string>
   <array name="timer_values">
     <item>关闭</item>
     <item>15分钟</item>

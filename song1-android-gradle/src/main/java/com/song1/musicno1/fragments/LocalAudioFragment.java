@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import com.song1.musicno1.R;
-import com.song1.musicno1.adapter.AudioAdapter;
+import com.song1.musicno1.adapter.AudioWithIndexAdapter;
 import com.song1.musicno1.adapter.DataAdapter;
 import com.song1.musicno1.entity.Album;
 import com.song1.musicno1.entity.Artist;
@@ -34,7 +34,7 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
   private Artist   artist;
   private TextView audioTotalTextView;
 
-  AudioAdapter audioAdapter;
+  AudioWithIndexAdapter audioAdapter;
   int audioTotal = 0;
 
   @Inject
@@ -77,7 +77,7 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
 
   @Override
   protected DataAdapter<Audio> newAdapter() {
-    audioAdapter = new AudioAdapter(getActivity());
+    audioAdapter = new AudioWithIndexAdapter(getActivity());
     return audioAdapter;
   }
 

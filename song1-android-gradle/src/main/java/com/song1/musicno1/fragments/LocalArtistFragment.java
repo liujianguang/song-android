@@ -3,7 +3,6 @@ package com.song1.musicno1.fragments;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import com.song1.musicno1.App;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.adapter.DataAdapter;
 import com.song1.musicno1.adapter.LocalArtistAdapter;
@@ -47,9 +46,8 @@ public class LocalArtistFragment extends ListFragment<Artist> implements Adapter
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     Artist artist = getDataItem(position);
     MainActivity mainActivity = (MainActivity) getActivity();
-    LocalAudioFragment localAudioFragment = App.get(LocalAudioFragment.class);
-    localAudioFragment.setArtist(artist);
-    localAudioFragment.setTitle(artist.name);
-    mainActivity.push(LocalAudioFragment.class.getName(), localAudioFragment);
+    LocalArtistDetailFragment fragment = new LocalArtistDetailFragment();
+    fragment.setArtist(artist);
+    mainActivity.push(LocalAudioFragment.class.getName(), fragment);
   }
 }

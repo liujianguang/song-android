@@ -7,7 +7,28 @@
 
   <ImageView
       android:id="@+id/album_art"
-      android:background="@color/red"
+      android:scaleType="centerCrop"
       android:layout_width="match_parent"
-      android:layout_height="200dp"/>
+      android:minHeight="180dp"
+      android:layout_height="180dp"/>
+
+  <LinearLayout
+      android:paddingLeft="8dp"
+      android:paddingRight="8dp"
+      android:orientation="horizontal"
+      android:background="@color/title_bg"
+      android:layout_width="match_parent"
+      android:gravity="center_vertical"
+      android:layout_height="30dp">
+
+    <TextView
+        android:id="@+id/audio_number"
+        android:text="@string/audio_total"
+        android:textColor="@color/red"
+        android:textSize="@dimen/text_size_small"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+  </LinearLayout>
 </LinearLayout>

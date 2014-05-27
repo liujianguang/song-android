@@ -3,7 +3,6 @@ package com.song1.musicno1.fragments;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import com.song1.musicno1.App;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.adapter.AlbumAdapter;
 import com.song1.musicno1.adapter.DataAdapter;
@@ -46,9 +45,8 @@ public class LocalAlbumFragment extends GridFragment<Album> implements AdapterVi
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     Album album = getDataItem(position);
     MainActivity activity = (MainActivity) getActivity();
-    LocalAudioFragment localAudioFragment = App.get(LocalAudioFragment.class);
-    localAudioFragment.setAlbum(album);
-    localAudioFragment.setTitle(album.title);
-    activity.push(LocalAudioFragment.class.getName(), localAudioFragment);
+    LocalAlbumDetailFragment fragment = new LocalAlbumDetailFragment();
+    fragment.setAlbum(album);
+    activity.push(LocalAudioFragment.class.getName(), fragment);
   }
 }

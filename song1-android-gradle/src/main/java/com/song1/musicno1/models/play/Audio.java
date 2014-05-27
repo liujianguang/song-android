@@ -1,6 +1,8 @@
 package com.song1.musicno1.models.play;
 
+import android.content.Context;
 import com.google.common.base.Strings;
+import com.song1.musicno1.R;
 import com.song1.musicno1.models.LocalAudioStore;
 
 /**
@@ -20,7 +22,7 @@ public class Audio {
   private String remotePlayUrl;
   private String localPlayUri;
   private String albumArt;
-  private String mimiType;
+  private String mimeType;
   private long   duration;
   private long   size;
 
@@ -103,12 +105,12 @@ public class Audio {
     this.albumId = albumId;
   }
 
-  public String getMimiType() {
-    return mimiType;
+  public String getMimeType() {
+    return mimeType;
   }
 
-  public void setMimiType(String mimiType) {
-    this.mimiType = mimiType;
+  public void setMimeType(String mimeType) {
+    this.mimeType = mimeType;
   }
 
   public long getDuration() {
@@ -134,5 +136,17 @@ public class Audio {
 
   public String getAlbumArt() {
     return albumArt;
+  }
+
+  public String getSubtitle(Context context) {
+    String albumStr = Strings.isNullOrEmpty(album) ? context.getString(R.string.unknown) : album;
+    String artistStr = Strings.isNullOrEmpty(artist) ? context.getString(R.string.unknown) : artist;
+    return albumStr + " - " + artistStr;
+  }
+
+  public boolean isLossless() {
+    return "audio/flac".equals(mimeType) ||
+        "audio/wav".equals(mimeType) ||
+        "audio/x-wav".equals(mimeType);
   }
 }

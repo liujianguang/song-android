@@ -8,7 +8,7 @@
               android:layout_height="50dp">
 
   <ImageView
-      android:id="@+id/currentAudioImageView"
+      android:id="@+id/playing_flag"
       android:layout_width="20dp"
       android:layout_height="20dp"
       android:layout_marginRight="4dp"

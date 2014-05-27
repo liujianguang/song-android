@@ -21,7 +21,6 @@ import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.models.play.Playlist;
 import com.song1.musicno1.stores.PlayerStore;
 import com.squareup.otto.Subscribe;
-import de.akquinet.android.androlog.Log;
 
 /**
  * Created by windless on 4/1/14.
@@ -124,8 +123,8 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemClic
   }
 
   class ViewHolder extends BaseAdapter.ViewHolder {
-    @InjectView(R.id.currentAudioImageView) ImageView currentAudioImageView;
-    @InjectView(R.id.title)                 TextView  title;
+    @InjectView(R.id.playing_flag) ImageView currentAudioImageView;
+    @InjectView(R.id.title)        TextView  title;
 
     @Override
     public void inject(View view) {
