@@ -3,7 +3,6 @@
   <!-- Device -->
   <style name="dialogTheme" parent="android:Theme.Holo.Light.Dialog">
     <item name="android:windowNoTitle">true</item>
-    <item name="android:windowBackground">@color/content_bg_color</item>
   </style>
 
   <style name="buttonStyle" parent="@android:style/Widget.Holo.Light.Button">
