@@ -65,7 +65,9 @@ public class LocalAlbumDetailFragment extends BaseFragment implements AdapterVie
     numberView.setText(getString(R.string.audio_total, album.audios.size()));
 
     if (!Strings.isNullOrEmpty(album.album_art)) {
-      Picasso.with(getActivity()).load(new File(album.album_art)).into(imageView);
+      Picasso.with(getActivity()).load(new File(album.album_art)).placeholder(R.drawable.album_art_default_big).into(imageView);
+    } else {
+      imageView.setImageResource(R.drawable.album_art_default_big);
     }
 
     listView.setOnItemClickListener(this);

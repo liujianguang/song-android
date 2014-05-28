@@ -20,6 +20,7 @@ public class AlbumArtHelper {
         Picasso.with(context)
             .load(albumArt)
             .transform(new RoundedTransformation())
+            .placeholder(errorDrawable)
             .error(errorDrawable)
             .into(imageView);
       } else {
@@ -28,11 +29,13 @@ public class AlbumArtHelper {
           Picasso.with(context)
               .load(file)
               .transform(new RoundedTransformation())
+              .placeholder(errorDrawable)
               .error(errorDrawable)
               .into(imageView);
         } else {
           Picasso.with(context)
               .load(errorDrawable)
+              .placeholder(errorDrawable)
               .transform(new RoundedTransformation())
               .into(imageView);
         }
@@ -47,6 +50,7 @@ public class AlbumArtHelper {
       if (albumArt.startsWith("http")) {
         Picasso.with(context)
             .load(albumArt)
+            .placeholder(errorDrawable)
             .error(errorDrawable)
             .into(imageView);
       } else {
@@ -54,11 +58,13 @@ public class AlbumArtHelper {
         if (file.exists()) {
           Picasso.with(context)
               .load(file)
+              .placeholder(errorDrawable)
               .error(errorDrawable)
               .into(imageView);
         } else {
           Picasso.with(context)
               .load(errorDrawable)
+              .placeholder(errorDrawable)
               .into(imageView);
         }
       }
