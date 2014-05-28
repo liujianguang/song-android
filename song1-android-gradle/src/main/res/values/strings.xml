@@ -194,7 +194,7 @@
   <string name="add_to">添加</string>
   <string name="create_new_favorite">新建歌单</string>
   <string name="add_to_favorite">添加 %1$s 到 %2$s</string>
-  <string name="favorite_contains_audio">%1$s 已经添加到 %2$s</string>
+  <string name="favorite_contains_audio">%1$s 已经存在于 %2$s 中</string>
 
   <string name="task_doing">下载中(%s)</string>
   <string name="task_done">已下载(%s)</string>
@@ -248,6 +248,7 @@
   <string name="cancel_collection">取消收藏</string>
   <string name="description">描述</string>
   <string name="share">分享</string>
+  <string name="choose_favorite">请选择歌单</string>
 
   <array name="timer_values">
     <item>关闭</item>

@@ -11,6 +11,7 @@ import butterknife.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.song1.musicno1.R;
+import com.song1.musicno1.controllers.AddFavoritesController;
 import com.song1.musicno1.entity.AudioGroup;
 import com.song1.musicno1.helpers.TimeHelper;
 import com.song1.musicno1.models.FavoriteAudio;
@@ -191,7 +192,8 @@ public class AudioWithIndexAdapter extends DataAdapter<Audio> {
   }
 
   private void addToFavorites(Audio audio) {
-
+    AddFavoritesController addFavoritesController = new AddFavoritesController(context);
+    addFavoritesController.addToFavorite(audio);
   }
 
   private void toggleMenu(Audio audio) {

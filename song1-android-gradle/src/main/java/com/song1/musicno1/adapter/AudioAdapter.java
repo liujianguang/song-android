@@ -8,6 +8,7 @@ import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.song1.musicno1.R;
+import com.song1.musicno1.controllers.AddFavoritesController;
 import com.song1.musicno1.helpers.TimeHelper;
 import com.song1.musicno1.models.FavoriteAudio;
 import com.song1.musicno1.models.LocalAudioStore;
@@ -85,8 +86,14 @@ public class AudioAdapter extends DataAdapter<Audio> {
     holder.redHeartButton.setOnClickListener((button) -> addToRedHeart(audio));
     holder.infoButton.setOnClickListener((button) -> showInfo(audio));
     holder.deleteButton.setOnClickListener((button) -> deleteAudio(audio));
+    holder.addToButton.setOnClickListener((button) -> addToFavorites(audio));
 
     return view;
+  }
+
+  private void addToFavorites(Audio audio) {
+    AddFavoritesController addFavoritesController = new AddFavoritesController(context);
+    addFavoritesController.addToFavorite(audio);
   }
 
   private void deleteAudio(Audio audio) {
