@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
+import com.song1.musicno1.App;
 import com.song1.musicno1.R;
 import com.song1.musicno1.adapter.AudioWithIndexAdapter;
 import com.song1.musicno1.adapter.DataAdapter;
@@ -77,7 +78,7 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
 
   @Override
   protected DataAdapter<Audio> newAdapter() {
-    audioAdapter = new AudioWithIndexAdapter(getActivity());
+    audioAdapter = new AudioWithIndexAdapter(getActivity(), App.get(LocalAudioStore.class));
     return audioAdapter;
   }
 
@@ -96,7 +97,6 @@ public class LocalAudioFragment extends ListFragment<Audio> implements AdapterVi
   @Override
   public void onResume() {
     super.onResume();
-    audioAdapter.updatePlayingAudio(null);
   }
 
   @Override

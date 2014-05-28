@@ -18,9 +18,12 @@ import com.song1.musicno1.helpers.List8;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.LocalAudioStore;
 import com.song1.musicno1.models.play.Audio;
+import com.song1.musicno1.models.play.Player;
 import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.models.play.Playlist;
+import com.song1.musicno1.stores.PlayerStore;
 import com.song1.musicno1.util.AudioUtil;
+import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
@@ -52,7 +55,7 @@ public class LocalAudiosWithIndexFragment extends DataFragment<Audio> implements
 
   @Override
   protected DataAdapter<Audio> newAdapter() {
-    audioAdapter = new AudioWithIndexAdapter(getActivity());
+    audioAdapter = new AudioWithIndexAdapter(getActivity(), App.get(LocalAudioStore.class));
     return audioAdapter;
   }
 
@@ -77,19 +80,32 @@ public class LocalAudiosWithIndexFragment extends DataFragment<Audio> implements
     indexView.setText(sb.toString());
 
     setHasOptionsMenu(true);
-    MainBus.register(audioAdapter);
   }
 
   @Override
   public void onResume() {
     super.onResume();
-    audioAdapter.updatePlayingAudio(null);
+    MainBus.register(this);
+    updateCurrentPlayerState(null);
+  }
+
+  @Subscribe
+  public void updateCurrentPlayerState(PlayerStore.CurrentPlayerChangedEvent event) {
+    updatePlayingAudio(null);
+  }
+
+  @Subscribe
+  public void updatePlayingAudio(PlayerStore.PlayerPlayingAudioChangedEvent event) {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (currentPlayer != null) {
+      audioAdapter.setPlayingAudio(currentPlayer.getPlayingAudio());
+    }
   }
 
   @Override
-  public void onDestroy() {
-    super.onDestroy();
-    MainBus.unregister(audioAdapter);
+  public void onPause() {
+    super.onPause();
+    MainBus.unregister(this);
   }
 
   public void playAll() {
@@ -198,5 +214,6 @@ public class LocalAudiosWithIndexFragment extends DataFragment<Audio> implements
       Playlist playlist = new Playlist(List8.newList(getDataList()), audioAdapter.getDataItem(i - 1));
       Players.setPlaylist(playlist, getFragmentManager());
     }
+    audioAdapter.setSelectedAudio(null);
   }
 }

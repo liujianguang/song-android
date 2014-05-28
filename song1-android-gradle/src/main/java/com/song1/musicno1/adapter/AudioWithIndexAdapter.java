@@ -1,28 +1,22 @@
 package com.song1.musicno1.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
+import butterknife.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.song1.musicno1.R;
-import com.song1.musicno1.dialogs.FavoritesDialog;
-import com.song1.musicno1.dialogs.PromptDialog;
 import com.song1.musicno1.entity.AudioGroup;
 import com.song1.musicno1.helpers.TimeHelper;
 import com.song1.musicno1.models.FavoriteAudio;
 import com.song1.musicno1.models.LocalAudioStore;
 import com.song1.musicno1.models.play.Audio;
-import com.song1.musicno1.models.play.Player;
-import com.song1.musicno1.stores.PlayerStore;
 import com.song1.musicno1.util.Global;
-import com.squareup.otto.Subscribe;
 
 import java.util.List;
 import java.util.Map;
@@ -34,16 +28,14 @@ public class AudioWithIndexAdapter extends DataAdapter<Audio> {
   private final static int GROUP = 0;
   private final static int AUDIO = 1;
 
-  LocalAudioStore localAudioStore;
+  protected final LocalAudioStore store;
 
-  protected Audio selectedAudio;
+  private Audio selectedAudio;
+  private Audio playingAudio;
 
-  FragmentActivity activity;
-
-  public AudioWithIndexAdapter(Context context) {
+  public AudioWithIndexAdapter(Context context, LocalAudioStore store) {
     super(context);
-    activity = (FragmentActivity) context;
-    localAudioStore = new LocalAudioStore(context);
+    this.store = store;
   }
 
   private Map<String, Integer> mapGroupPosition = Maps.newHashMap();
@@ -53,7 +45,6 @@ public class AudioWithIndexAdapter extends DataAdapter<Audio> {
   public void setDataList(List<Audio> dataList) {
     super.setDataList(dataList);
     for (Audio audio : dataList) {
-      //System.out.println("--------------------" + audio.getTitle());
       if (audio instanceof AudioGroup) {
         mapGroupPosition.put(audio.getTitle(), dataList.indexOf(audio));
         if (firstGroupName == null) {
@@ -76,12 +67,18 @@ public class AudioWithIndexAdapter extends DataAdapter<Audio> {
     return newList;
   }
 
-  public String getFirstGroupName() {
-    return firstGroupName;
-  }
-
   public Integer getGroupPositionByName(String name) {
     return mapGroupPosition.get(name);
+  }
+
+  public void setSelectedAudio(Audio selectedAudio) {
+    this.selectedAudio = selectedAudio;
+    notifyDataSetChanged();
+  }
+
+  public void setPlayingAudio(Audio playingAudio) {
+    this.playingAudio = playingAudio;
+    notifyDataSetChanged();
   }
 
   @Override
@@ -96,252 +93,137 @@ public class AudioWithIndexAdapter extends DataAdapter<Audio> {
 
   @Override
   public View getView(int i, View view, ViewGroup viewGroup) {
+    ViewHolder holder;
     if (view == null) {
       if (getItemViewType(i) == GROUP) {
         view = View.inflate(context, R.layout.audio_group_title, null);
-        view.setTag(new TitleViewHolder(view));
+        holder = new ViewHolder(view);
+        view.setTag(holder);
       } else {
         view = View.inflate(context, R.layout.item_audio_without_index, null);
-        view.setTag(new ViewHolder(view));
+        holder = new ViewHolder(view);
+        view.setTag(holder);
       }
+    } else {
+      holder = (ViewHolder) view.getTag();
     }
 
     Audio audio = getDataItem(i);
 
-    if (view.getTag() instanceof TitleViewHolder) {
-      TitleViewHolder holder = (TitleViewHolder) view.getTag();
-      holder.title.setText(audio.getTitle());
-    } else {
-      ViewHolder holder = (ViewHolder) view.getTag();
-      holder.setAudio(audio);
-      holder.menuBtn.setTag(audio);
-      holder.addToBtn.setTag(audio);
-      holder.redHeartBtn.setTag(audio);
-      holder.title.setText(audio.getTitle());
-      holder.art.setText(audio.getArtist() + "-" + audio.getAlbum());
-
-      if (audio.isEqual(playingAudio)) {
-        holder.currentImageView.setVisibility(View.VISIBLE);
-      } else {
-        holder.currentImageView.setVisibility(View.GONE);
-      }
-
-      if (selectedAudio == audio) {
-        holder.menu.setVisibility(View.VISIBLE);
-        if (FavoriteAudio.isFavorite(audio)) {
-          holder.redHeartBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_choose, 0, 0);
-        } else {
-          holder.redHeartBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_normal, 0, 0);
-        }
-      } else {
-        holder.menu.setVisibility(View.GONE);
-      }
-
-      if (audio.isLossless()) {
-        holder.loseless.setVisibility(View.VISIBLE);
-      } else {
-        holder.loseless.setVisibility(View.GONE);
-      }
+    holder.title.setText(audio.getTitle());
+    if (getItemViewType(i) == GROUP) {
+      return view;
     }
+
+    if (audio.isEqual(playingAudio)) {
+      holder.playingFlag.setVisibility(View.VISIBLE);
+    } else {
+      holder.playingFlag.setVisibility(View.GONE);
+    }
+
+    if (selectedAudio == audio) {
+      holder.menu.setVisibility(View.VISIBLE);
+      if (FavoriteAudio.isFavorite(audio)) {
+        holder.redHeartBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_choose, 0, 0);
+      } else {
+        holder.redHeartBtn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_normal, 0, 0);
+      }
+    } else {
+      holder.menu.setVisibility(View.GONE);
+    }
+
+    if (audio.isLossless()) {
+      holder.loseless.setVisibility(View.VISIBLE);
+    } else {
+      holder.loseless.setVisibility(View.GONE);
+    }
+
+    holder.subtitle.setText(audio.getSubtitle(context));
+
+    holder.menuBtn.setOnClickListener((button) -> toggleMenu(audio));
+    holder.addToBtn.setOnClickListener((button) -> addToFavorites(audio));
+    holder.redHeartBtn.setOnClickListener((button) -> addToRedHeart(audio));
+    holder.infoBtn.setOnClickListener((button) -> showInfo(audio));
+    holder.deleteBtn.setOnClickListener((button) -> deleteAudio(audio));
+
+    holder.title.setText(audio.getTitle());
     return view;
   }
 
-  private Audio playingAudio;
+  private void deleteAudio(Audio audio) {
+    AlertDialog.Builder alert = new AlertDialog.Builder(context);
+    alert.setTitle(R.string.notice);
+    alert.setMessage(R.string.confirm_delete);
+    alert.setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
+      if (store.deleteAudio(audio)) {
+        remove(audio);
+      } else {
+        Toast.makeText(context, R.string.delete_failed, Toast.LENGTH_SHORT).show();
+      }
+      notifyDataSetChanged();
+      dialog.dismiss();
+    });
+    alert.setNegativeButton(android.R.string.cancel, (dialog, whichButton) -> dialog.dismiss());
+    alert.show();
+  }
 
-  @Subscribe
-  public void updatePlayingAudio(PlayerStore.PlayerPlayingAudioChangedEvent event) {
-    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
-    if (currentPlayer != null) {
-      playingAudio = currentPlayer.getPlayingAudio();
+  private void showInfo(Audio audio) {
+    AlertDialog.Builder alert = new AlertDialog.Builder(context);
+    alert.setTitle(R.string.audio_info);
+    StringBuilder sb = new StringBuilder();
+    sb.append(context.getString(R.string.songName)).append(audio.getTitle()).append("\r\n");
+    sb.append(context.getString(R.string.fileType)).append(audio.getMimeType()).append("\r\n");
+    sb.append(context.getString(R.string.fileSize)).append(Global.format(audio.getSize())).append("\r\n");
+    sb.append(context.getString(R.string.duration)).append(TimeHelper.milli2str((int) audio.getDuration())).append("\r\n");
+    sb.append(context.getString(R.string.path)).append(audio.getLocalPlayUri());
+    alert.setMessage(sb.toString());
+    alert.setPositiveButton(android.R.string.ok, (dialog, w) -> dialog.dismiss());
+    alert.show();
+  }
+
+  private void addToRedHeart(Audio audio) {
+    if (FavoriteAudio.toggleRedHeart(audio)) {
+      Toast.makeText(context, R.string.added_to_red_heart, Toast.LENGTH_SHORT).show();
     } else {
-      playingAudio = null;
+      Toast.makeText(context, R.string.removed_frome_red_heart, Toast.LENGTH_SHORT).show();
     }
     notifyDataSetChanged();
   }
 
-  @Subscribe
-  public void updatePlayerInfo(PlayerStore.CurrentPlayerChangedEvent event) {
-    updatePlayingAudio(null);
+  private void addToFavorites(Audio audio) {
+
   }
+
+  private void toggleMenu(Audio audio) {
+    if (selectedAudio == audio) {
+      selectedAudio = null;
+    } else {
+      selectedAudio = audio;
+    }
+    notifyDataSetChanged();
+  }
+
 
   @Override
   public boolean isEnabled(int position) {
-    Object obj = getDataItem(position);
-    if (obj instanceof AudioGroup) {
-      return false;
-    }
-    return true;
+    return !(getDataItem(position) instanceof AudioGroup);
   }
-
-  class TitleViewHolder {
-    @InjectView(R.id.title)
-    TextView title;
-
-    public TitleViewHolder(View view) {
-      ButterKnife.inject(this, view);
-    }
-  }
-
-  PromptDialog          detailDialog;
-  AudioDetailViewHolder detailViewHolder;
 
   class ViewHolder {
-    @InjectView(R.id.title)        TextView    title;
-    @InjectView(R.id.menu)         View        menu;
-    @InjectView(R.id.menu_btn)     ImageButton menuBtn;
-    @InjectView(R.id.red_heart)    Button      redHeartBtn;
-    @InjectView(R.id.add_to)       Button      addToBtn;
-    @InjectView(R.id.subtitle)     TextView    art;
-    @InjectView(R.id.playing_flag) ImageView   currentImageView;
-    @InjectView(R.id.lossless)     TextView    loseless;
+    @InjectView(R.id.title)                  TextView    title;
+    @Optional @InjectView(R.id.menu)         View        menu;
+    @Optional @InjectView(R.id.menu_btn)     ImageButton menuBtn;
+    @Optional @InjectView(R.id.red_heart)    Button      redHeartBtn;
+    @Optional @InjectView(R.id.add_to)       Button      addToBtn;
+    @Optional @InjectView(R.id.lookInfo)     Button      infoBtn;
+    @Optional @InjectView(R.id.delete)       Button      deleteBtn;
+    @Optional @InjectView(R.id.subtitle)     TextView    subtitle;
+    @Optional @InjectView(R.id.playing_flag) ImageView   playingFlag;
+    @Optional @InjectView(R.id.lossless)     TextView    loseless;
 
     public ViewHolder(View view) {
       ButterKnife.inject(this, view);
     }
 
-    Audio audio;
-
-    public void setAudio(Audio audio) {
-      this.audio = audio;
-    }
-
-    @OnClick(R.id.menu_btn)
-    public void openMenu(View btn) {
-      Audio tagAudio = (Audio) btn.getTag();
-      if (selectedAudio == tagAudio) {
-        selectedAudio = null;
-      } else {
-        selectedAudio = tagAudio;
-      }
-      notifyDataSetChanged();
-    }
-
-    @OnClick(R.id.red_heart)
-    public void onRedHeartClick(View view) {
-      Audio audio = (Audio) view.getTag();
-      if (FavoriteAudio.toggleRedHeart(audio)) {
-        Toast.makeText(context, R.string.added_to_red_heart, Toast.LENGTH_SHORT).show();
-      } else {
-        Toast.makeText(context, R.string.removed_frome_red_heart, Toast.LENGTH_SHORT).show();
-      }
-      notifyDataSetChanged();
-    }
-
-    @OnClick(R.id.add_to)
-    public void addToFavorite(View view) {
-      Audio audio = (Audio) view.getTag();
-      showFavoritesDialog(audio);
-    }
-
-    @OnClick(R.id.lookInfo)
-    public void lookInfo(View view) {
-      if (context instanceof FragmentActivity) {
-        FragmentActivity activity = (FragmentActivity) context;
-        detailDialog = new PromptDialog(context);
-        detailViewHolder = new AudioDetailViewHolder();
-        detailDialog.setTitle(R.string.songInfo);
-        detailDialog.setCancelText(R.string.close);
-        detailDialog.setConfirmText(R.string.update);
-        detailDialog.setClickListener(detailViewHolder);
-        detailDialog.setCustomView(detailViewHolder.view);
-        detailViewHolder.setData(audio);
-        detailDialog.show(activity.getSupportFragmentManager(), "AudioDetail");
-      }
-    }
-
-
-    @OnClick(R.id.delete)
-    public void delete(View view) {
-      FragmentActivity activity = (FragmentActivity) context;
-      PromptDialog dialog = new PromptDialog(context);
-      dialog.setTitle(R.string.notice)
-          .setMessage(R.string.confirm_delete)
-          .setConfirmClick(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              if (localAudioStore.deleteAudio(audio)) {
-                remove(audio);
-              } else {
-              }
-              notifyDataSetChanged();
-              dialog.dismiss();
-            }
-          });
-      dialog.show(activity.getSupportFragmentManager(), "deleteDialog");
-    }
-
-    private void showFavoritesDialog(Audio audio) {
-      if (context instanceof FragmentActivity) {
-        FragmentActivity activity = (FragmentActivity) context;
-        FavoritesDialog favoritesDialog = new FavoritesDialog();
-        favoritesDialog.setAddingAudio(audio);
-        favoritesDialog.show(activity.getSupportFragmentManager(), "");
-      }
-    }
-  }
-
-  class AudioDetailViewHolder implements View.OnClickListener {
-    View view;
-    @InjectView(R.id.songName)
-    TextView songName;
-    @InjectView(R.id.fileType)
-    TextView fileType;
-    @InjectView(R.id.fileSize)
-    TextView fileSize;
-    @InjectView(R.id.duration)
-    TextView duration;
-    @InjectView(R.id.path)
-    TextView path;
-
-    Audio audio;
-
-    private AudioDetailViewHolder() {
-      view = LayoutInflater.from(context).inflate(R.layout.audio_detail, null);
-      ButterKnife.inject(this, view);
-    }
-
-    public void setData(Audio audio) {
-      this.audio = audio;
-      songName.setText(audio.getTitle());
-      path.setText(audio.getLocalPlayUri());
-      fileSize.setText(Global.format(audio.getSize()));
-      duration.setText(TimeHelper.milli2str((int) audio.getDuration()));
-      fileType.setText(audio.getMimeType());
-    }
-
-    @Override
-    public void onClick(View view) {
-      switch (view.getId()) {
-        case R.id.cancel:
-          detailDialog.dismiss();
-          break;
-        case R.id.confirm:
-          detailDialog.dismiss();
-          PromptDialog editDialog = new PromptDialog(context);
-          View editView = LayoutInflater.from(context).inflate(R.layout.audio_edit, null);
-          EditText songNameEditView = (EditText) editView.findViewById(R.id.songName);
-          songNameEditView.setText(audio.getTitle());
-          songNameEditView.setSelection(audio.getTitle().length());
-
-          editDialog.setTitle(R.string.updateTitle);
-          editDialog.setCustomView(editView);
-          editDialog.setConfirmClick(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              audio.setTitle(songNameEditView.getText().toString());
-              Audio newAudio = localAudioStore.update(audio);
-              if (newAudio == null) {
-                remove(audio);
-              } else {
-                audio.setLocalPlayUri(newAudio.getLocalPlayUri());
-              }
-              notifyDataSetChanged();
-              editDialog.dismiss();
-            }
-          });
-          editDialog.show(activity.getSupportFragmentManager(), "EditDialog");
-          break;
-      }
-    }
   }
 }
