@@ -75,6 +75,7 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
     slidingUpPanel.setPanelHeight(ViewHelper.dp2pixels(this, 60f));
 
     getSupportActionBar().setHomeButtonEnabled(true);
+    getSupportActionBar().setIcon(R.drawable.ic_home);
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.navigation, leftFragment)
         .replace(R.id.play_bar, playBarFragment)
