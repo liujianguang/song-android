@@ -1,16 +1,14 @@
 package com.song1.musicno1.dialogs;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
 import com.song1.musicno1.R;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.helpers.TimeHelper;
@@ -25,7 +23,6 @@ public class TimerDialog extends DialogFragment implements SeekBar.OnSeekBarChan
 
   @InjectView(R.id.time_seeker) SeekBar  timeSeek;
   @InjectView(R.id.time)        TextView timeView;
-  @InjectView(R.id.stop)        Button   stopBtn;
 
   protected int time = 60 * 60;
 
@@ -38,10 +35,15 @@ public class TimerDialog extends DialogFragment implements SeekBar.OnSeekBarChan
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.dialog_timer, container, false);
+  public Dialog onCreateDialog(Bundle savedInstanceState) {
+    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+    View view = View.inflate(getActivity(), R.layout.dialog_timer, null);
     ButterKnife.inject(this, view);
-    return view;
+    return alert.setTitle(R.string.setting_timer)
+        .setView(view)
+        .setNegativeButton(R.string.stop_timer, (dialog, i) -> stopTimer())
+        .setPositiveButton(android.R.string.ok, (dialog, i) -> confirm())
+        .create();
   }
 
   @Override
@@ -49,12 +51,9 @@ public class TimerDialog extends DialogFragment implements SeekBar.OnSeekBarChan
     super.onActivityCreated(savedInstanceState);
     Bundle arguments = getArguments();
     if (arguments != null) {
-      int arg = arguments.getInt(TIME);
-      if (arg != 0) {
-        time = arg;
-        stopBtn.setText(R.string.stop_timer);
-      } else {
-        stopBtn.setText(android.R.string.cancel);
+      int workingTime = arguments.getInt(TIME);
+      if (workingTime != 0) {
+        time = workingTime;
       }
     }
     timeView.setText(TimeHelper.secondToString(time));
@@ -62,14 +61,12 @@ public class TimerDialog extends DialogFragment implements SeekBar.OnSeekBarChan
     timeSeek.setProgress(time);
   }
 
-  @OnClick(R.id.stop)
   public void stopTimer() {
     MainBus.post(new StartTimerEvent(0));
     MainBus.post(new TimerEvent(timeSeek.getProgress()));
     dismiss();
   }
 
-  @OnClick(R.id.ok)
   public void confirm() {
     MainBus.post(new StartTimerEvent(timeSeek.getProgress()));
     MainBus.post(new TimerEvent(timeSeek.getProgress()));
