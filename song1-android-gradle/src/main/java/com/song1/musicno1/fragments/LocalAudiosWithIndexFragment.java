@@ -1,5 +1,6 @@
 package com.song1.musicno1.fragments;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.AdapterView;
@@ -149,17 +150,33 @@ public class LocalAudiosWithIndexFragment extends DataFragment<Audio> implements
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.refresh:
-        MediaScannerDialog mediaScannerDialog = new MediaScannerDialog();
-        mediaScannerDialog.onDismiss((isFinish) -> {
-          if (isFinish) {
-            localAudioStore.cleanCache();
-            reload();
-          }
-        });
-        mediaScannerDialog.show(getFragmentManager(), "Scanner");
+        showScanConfirmDialog();
         return true;
     }
     return super.onOptionsItemSelected(item);
+  }
+
+  private void showScanConfirmDialog() {
+    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+    alert.setTitle(R.string.notice)
+        .setMessage(R.string.need_to_scan)
+        .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
+          dialog.dismiss();
+          showScannerDialog();
+        })
+        .setNegativeButton(android.R.string.cancel, (dialog, whichButton) -> dialog.dismiss())
+        .show();
+  }
+
+  private void showScannerDialog() {
+    MediaScannerDialog dialog = new MediaScannerDialog();
+    dialog.onDismiss((isFinish) -> {
+      if (isFinish) {
+        localAudioStore.cleanCache();
+        reload();
+      }
+    });
+    dialog.show(getFragmentManager(), "Scanner");
   }
 
   @Override

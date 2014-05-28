@@ -231,7 +231,7 @@
   <string name="scanning_file">正在扫描: %s</string>
   <string name="prepare_for_scanning">正在准备扫描…</string>
   <string name="scan">扫描</string>
-  <string name="need_to_scan">是否开始扫描</string>
+  <string name="need_to_scan">是否开始扫描音乐？</string>
   <string name="scanning_please_wait">正在扫描，请稍候…</string>
   <string name="invalid_audio">无法播放 %s</string>
 
