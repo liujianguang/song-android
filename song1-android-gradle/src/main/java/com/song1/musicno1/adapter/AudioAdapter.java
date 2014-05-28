@@ -165,7 +165,7 @@ public class AudioAdapter extends DataAdapter<Audio> {
     @InjectView(R.id.playing_flag) ImageView   playingFlag;
     @InjectView(R.id.title)        TextView    title;
     @InjectView(R.id.subtitle)     TextView    subtitle;
-    @InjectView(R.id.lossless)     TextView    lossless;
+    @InjectView(R.id.loseless)     TextView    lossless;
     @InjectView(R.id.menu)         View        menu;
     @InjectView(R.id.menu_btn)     ImageButton menuBtn;
     @InjectView(R.id.add_to)       Button      addToButton;

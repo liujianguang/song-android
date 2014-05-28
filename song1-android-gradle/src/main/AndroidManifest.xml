@@ -25,7 +25,7 @@
         android:value="song1.db"/>
     <meta-data
         android:name="AA_DB_VERSION"
-        android:value="2"/>
+        android:value="3"/>
     <meta-data
         android:name="appid"
         android:value="appid:004711975924897866"/>

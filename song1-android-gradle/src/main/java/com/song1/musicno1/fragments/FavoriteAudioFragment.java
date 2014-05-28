@@ -115,6 +115,12 @@ public class FavoriteAudioFragment extends ListFragment<Audio> implements Adapte
           holder.playingFlag.setVisibility(View.GONE);
         }
 
+        if (audio.isLossless()) {
+          holder.loseless.setVisibility(View.VISIBLE);
+        } else {
+          holder.loseless.setVisibility(View.GONE);
+        }
+
         return view;
       }
     };
@@ -137,6 +143,7 @@ public class FavoriteAudioFragment extends ListFragment<Audio> implements Adapte
     @InjectView(R.id.index)        TextView    index;
     @InjectView(R.id.menu)         View        menu;
     @InjectView(R.id.playing_flag) View        playingFlag;
+    @InjectView(R.id.loseless)     View        loseless;
 
     public ViewHolder(View view) {
       ButterKnife.inject(this, view);

@@ -42,6 +42,9 @@ public class FavoriteAudio extends Model {
   @Column(name = "album_id")
   public String albumId;
 
+  @Column(name = "mime_type")
+  public String mimeType;
+
   public FavoriteAudio() {
 
   }
@@ -55,6 +58,7 @@ public class FavoriteAudio extends Model {
     remotePlayUrl = audio.getRemotePlayUrl();
     localPlayUri = audio.getLocalPlayUri();
     albumId = audio.getAlbumId();
+    mimeType = audio.getMimeType();
   }
 
   public Audio toAudio() {
@@ -66,6 +70,7 @@ public class FavoriteAudio extends Model {
     audio.setLocalPlayUri(localPlayUri);
     audio.setRemotePlayUrl(remotePlayUrl);
     audio.setAlbumId(albumId);
+    audio.setMimeType(mimeType);
     return audio;
   }
 

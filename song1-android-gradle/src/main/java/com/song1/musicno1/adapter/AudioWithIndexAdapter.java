@@ -221,7 +221,7 @@ public class AudioWithIndexAdapter extends DataAdapter<Audio> {
     @Optional @InjectView(R.id.delete)       Button      deleteBtn;
     @Optional @InjectView(R.id.subtitle)     TextView    subtitle;
     @Optional @InjectView(R.id.playing_flag) ImageView   playingFlag;
-    @Optional @InjectView(R.id.lossless)     TextView    loseless;
+    @Optional @InjectView(R.id.loseless)     TextView    loseless;
 
     public ViewHolder(View view) {
       ButterKnife.inject(this, view);
