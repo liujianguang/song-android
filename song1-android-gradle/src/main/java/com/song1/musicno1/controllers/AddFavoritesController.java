@@ -69,18 +69,11 @@ public class AddFavoritesController {
             Favorite favorite = Favorite.create(editText.getText().toString());
             favorite.add(audio);
             showSuccessToast(favorite.name, audio.getTitle());
-//            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-//            imm.hideSoftInputFromInputMethod(editText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
           }
         })
         .setNegativeButton(android.R.string.cancel, (dialog, i) -> {
           dialog.dismiss();
-//          InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-//          imm.hideSoftInputFromInputMethod(editText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
         })
         .show();
-
-    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-    imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
   }
 }

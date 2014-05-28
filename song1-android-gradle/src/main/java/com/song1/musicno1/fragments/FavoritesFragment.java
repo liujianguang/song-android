@@ -8,19 +8,15 @@ import android.view.*;
 import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.google.common.collect.Lists;
+import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.adapter.DataAdapter;
-import com.song1.musicno1.dialogs.InputDialog;
-import com.song1.musicno1.dialogs.PromptDialog;
 import com.song1.musicno1.fragments.base.DataFragment;
 import com.song1.musicno1.helpers.ActiveHelper;
 import com.song1.musicno1.loader.LoadData;
 import com.song1.musicno1.models.Favorite;
-import com.song1.musicno1.ui.ButtonTool;
-import com.song1.musicno1.util.ToastUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -49,44 +45,21 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
     public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
       switch (menuItem.getItemId()) {
         case R.id.delete:
-          PromptDialog promptDialog = new PromptDialog(getActivity());
-          promptDialog.setTitle(R.string.notice)
+          AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+          alert.setTitle(R.string.notice)
               .setMessage(R.string.confirm_delete)
-              .setConfirmClick(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                  ActiveHelper.transition(() -> {
-                    for (Favorite favorite : selectedItem.values()) {
-                      favorite.destroy();
-                    }
-                  });
-                  actionMode.finish();
-                  reload();
-                  promptDialog.dismiss();
-                }
+              .setPositiveButton(android.R.string.ok, (dialog, i) -> {
+                dialog.dismiss();
+                ActiveHelper.transition(() -> {
+                  for (Favorite favorite : selectedItem.values()) {
+                    favorite.destroy();
+                  }
+                });
+                actionMode.finish();
+                reload();
               })
-              .setCancelClick(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                  promptDialog.dismiss();
-                }
-              });
-          promptDialog.show(getFragmentManager(), "promptDialog");
-//          AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//          builder.setTitle(R.string.notice)
-//              .setMessage(R.string.confirm_delete)
-//              .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-//                ActiveHelper.transition(() -> {
-//                  for (Favorite favorite : selectedItem.values()) {
-//                    favorite.destroy();
-//                  }
-//                });
-//                actionMode.finish();
-//                reload();
-//                dialog.dismiss();
-//              })
-//              .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss())
-//              .create().show();
+              .setNegativeButton(android.R.string.cancel, (dialog, i) -> dialog.dismiss())
+              .show();
           return true;
       }
       return false;
@@ -127,11 +100,9 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
     super.onResume();
     reload();
   }
-  
+
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//    ToastUtil.show(getActivity(),"hello");
-    System.out.println("onCreateOptionMenu...");
     inflater.inflate(R.menu.favorites, menu);
     super.onCreateOptionsMenu(menu, inflater);
   }
@@ -150,11 +121,22 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
   }
 
   private void createFavorite() {
-    InputDialog.openWithTitle(getString(R.string.please_input_favorite_name))
-        .onConfirmed((name) -> {
-          Favorite.create(name);
-          reload();
-        }).show(getFragmentManager(), "");
+    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+    View view = View.inflate(getActivity(), R.layout.dialog_only_input, null);
+    EditText editText = (EditText) view.findViewById(R.id.input);
+    alert.setTitle(R.string.create_new_favorite)
+        .setView(view)
+        .setPositiveButton(android.R.string.ok, (dialog, i) -> {
+          dialog.dismiss();
+          if (editText.getText() != null && !Strings.isNullOrEmpty(editText.getText().toString())) {
+            Favorite.create(editText.getText().toString());
+            reload();
+          }
+        })
+        .setNegativeButton(android.R.string.cancel, (dialog, i) -> {
+          dialog.dismiss();
+        })
+        .show();
   }
 
   @Override
@@ -232,7 +214,8 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
     edit();
     return true;
   }
-  private void edit(){
+
+  private void edit() {
 
     MainActivity activity = (MainActivity) getActivity();
     activity.hidePlayBar();
