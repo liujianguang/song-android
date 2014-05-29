@@ -6,7 +6,7 @@
               android:layout_height="match_parent"
               android:minHeight="@dimen/menu_title_height"
               android:gravity="center_vertical"
-              android:background="@color/title_bg">
+              android:background="@color/gray">
 
   <TextView
       android:id="@+id/title"

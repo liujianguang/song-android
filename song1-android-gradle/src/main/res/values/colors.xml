@@ -7,8 +7,8 @@
   <color name="title_bg_color">#427100</color>
   <color name="content_bg_color">#688d33</color>
   <color name="red">#ff0000</color>
-  <color name="bg">#E0E0E0</color>
-  <color name="title_bg">#ffd5d5d5</color>
+  <color name="bg">#FFFFFF</color>
+  <color name="title_bg">#fff5f5f5</color>
   <color name="dark_green">#437012</color>
   <color name="subtitle_text_color">#B1C0A4</color>
   <color name="button_disabled">#ffb5c0a8</color>
@@ -22,4 +22,5 @@
   <color name="index_bg">#88414141</color>
   <color name="index_text">#FFFFFF</color>
   <color name="pink">#F000FF</color>
+  <color name="gray">#fff5f5f5</color>
 </resources>

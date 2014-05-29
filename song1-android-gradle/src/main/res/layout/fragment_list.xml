@@ -18,6 +18,8 @@
       android:visibility="gone"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:divider="@color/gray"
+      android:dividerHeight="0.5dp"
       android:layout_below="@id/headerLayout"/>
 
   <ProgressBar
