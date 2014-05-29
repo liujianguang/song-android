@@ -10,7 +10,8 @@
       android:gravity="center_vertical"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:visibility="visible">
+      android:visibility="visible"
+      android:background="@drawable/playing_page_title_bg">
 
     <RelativeLayout
         android:id="@+id/bottom_play_list_container"
@@ -18,15 +19,17 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:clickable="true">
+        android:clickable="true"
+        android:layout_marginRight="5dp">
         <ImageButton
             android:id="@+id/bottom_player_list"
             android:background="@null"
             android:scaleType="fitCenter"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
-            android:src="@drawable/ic_device_list"
-            android:contentDescription="@null"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_sling_up"
+            android:contentDescription="@null"
+            android:padding="15dp"/>
         <com.song1.musicno1.ui.IocTextView
             android:id="@+id/deviceNumView"
             android:visibility="gone"
@@ -46,69 +49,71 @@
         android:layout_marginRight="4dp"
         android:layout_width="1dp"
         android:layout_centerVertical="true"
-        android:layout_height="30dp"/>
-
-    <ImageButton
-        android:id="@+id/bottom_play"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/gap"
-        android:padding="4dp"
-        android:background="@null"
-        android:src="@drawable/ic_play_large"
-        android:scaleType="fitCenter"
-        android:layout_width="54dp"
-        android:layout_height="54dp"
-        android:contentDescription="@null"
-        android:clickable="false"/>
-
+        android:layout_height="30dp"
+        android:visibility="gone"/>
 
     <RelativeLayout
-        android:layout_toLeftOf="@id/bottom_play"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:id="@+id/bottomLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp">
 
-      <com.song1.musicno1.ui.RoundImageView
+      <ImageView
           android:id="@+id/bottom_album_art"
           android:background="@android:color/transparent"
           android:src="@drawable/default_album_art_small"
           android:layout_centerVertical="true"
-          android:layout_marginLeft="4dp"
-          android:layout_width="50dp"
-          android:layout_height="50dp"
-          roundImage:mBorderThickness="2dp"
-          roundImage:mBorderColor="@color/white"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
           android:contentDescription="@null"/>
 
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:layout_toRightOf="@id/bottom_album_art"
-          android:orientation="vertical"
-          android:gravity="center_vertical"
-          android:layout_marginLeft="10dp">
+      <ImageButton
+          android:id="@+id/bottom_play"
+          android:layout_centerVertical="true"
+          android:background="@null"
+          android:src="@drawable/ic_play_large"
+          android:scaleType="fitCenter"
+          android:layout_width="30dp"
+          android:layout_height="30dp"
+          android:contentDescription="@null"
+          android:clickable="false"
+          android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_toRightOf="@id/bottomLeft"
+        android:layout_toLeftOf="@id/bottom_play_list_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <com.song1.musicno1.views.AlwaysMarqueeTextView
             android:id="@+id/bottom_title"
             android:textSize="@dimen/list_item_title_text_size"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:singleLine="true"
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:scrollHorizontally="true"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_centerInParent="true"/>
 
         <TextView
             android:id="@+id/bottom_subtitle"
-            android:textColor="@color/subtitle_text_color"
+            android:textColor="@color/white"
             android:singleLine="true"
             android:ellipsize="end"
             android:textSize="@dimen/text_size_small"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-      </LinearLayout>
-    </RelativeLayout>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
+
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/position_progress"
@@ -123,7 +128,7 @@
       android:visibility="gone"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="@drawable/play_page_title_bg">
+      android:background="@drawable/playing_page_title_bg">
 
     <ImageButton
         android:id="@+id/top_slide_down"
@@ -169,12 +174,13 @@
         android:layout_toRightOf="@id/top_slide_down"
         android:layout_toLeftOf="@id/timer"
         android:layout_width="match_parent"
-        android:layout_height="34dp"/>
+        android:layout_height="34dp"
+        android:textColor="@color/white"/>
 
     <TextView
         android:id="@+id/top_subtitle"
         android:textSize="@dimen/text_size_small"
-        android:textColor="@color/subtitle_text_color"
+        android:textColor="@color/white"
         android:gravity="center"
         android:singleLine="true"
         android:ellipsize="end"

@@ -107,12 +107,12 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
       refreshLayout.setRefreshing(false);
       albumArtImageView.setImageResource(R.drawable.default_album_art_small);
 
-      playerListBtn.setImageResource(R.drawable.ic_device_list);
+      playerListBtn.setImageResource(R.drawable.ic_sling_up);
     } else {
       if (currentPlayer instanceof LocalPlayer) {
-        playerListBtn.setImageResource(R.drawable.ic_device_list);
+        playerListBtn.setImageResource(R.drawable.ic_sling_up);
       } else {
-        playerListBtn.setImageResource(R.drawable.ic_device_list_selected);
+        playerListBtn.setImageResource(R.drawable.ic_sling_up);
       }
 
       bottomPlayBtn.setEnabled(true);
@@ -280,7 +280,7 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
     newDeviceCount = ssidList.size();
     if (newDeviceCount != 0) {
       deviceNumView.setText(newDeviceCount + "");
-      deviceNumView.setVisibility(View.VISIBLE);
+      deviceNumView.setVisibility(View.GONE);
     } else {
       deviceNumView.setVisibility(View.GONE);
     }

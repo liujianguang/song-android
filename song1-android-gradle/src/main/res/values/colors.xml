@@ -23,4 +23,6 @@
   <color name="index_text">#FFFFFF</color>
   <color name="pink">#F000FF</color>
   <color name="gray">#fff5f5f5</color>
+  <color name="button_press">#1186FF</color>
+  <color name="green">#00ff00</color>
 </resources>

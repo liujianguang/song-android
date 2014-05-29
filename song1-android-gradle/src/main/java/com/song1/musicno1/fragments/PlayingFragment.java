@@ -21,6 +21,7 @@ import com.song1.musicno1.models.play.*;
 import com.song1.musicno1.stores.PlayerStore;
 import com.song1.musicno1.ui.IocTextView;
 import com.song1.musicno1.util.DeviceUtil;
+import com.song1.musicno1.util.ToastUtil;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -51,6 +52,8 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
   int newDeviceCount = 0;
   protected boolean isDeviceFragmentShow;
 
+  AudioActionsFragment audioActionsFragment;
+
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,6 +65,10 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
+    audioActionsFragment = new AudioActionsFragment();
+    audioActionsFragment.setView(getView());
+
+
     pager.setAdapter(new Adapter(getChildFragmentManager()));
     pager.setCurrentItem(1);
     //indicator.setViewPager(pager);
@@ -170,12 +177,14 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
   public void onPause() {
     super.onPause();
     MainBus.unregister(this);
+    //audioActionsFragment.onPause();
   }
 
   @Override
   public void onResume() {
     super.onResume();
     MainBus.register(this);
+    //audioActionsFragment.onResume();
     updatePlayerInfo(null);
   }
 
@@ -193,6 +202,7 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
 
   @OnClick(R.id.play)
   public void onPlayClick() {
+//    ToastUtil.show(getActivity(),"playButton");
     switch (state) {
       case Player.State.PLAYING:
         Players.pause();
@@ -298,9 +308,11 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     public Fragment getItem(int position) {
 //      switch (position) {
 //        case 0:
-         // return new PlaylistFragment();
+      // return new PlaylistFragment();
 //        default:
-          return new PlaylistFragment();
+      PlaylistFragment playlistFragment = new PlaylistFragment();
+      playlistFragment.setAudioActionsFragment(audioActionsFragment);
+      return playlistFragment;
 //      }
     }
 

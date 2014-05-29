@@ -46,7 +46,8 @@
       <FrameLayout
           android:id="@+id/playing"
           android:layout_width="match_parent"
-          android:layout_height="match_parent">
+          android:layout_height="match_parent"
+          android:clickable="true">
       </FrameLayout>
     </LinearLayout>
   </com.song1.musicno1.vender.SlidingUpPanelLayout>

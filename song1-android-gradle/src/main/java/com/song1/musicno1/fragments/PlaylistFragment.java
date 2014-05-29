@@ -31,6 +31,7 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemClic
   private   Audio              playingAudio;
 
   @InjectView(R.id.list) ListView listView;
+  AudioActionsFragment audioActionsFragment;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,9 +44,14 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemClic
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     audiosAdapter = newAdapter();
+    View headerView = getLayoutInflater(savedInstanceState).inflate(R.layout.header,null);
+    listView.addHeaderView(headerView);
+    getChildFragmentManager().beginTransaction().replace(R.id.header,audioActionsFragment).commit();
+
     listView.setAdapter(audiosAdapter);
     listView.setOnItemClickListener(this);
   }
+
 
   @Subscribe
   public void updatePlayerInfo(PlayerStore.CurrentPlayerChangedEvent event) {
@@ -118,7 +124,7 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemClic
 
   @Override
   public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-    Audio audio = audiosAdapter.getDataItem(i);
+    Audio audio = audiosAdapter.getDataItem(i - 1);
     Players.playWithAudio(audio);
   }
 
@@ -130,5 +136,9 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemClic
     public void inject(View view) {
       ButterKnife.inject(this, view);
     }
+  }
+
+  public void setAudioActionsFragment(AudioActionsFragment audioActionsFragment){
+    this.audioActionsFragment = audioActionsFragment;
   }
 }

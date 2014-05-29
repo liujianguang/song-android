@@ -24,19 +24,21 @@ import com.song1.musicno1.models.LocalAudioStore;
 import com.song1.musicno1.models.play.*;
 import com.song1.musicno1.stores.PlayerStore;
 import com.song1.musicno1.util.RoundedTransformation;
+import com.song1.musicno1.util.ToastUtil;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
+import org.w3c.dom.Text;
 
 /**
  * Created by windless on 3/31/14.
  */
 public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
-  @InjectView(R.id.position)        TextView    positionView;
-  @InjectView(R.id.duration)        TextView    durationView;
-  @InjectView(R.id.position_seeker) SeekBar     positionSeeker;
-  @InjectView(R.id.actions_section) View        actionsSection;
+  TextView    positionView;
+  TextView    durationView;
+  SeekBar     positionSeeker;
+//  @InjectView(R.id.actions_section) View        actionsSection;
   @InjectView(R.id.album_art)       ImageView   albumArtImageView;
-  @InjectView(R.id.play_mode)       ImageButton playModeBtn;
+  ImageButton playModeBtn;
 
   private LocalAudioStore localAudioStore;
   private ObjectAnimator  rotation;
@@ -76,12 +78,12 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
   }
 
   private void newRotationAnimator() {
-    rotation = ObjectAnimator.ofFloat(albumArtImageView, "rotation", rotationStart, 360f + rotationStart);
-    rotation.setRepeatCount(ValueAnimator.INFINITE);
-    rotation.setRepeatMode(ValueAnimator.RESTART);
-    rotation.setInterpolator(new LinearInterpolator());
-    rotation.setDuration(30000);
-    rotation.addUpdateListener(animation -> rotationStart = (float) animation.getAnimatedValue());
+//    rotation = ObjectAnimator.ofFloat(albumArtImageView, "rotation", rotationStart, 360f + rotationStart);
+//    rotation.setRepeatCount(ValueAnimator.INFINITE);
+//    rotation.setRepeatMode(ValueAnimator.RESTART);
+//    rotation.setInterpolator(new LinearInterpolator());
+//    rotation.setDuration(30000);
+//    rotation.addUpdateListener(animation -> rotationStart = (float) animation.getAnimatedValue());
   }
 
   @Subscribe
@@ -201,12 +203,14 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
 
   @OnClick(R.id.album_art)
   public void toggleActionsView() {
-    if (actionsSection.getVisibility() == View.GONE) {
-      actionsSection.setVisibility(View.VISIBLE);
-    } else {
-      actionsSection.setVisibility(View.GONE);
-    }
+//    if (actionsSection.getVisibility() == View.GONE) {
+//      actionsSection.setVisibility(View.VISIBLE);
+//    } else {
+//      actionsSection.setVisibility(View.GONE);
+//    }
   }
+
+
 
   @Override
   public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -220,6 +224,7 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
 
   @Override
   public void onStopTrackingTouch(SeekBar seekBar) {
+    //ToastUtil.show(getActivity(),"seekbar");
     Players.seek(seekBar.getProgress());
   }
 
@@ -228,4 +233,18 @@ public class AudioActionsFragment extends Fragment implements SeekBar.OnSeekBarC
     Players.nextPlayMode();
     updatePlayMode(null);
   }
+
+  public void setView(View view){
+    positionView = (TextView) view.findViewById(R.id.position);
+    positionSeeker = (SeekBar) view.findViewById(R.id.position_seeker);
+    durationView = (TextView) view.findViewById(R.id.duration);
+    playModeBtn = (ImageButton) view.findViewById(R.id.play_mode);
+    playModeBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        onPlayModeClick();
+      }
+    });
+  }
+
 }

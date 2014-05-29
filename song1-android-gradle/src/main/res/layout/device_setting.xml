@@ -53,7 +53,8 @@
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/setDeviceName"/>
+          android:text="@string/setDeviceName"
+          android:textColor="@color/white"/>
 
       <RelativeLayout
           android:layout_width="wrap_content"
@@ -98,7 +99,8 @@
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/selectNetwork"/>
+          android:text="@string/selectNetwork"
+          android:textColor="@color/white"/>
 
       <Spinner
           android:layout_width="wrap_content"
@@ -119,7 +121,8 @@
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/networkPass"/>
+          android:text="@string/networkPass"
+          android:textColor="@color/white"/>
 
       <EditText
           android:layout_width="wrap_content"

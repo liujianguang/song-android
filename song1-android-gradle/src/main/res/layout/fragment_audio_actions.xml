@@ -3,7 +3,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:orientation="vertical"
              android:layout_width="match_parent"
-             android:layout_height="match_parent">
+             android:layout_height="272dp"
+            android:id="@+id/audio_action">
 
   <ImageView
       android:id="@+id/album_art"
@@ -16,7 +17,7 @@
 
   <RelativeLayout
       android:id="@+id/actions_section"
-      android:visibility="gone"
+      android:visibility="visible"
       android:layout_width="match_parent"
       android:layout_height="match_parent">
 
@@ -24,7 +25,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:visibility="gone">
 
       <TextView
           android:id="@+id/position"
@@ -64,7 +66,8 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="40dp">
+        android:layout_height="40dp"
+        android:visibility="gone">
 
       <ImageButton
           android:id="@+id/play_mode"

@@ -14,7 +14,7 @@
       android:layout_marginRight="4dp"
       android:background="@null"
       android:layout_gravity="center_vertical"
-      android:src="@drawable/ic_vol_max"
+      android:src="@drawable/ic_playing_audio"
       android:visibility="invisible"/>
 
   <TextView

@@ -30,6 +30,7 @@ import com.song1.musicno1.services.HttpService;
 import com.song1.musicno1.services.PlayService;
 import com.song1.musicno1.services.UpnpService;
 import com.song1.musicno1.stores.PlayerStore;
+import com.song1.musicno1.util.ToastUtil;
 import com.song1.musicno1.vender.SlidingUpPanelLayout;
 import com.squareup.otto.Subscribe;
 import de.akquinet.android.androlog.Log;
@@ -80,7 +81,7 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.navigation, leftFragment)
         .replace(R.id.play_bar, playBarFragment)
-        .replace(R.id.main, new TestFragment())
+//        .replace(R.id.main, new TestFragment())
         .replace(R.id.playing, playingFragment)
         .commit();
 
@@ -106,7 +107,6 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
     drawerLayout.setDrawerListener(actionBarDrawerToggle);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportActionBar().setHomeButtonEnabled(true);
-
   }
 
   @Override
@@ -216,6 +216,7 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
 
   @Override
   public void onPanelCollapsed(View panel) {
+    //ToastUtil.show(this,"onPanelCollapsed");
     if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
       drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
@@ -234,6 +235,7 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
 
   @Override
   public void onPanelExpanded(View panel) {
+    //ToastUtil.show(this,"onPanelExpanded");
     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     playingFragment.updatePlayerInfo(null);
   }
