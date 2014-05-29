@@ -48,6 +48,7 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
   @InjectView(R.id.position_seeker)  SeekBar     positionSeeker;
   @InjectView(R.id.position)         TextView    positionView;
   @InjectView(R.id.duration)         TextView    durationView;
+  @InjectView(R.id.play_mode)        ImageButton playModeBtn;
 
   ImageView albumArtView;
 
@@ -132,6 +133,7 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
       nextButton.setEnabled(false);
       volumeBar.setEnabled(false);
       favoriteButton.setEnabled(false);
+      playModeBtn.setVisibility(View.INVISIBLE);
 
       playerListBtn.setImageResource(R.drawable.ic_playerlist);
     } else {
@@ -139,13 +141,14 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
       playButton.setEnabled(true);
       nextButton.setEnabled(true);
       volumeBar.setEnabled(true);
+      playModeBtn.setVisibility(View.VISIBLE);
 
       favoriteButton.setEnabled(true);
 
       if (currentPlayer instanceof LocalPlayer) {
         playerListBtn.setImageResource(R.drawable.ic_playerlist);
       } else {
-        playerListBtn.setImageResource(R.drawable.ic_playerlist);
+        playerListBtn.setImageResource(R.drawable.ic_playerlist_selected);
       }
 
       updateVolume();
@@ -153,6 +156,7 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
       updatePosition();
       updatePlaylist(null);
       updatePlayingAudio(null);
+      updatePlayMode(null);
     }
   }
 
@@ -168,6 +172,35 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
         albumArtView.setImageDrawable(null);
       }
       playlistItemAdapter.notifyDataSetChanged();
+    }
+  }
+
+  @OnClick(R.id.play_mode)
+  public void onPlayModeClick() {
+    Players.nextPlayMode();
+    updatePlayMode(null);
+  }
+
+  @Subscribe
+  public void updatePlayMode(PlayerStore.PlayerModeChangedEvent event) {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (currentPlayer != null) {
+      playModeBtn.setVisibility(View.VISIBLE);
+
+      int playMode = currentPlayer.getPlayMode();
+      switch (playMode) {
+        case Player.PlayMode.NORMAL:
+          playModeBtn.setImageResource(R.drawable.ic_play_mode_normal);
+          break;
+        case Player.PlayMode.REPEAT_ALL:
+          playModeBtn.setImageResource(R.drawable.ic_play_mode_repeat_all);
+          break;
+        case Player.PlayMode.REPEAT_ONE:
+          playModeBtn.setImageResource(R.drawable.ic_play_mode_repeat_one);
+          break;
+        case Player.PlayMode.SHUFFLE:
+          playModeBtn.setImageResource(R.drawable.ic_play_mode_random);
+      }
     }
   }
 

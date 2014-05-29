@@ -105,7 +105,7 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
       if (currentPlayer instanceof LocalPlayer) {
         playerListBtn.setImageResource(R.drawable.ic_playerlist);
       } else {
-        playerListBtn.setImageResource(R.drawable.ic_playerlist);
+        playerListBtn.setImageResource(R.drawable.ic_playerlist_selected);
       }
 
       bottomPlayBtn.setEnabled(true);
