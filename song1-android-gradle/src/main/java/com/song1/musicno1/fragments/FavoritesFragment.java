@@ -45,21 +45,25 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
     public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
       switch (menuItem.getItemId()) {
         case R.id.delete:
-          AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-          alert.setTitle(R.string.notice)
-              .setMessage(R.string.confirm_delete)
-              .setPositiveButton(android.R.string.ok, (dialog, i) -> {
-                dialog.dismiss();
-                ActiveHelper.transition(() -> {
-                  for (Favorite favorite : selectedItem.values()) {
-                    favorite.destroy();
-                  }
-                });
-                actionMode.finish();
-                reload();
-              })
-              .setNegativeButton(android.R.string.cancel, (dialog, i) -> dialog.dismiss())
-              .show();
+          if (selectedItem.values().size() > 0) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+            alert.setTitle(R.string.notice)
+                .setMessage(R.string.confirm_delete)
+                .setPositiveButton(android.R.string.ok, (dialog, i) -> {
+                  dialog.dismiss();
+                  ActiveHelper.transition(() -> {
+                    for (Favorite favorite : selectedItem.values()) {
+                      favorite.destroy();
+                    }
+                  });
+                  actionMode.finish();
+                  reload();
+                })
+                .setNegativeButton(android.R.string.cancel, (dialog, i) -> dialog.dismiss())
+                .show();
+          } else {
+            actionMode.finish();
+          }
           return true;
       }
       return false;
@@ -114,7 +118,7 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
         createFavorite();
         return true;
       case R.id.edit:
-        edit();
+        selectItem(-1);
         return true;
     }
     return super.onOptionsItemSelected(item);
@@ -211,18 +215,20 @@ public class FavoritesFragment extends DataFragment<Favorite> implements Adapter
     if (actionMode != null) {
       return false;
     }
-    edit();
+
+    selectItem(i);
     return true;
   }
 
-  private void edit() {
-
+  private void selectItem(int i) {
     MainActivity activity = (MainActivity) getActivity();
     activity.hidePlayBar();
 
     actionMode = startActionMode(actionModeCallback);
     actionMode.setTitle(getString(R.string.selected_items, selectedItem.size()));
-    //selectedItem.put(i, getDataItem(i));
+    if (i != -1) {
+      selectedItem.put(i, getDataItem(i));
+    }
     getAdapter().notifyDataSetChanged();
   }
 
