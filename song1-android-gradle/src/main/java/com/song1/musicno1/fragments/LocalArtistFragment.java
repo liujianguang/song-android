@@ -3,6 +3,7 @@ package com.song1.musicno1.fragments;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import com.song1.musicno1.App;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.adapter.DataAdapter;
 import com.song1.musicno1.adapter.LocalArtistAdapter;
@@ -19,7 +20,7 @@ import java.util.List;
  * Time: PM4:12
  */
 public class LocalArtistFragment extends ListFragment<Artist> implements AdapterView.OnItemClickListener {
-  @Inject LocalAudioStore localAudioStore;
+  LocalAudioStore localAudioStore;
 
   @Inject
   public LocalArtistFragment() {
@@ -28,6 +29,7 @@ public class LocalArtistFragment extends ListFragment<Artist> implements Adapter
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
+    localAudioStore = App.get(LocalAudioStore.class);
     getListView().setOnItemClickListener(this);
   }
 

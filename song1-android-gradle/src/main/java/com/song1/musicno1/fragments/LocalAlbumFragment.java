@@ -3,6 +3,7 @@ package com.song1.musicno1.fragments;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import com.song1.musicno1.App;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.adapter.AlbumAdapter;
 import com.song1.musicno1.adapter.DataAdapter;
@@ -19,7 +20,7 @@ import java.util.List;
  * Time: PM4:41
  */
 public class LocalAlbumFragment extends GridFragment<Album> implements AdapterView.OnItemClickListener {
-  @Inject LocalAudioStore localAudioStore;
+  LocalAudioStore localAudioStore;
 
   @Inject
   public LocalAlbumFragment() {
@@ -28,6 +29,7 @@ public class LocalAlbumFragment extends GridFragment<Album> implements AdapterVi
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
+    localAudioStore = App.get(LocalAudioStore.class);
     getGridView().setOnItemClickListener(this);
   }
 

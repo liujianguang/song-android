@@ -1,19 +1,21 @@
 package com.song1.musicno1.fragments;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.RadioGroup;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.google.common.collect.Lists;
+import com.song1.musicno1.App;
 import com.song1.musicno1.R;
+import com.song1.musicno1.dialogs.MediaScannerDialog;
 import com.song1.musicno1.fragments.base.BaseFragment;
+import com.song1.musicno1.models.LocalAudioStore;
 
 import javax.inject.Inject;
 import java.lang.reflect.Field;
@@ -29,9 +31,9 @@ public class LocalAudioContainerFragment extends BaseFragment implements ViewPag
 
   List<Fragment> fragments;
 
-  @Inject LocalAudioFragment  localAudioFragment;
-  @Inject LocalAlbumFragment  localAlbumFragment;
-  @Inject LocalArtistFragment localArtistFragment;
+  LocalAudiosWithIndexFragment localAudioFragment;
+  LocalAlbumFragment           localAlbumFragment;
+  LocalArtistFragment          localArtistFragment;
 
   @InjectView(R.id.pager)           ViewPager  viewPager;
   @InjectView(R.id.segment_control) RadioGroup segmentControl;
@@ -39,6 +41,7 @@ public class LocalAudioContainerFragment extends BaseFragment implements ViewPag
   FragmentAdapter adapter;
 
   int selectedSegmentId = R.id.songButton;
+  protected LocalAudioStore localAudioStore;
 
   public FragmentPagerAdapter getAdapter() {
     return adapter;
@@ -55,13 +58,16 @@ public class LocalAudioContainerFragment extends BaseFragment implements ViewPag
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    LocalAudiosWithIndexFragment localAudioFragment = new LocalAudiosWithIndexFragment();
+    localAudioFragment = new LocalAudiosWithIndexFragment();
+    localAlbumFragment = new LocalAlbumFragment();
+    localArtistFragment = new LocalArtistFragment();
     fragments = Lists.newArrayList(
         localAudioFragment,
         localAlbumFragment,
         localArtistFragment
     );
     adapter = new FragmentAdapter(getChildFragmentManager());
+    localAudioStore = App.get(LocalAudioStore.class);
   }
 
   @Override
@@ -73,6 +79,49 @@ public class LocalAudioContainerFragment extends BaseFragment implements ViewPag
 
     segmentControl.check(selectedSegmentId);
     segmentControl.setOnCheckedChangeListener(this);
+
+    setHasOptionsMenu(true);
+  }
+
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.local_audio, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.refresh:
+        showScanConfirmDialog();
+        return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+  private void showScanConfirmDialog() {
+    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+    alert.setTitle(R.string.notice)
+        .setMessage(R.string.need_to_scan)
+        .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
+          dialog.dismiss();
+          showScannerDialog();
+        })
+        .setNegativeButton(android.R.string.cancel, (dialog, whichButton) -> dialog.dismiss())
+        .show();
+  }
+
+  private void showScannerDialog() {
+    MediaScannerDialog dialog = new MediaScannerDialog();
+    dialog.onDismiss((isFinish) -> {
+      if (isFinish) {
+        localAudioStore.cleanCache();
+        localAudioFragment.reload();
+        localAlbumFragment.reload();
+        localArtistFragment.reload();
+      }
+    });
+    dialog.show(getFragmentManager(), "Scanner");
   }
 
   @Override

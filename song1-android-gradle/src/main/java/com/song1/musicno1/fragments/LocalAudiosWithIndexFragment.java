@@ -79,8 +79,6 @@ public class LocalAudiosWithIndexFragment extends DataFragment<Audio> implements
       sb.append(indexString);
     }
     indexView.setText(sb.toString());
-
-    setHasOptionsMenu(true);
   }
 
   @Override
@@ -134,49 +132,6 @@ public class LocalAudiosWithIndexFragment extends DataFragment<Audio> implements
     listView.setVisibility(View.GONE);
     indexView.setVisibility(View.GONE);
     getActivity().invalidateOptionsMenu();
-  }
-
-  @Override
-  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    if (isLoaded) {
-      inflater.inflate(R.menu.local_audio, menu);
-    } else {
-      inflater.inflate(R.menu.no_menu, menu);
-    }
-    super.onCreateOptionsMenu(menu, inflater);
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.refresh:
-        showScanConfirmDialog();
-        return true;
-    }
-    return super.onOptionsItemSelected(item);
-  }
-
-  private void showScanConfirmDialog() {
-    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-    alert.setTitle(R.string.notice)
-        .setMessage(R.string.need_to_scan)
-        .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
-          dialog.dismiss();
-          showScannerDialog();
-        })
-        .setNegativeButton(android.R.string.cancel, (dialog, whichButton) -> dialog.dismiss())
-        .show();
-  }
-
-  private void showScannerDialog() {
-    MediaScannerDialog dialog = new MediaScannerDialog();
-    dialog.onDismiss((isFinish) -> {
-      if (isFinish) {
-        localAudioStore.cleanCache();
-        reload();
-      }
-    });
-    dialog.show(getFragmentManager(), "Scanner");
   }
 
   @Override
