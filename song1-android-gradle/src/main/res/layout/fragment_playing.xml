@@ -3,142 +3,122 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@drawable/playing_page_bg">
+              android:layout_height="match_parent">
 
-
-  <!--
-  <com.viewpagerindicator.CirclePageIndicator
-      android:id="@+id/indicator"
-      android:paddingTop="4dp"
+  <ListView
+      android:id="@+id/list"
+      android:layout_weight="1"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:visibility="gone"
-      />
-  -->
-
-  <android.support.v4.view.ViewPager
-      android:id="@+id/pager"
-      android:clickable="true"
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:layout_weight="1">
-  </android.support.v4.view.ViewPager>
-
+      android:background="@color/gray"
+      android:layout_height="0dp"/>
 
   <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="50dp"
-      android:orientation="horizontal"
-      android:gravity="center_vertical">
-
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center">
-
-      <Button
-          android:background="@null"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/offline"
-          android:textSize="@dimen/list_item_title_text_size"
-          android:enabled="false"
-          android:paddingLeft="0dp"
-          android:minHeight="0dp"
-          android:minWidth="0dp"/>
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center">
-
-      <Button
-          android:id="@+id/collectionButton"
-          android:textColor="@color/white"
-          android:background="@null"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/collection"
-          android:textSize="@dimen/list_item_title_text_size"
-          android:minHeight="0dp"
-          android:minWidth="0dp"/>
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center">
-
-      <Button
-          android:background="@null"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/description"
-          android:enabled="false"
-          android:textSize="@dimen/list_item_title_text_size"
-          android:minHeight="0dp"
-          android:minWidth="0dp"/>
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center">
-
-      <Button
-          android:background="@null"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/share"
-          android:enabled="false"
-          android:textSize="@dimen/list_item_title_text_size"
-          android:minHeight="0dp"
-          android:minWidth="0dp"/>
-    </LinearLayout>
-  </LinearLayout>
-
-  <LinearLayout
+      android:background="@drawable/playing_page_bg"
       android:orientation="vertical"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:gravity="center_vertical"
-      android:visibility="visible">
+      android:layout_height="240dp">
 
-    <SeekBar
-        android:id="@+id/position_seeker"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_gravity="center_vertical"
-        android:layout_height="12dp"
-        android:paddingLeft="0dp"
-        android:paddingRight="0dp"
-        android:paddingTop="6dp"
-        android:paddingBottom="4dp"
-        android:thumbOffset="0dp"
-        android:thumb="@drawable/play_slider"
-        android:progressDrawable="@drawable/play_seek_bar"/>
+        android:paddingTop="10dp"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+      <FrameLayout
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_weight="1">
+
+        <Button
+            android:background="@null"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/offline"
+            android:textSize="@dimen/list_item_title_text_size"
+            android:enabled="false"
+            android:paddingLeft="0dp"
+            android:minHeight="0dp"
+            android:minWidth="0dp"/>
+      </FrameLayout>
+
+
+      <FrameLayout
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_weight="1">
+
+        <Button
+            android:id="@+id/collectionButton"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            android:background="@null"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/collection"
+            android:textSize="@dimen/list_item_title_text_size"
+            android:minHeight="0dp"
+            android:minWidth="0dp"/>
+      </FrameLayout>
+
+
+      <FrameLayout
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_weight="1">
+
+        <Button
+            android:background="@null"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/description"
+            android:enabled="false"
+            android:textSize="@dimen/list_item_title_text_size"
+            android:minHeight="0dp"
+            android:minWidth="0dp"/>
+      </FrameLayout>
+
+
+      <FrameLayout
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_weight="1">
+
+        <Button
+            android:background="@null"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/share"
+            android:enabled="false"
+            android:textSize="@dimen/list_item_title_text_size"
+            android:minHeight="0dp"
+            android:minWidth="0dp"/>
+      </FrameLayout>
+    </LinearLayout>
 
     <RelativeLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:visibility="visible">
+
+      <View
+          android:layout_marginTop="5dp"
+          android:layout_width="match_parent"
+          android:layout_height="0.6dp"
+          android:background="@color/line"/>
 
       <TextView
           android:id="@+id/position"
           android:text="@string/time_zero"
           android:textSize="10sp"
-          android:layout_gravity="center_vertical"
           android:gravity="center"
           android:layout_marginLeft="10dp"
-          android:layout_marginTop="5dp"
+          android:layout_marginTop="10dp"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_alignParentLeft="true"
@@ -148,7 +128,7 @@
           android:id="@+id/duration"
           android:text="@string/time_zero"
           android:textSize="10sp"
-          android:layout_marginTop="5dp"
+          android:layout_marginTop="10dp"
           android:layout_gravity="center_vertical"
           android:gravity="left"
           android:layout_marginRight="10dp"
@@ -156,85 +136,67 @@
           android:layout_height="wrap_content"
           android:layout_alignParentRight="true"
           android:textColor="@color/white"/>
+
+      <SeekBar
+          android:layout_marginTop="-20dp"
+          android:id="@+id/position_seeker"
+          android:layout_width="match_parent"
+          android:layout_gravity="center_vertical"
+          android:layout_height="50dp"
+          android:paddingLeft="0dp"
+          android:paddingRight="0dp"
+          android:paddingTop="24.2dp"
+          android:paddingBottom="24.2dp"
+          android:thumbOffset="0dp"
+          android:thumb="@null"
+          android:progressDrawable="@drawable/play_seek_bar"/>
+
+
     </RelativeLayout>
-  </LinearLayout>
 
 
-  <LinearLayout
-      android:layout_width="match_parent"
-      android:gravity="center_vertical"
-      android:layout_height="100dp">
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center">
-
-      <ImageButton
-          android:id="@+id/previous"
-          android:src="@drawable/ic_previous"
-          android:background="@null"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:paddingBottom="20dp"
+        android:layout_height="95dp">
 
       <ImageButton
           android:id="@+id/play"
           android:src="@drawable/ic_play_large"
+          android:layout_centerInParent="true"
+          android:background="@null"
+          android:layout_marginLeft="30dp"
+          android:layout_marginRight="30dp"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+      <ImageButton
+          android:id="@+id/previous"
+          android:src="@drawable/ic_previous"
+          android:layout_centerVertical="true"
+          android:layout_toLeftOf="@id/play"
           android:background="@null"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center">
 
       <ImageButton
           android:id="@+id/next"
           android:src="@drawable/ic_next"
+          android:layout_toRightOf="@id/play"
+          android:layout_centerVertical="true"
           android:background="@null"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"/>
-    </LinearLayout>
-  </LinearLayout>
+    </RelativeLayout>
 
-  <LinearLayout
-      android:orientation="horizontal"
-      android:layout_width="match_parent"
-      android:gravity="center_vertical"
-      android:layout_height="70dp"
-      android:visibility="gone">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:layout_height="70dp"
+        android:visibility="gone">
 
-    <ImageButton
-        android:id="@+id/favorite"
-        android:layout_weight="1"
-        android:src="@drawable/favorite_disable"
-        android:background="@null"
-        android:layout_width="70dp"
-        android:layout_height="70dp"/>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
-      <!--
-      <ImageButton
-          android:id="@+id/player_list"
-          android:src="@drawable/ic_device_list_large_nor"
-          android:background="@null"
-          android:layout_width="70dp"
-          android:layout_height="70dp"/>
-          -->
       <com.song1.musicno1.ui.IocTextView
           android:id="@+id/deviceNumView"
           android:layout_width="20dp"
@@ -243,68 +205,48 @@
           android:layout_marginTop="12dp"
           android:layout_marginLeft="35dp"
           />
-    </RelativeLayout>
+    </LinearLayout>
 
-  </LinearLayout>
-
-  <ImageView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:src="@drawable/line"/>
-
-  <LinearLayout
-      android:id="@+id/volume_section"
-      android:layout_width="match_parent"
-      android:layout_height="60dp"
-      android:orientation="horizontal"
-      android:gravity="center_vertical">
-
-    <ImageButton
-        android:id="@+id/play_mode"
-        android:background="@null"
-        android:src="@drawable/mode_shuffle"
-        android:layout_width="60dp"
-        android:layout_height="match_parent"
-        android:contentDescription="@string/play_mode"/>
-
-    <ImageButton
-        android:id="@+id/volume_min"
-        android:src="@drawable/vol_min_disable"
-        android:scaleType="fitCenter"
-        android:background="@null"
-        android:padding="6dp"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:contentDescription="@null"
-        android:visibility="gone"/>
-
-    <SeekBar
-        android:id="@+id/volume_bar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:paddingLeft="20dp"
-        android:paddingRight="15dp"
-        style="@style/seekBarStyle"
-        android:thumb="@drawable/vol_slider"/>
-
-    <ImageButton
-        android:id="@+id/volume_max"
-        android:src="@drawable/vol_max_disable"
-        android:scaleType="fitCenter"
-        android:background="@null"
-        android:padding="6dp"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:contentDescription="@null"
-        android:visibility="gone"/>
-
-    <ImageButton
-        android:id="@+id/player_list"
-        android:layout_width="60dp"
-        android:layout_height="match_parent"
-        android:src="@drawable/ic_sling_up"
-        android:background="@null"
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.6dp"
+        android:background="@color/line"
         />
+
+    <LinearLayout
+        android:id="@+id/volume_section"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+      <ImageButton
+          android:id="@+id/play_mode"
+          android:background="@null"
+          android:src="@drawable/mode_shuffle"
+          android:layout_width="40dp"
+          android:layout_height="match_parent"
+          android:contentDescription="@string/play_mode"/>
+
+      <SeekBar
+          android:id="@+id/volume_bar"
+          android:layout_width="0dp"
+          android:layout_height="50dp"
+          android:layout_weight="1"
+          android:paddingTop="16dp"
+          android:paddingBottom="12dp"
+          android:paddingLeft="18dp"
+          android:paddingRight="18dp"
+          style="@style/seekBarStyle"
+          android:thumb="@drawable/vol_slider"/>
+
+      <ImageButton
+          android:id="@+id/player_list"
+          android:layout_width="40dp"
+          android:layout_height="match_parent"
+          android:src="@drawable/ic_playerlist"
+          android:background="@null"
+          />
+    </LinearLayout>
   </LinearLayout>
 </LinearLayout>

@@ -15,7 +15,6 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import com.google.common.base.Strings;
 import com.song1.musicno1.R;
 import com.song1.musicno1.activities.MainActivity;
 import com.song1.musicno1.dialogs.TimerDialog;
@@ -32,9 +31,7 @@ import com.song1.musicno1.models.play.Players;
 import com.song1.musicno1.stores.PlayerStore;
 import com.song1.musicno1.ui.IocTextView;
 import com.song1.musicno1.util.DeviceUtil;
-import com.song1.musicno1.util.RoundedTransformation;
 import com.squareup.otto.Subscribe;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -67,11 +64,7 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
   private Runnable positionRunnable = new Runnable() {
     @Override
     public void run() {
-      Player player = PlayerStore.INSTANCE.getCurrentPlayer();
-      if (player != null) {
-        positionBar.setMax(player.getDuration());
-        positionBar.setProgress(player.getPosition());
-      }
+      updatePosition();
       handler.postDelayed(this, 1000);
     }
   };
@@ -105,19 +98,30 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
 
       positionBar.setProgress(0);
       refreshLayout.setRefreshing(false);
-      albumArtImageView.setImageResource(R.drawable.default_album_art_small);
+      albumArtImageView.setImageResource(R.drawable.album_art_default_small);
 
-      playerListBtn.setImageResource(R.drawable.ic_sling_up);
+      playerListBtn.setImageResource(R.drawable.ic_playerlist);
     } else {
       if (currentPlayer instanceof LocalPlayer) {
-        playerListBtn.setImageResource(R.drawable.ic_sling_up);
+        playerListBtn.setImageResource(R.drawable.ic_playerlist);
       } else {
-        playerListBtn.setImageResource(R.drawable.ic_sling_up);
+        playerListBtn.setImageResource(R.drawable.ic_playerlist);
       }
 
       bottomPlayBtn.setEnabled(true);
       updatePlayerState(null);
+      updatePosition();
       updatePlayingAudio(null);
+    }
+  }
+
+  private void updatePosition() {
+    Player player = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (player != null) {
+      positionBar.setMax(player.getDuration());
+      positionBar.setProgress(player.getPosition());
+    } else {
+      positionBar.setProgress(0);
     }
   }
 
@@ -129,13 +133,13 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
       switch (state) {
         case Player.State.PAUSED:
         case Player.State.STOPPED:
-          bottomPlayBtn.setImageResource(R.drawable.ic_play_large);
+          bottomPlayBtn.setImageResource(R.drawable.ic_play);
           bottomPlayBtn.setEnabled(true);
           positionBar.setVisibility(View.VISIBLE);
           refreshLayout.setRefreshing(false);
           break;
         case Player.State.PLAYING:
-          bottomPlayBtn.setImageResource(R.drawable.ic_pause_large);
+          bottomPlayBtn.setImageResource(R.drawable.ic_pause);
           bottomPlayBtn.setEnabled(true);
           positionBar.setVisibility(View.VISIBLE);
           refreshLayout.setRefreshing(false);
@@ -164,28 +168,18 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
         bottomSubtitleView.setText("");
         topTitleView.setText("");
         topSubtitleView.setText("");
-        Picasso.with(getActivity()).load(R.drawable.default_album_art_small).transform(new RoundedTransformation()).into(albumArtImageView);
+        albumArtImageView.setImageResource(R.drawable.album_art_default_small);
       } else {
-        String artist = playingAudio.getArtist();
-        if (Strings.isNullOrEmpty(artist)) {
-          artist = getString(R.string.unknown);
-        }
-
-        String album = playingAudio.getAlbum();
-        if (Strings.isNullOrEmpty(album)) {
-          album = getString(R.string.unknown);
-        }
-
         bottomTitleView.setText(playingAudio.getTitle());
-        bottomSubtitleView.setText(artist + " - " + album);
+        bottomSubtitleView.setText(playingAudio.getSubtitle(getActivity()));
 
         topTitleView.setText(playingAudio.getTitle());
-        topSubtitleView.setText(artist + " - " + album);
-        AlbumArtHelper.loadAlbumArtRounded(
+        topSubtitleView.setText(playingAudio.getSubtitle(getActivity()));
+        AlbumArtHelper.loadAlbumArt(
             getActivity(),
             playingAudio.getAlbumArt(localAudioStore),
             albumArtImageView,
-            R.drawable.default_album_art_small);
+            R.drawable.album_art_default_small);
       }
     }
   }

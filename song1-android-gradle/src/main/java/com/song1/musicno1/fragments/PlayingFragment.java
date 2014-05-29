@@ -2,28 +2,30 @@ package com.song1.musicno1.fragments;
 
 import android.net.wifi.ScanResult;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import com.song1.musicno1.App;
 import com.song1.musicno1.R;
+import com.song1.musicno1.adapter.PlaylistItemAdapter;
+import com.song1.musicno1.helpers.AlbumArtHelper;
 import com.song1.musicno1.helpers.MainBus;
+import com.song1.musicno1.helpers.TimeHelper;
 import com.song1.musicno1.models.FavoriteAudio;
+import com.song1.musicno1.models.LocalAudioStore;
 import com.song1.musicno1.models.WifiModel;
 import com.song1.musicno1.models.play.*;
 import com.song1.musicno1.stores.PlayerStore;
 import com.song1.musicno1.ui.IocTextView;
 import com.song1.musicno1.util.DeviceUtil;
-import com.song1.musicno1.util.ToastUtil;
 import com.squareup.otto.Subscribe;
-import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.List;
 
@@ -31,53 +33,85 @@ import java.util.List;
  * Created by windless on 3/28/14.
  */
 
-public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, WifiModel.ScanListener {
+public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, WifiModel.ScanListener, ViewTreeObserver.OnGlobalLayoutListener, AdapterView.OnItemClickListener {
   protected int   state;
   protected Audio currentAudio;
 
+  @InjectView(R.id.list)             ListView    listView;
   @InjectView(R.id.volume_bar)       SeekBar     volumeBar;
-  @InjectView(R.id.pager)            ViewPager   pager;
-  //@InjectView(R.id.indicator)     CirclePageIndicator indicator;
-  @InjectView(R.id.favorite)         ImageButton favoriteBtn;
   @InjectView(R.id.player_list)      ImageButton playerListBtn;
   @InjectView(R.id.deviceNumView)    IocTextView deviceNumView;
   @InjectView(R.id.previous)         ImageButton prevButton;
   @InjectView(R.id.play)             ImageButton playButton;
   @InjectView(R.id.next)             ImageButton nextButton;
-  @InjectView(R.id.volume_min)       ImageButton volumeMinButton;
-  @InjectView(R.id.volume_max)       ImageButton volumeMaxButton;
-  @InjectView(R.id.collectionButton) Button      collectionButton;
+  @InjectView(R.id.collectionButton) Button      favoriteButton;
+  @InjectView(R.id.position_seeker)  SeekBar     positionSeeker;
+  @InjectView(R.id.position)         TextView    positionView;
+  @InjectView(R.id.duration)         TextView    durationView;
+
+  ImageView albumArtView;
+
+  int newDeviceCount = 0;
 
   WifiModel wifiModel;
-  int newDeviceCount = 0;
-  protected boolean isDeviceFragmentShow;
+  protected boolean             isDeviceFragmentShow;
+  protected PlaylistItemAdapter playlistItemAdapter;
+  private   Playlist            playlist;
+  protected LocalAudioStore     localAudioStore;
 
-  AudioActionsFragment audioActionsFragment;
+  private Handler handler = new Handler();
 
+  private Runnable positionRunnable = new Runnable() {
+    @Override
+    public void run() {
+      updatePosition();
+      handler.postDelayed(this, 1000);
+    }
+  };
+
+  private void updatePosition() {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (currentPlayer != null) {
+      positionSeeker.setMax(currentPlayer.getDuration());
+      positionSeeker.setProgress(currentPlayer.getPosition());
+      durationView.setText(TimeHelper.milli2str(currentPlayer.getDuration()));
+    } else {
+      positionSeeker.setProgress(0);
+      durationView.setText(TimeHelper.milli2str(0));
+    }
+  }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_playing, container, false);
     ButterKnife.inject(this, view);
+    View headerView = View.inflate(getActivity(), R.layout.header_playlist, null);
+    albumArtView = (ImageView) headerView.findViewById(R.id.image);
+    listView.addHeaderView(headerView);
     return view;
   }
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    audioActionsFragment = new AudioActionsFragment();
-    audioActionsFragment.setView(getView());
+    localAudioStore = App.get(LocalAudioStore.class);
 
-
-    pager.setAdapter(new Adapter(getChildFragmentManager()));
-    pager.setCurrentItem(1);
-    //indicator.setViewPager(pager);
-
+    positionSeeker.setEnabled(false);
+    positionSeeker.setOnSeekBarChangeListener(this);
     volumeBar.setOnSeekBarChangeListener(this);
+
+    playlistItemAdapter = new PlaylistItemAdapter(getActivity());
+    listView.setOnItemClickListener(this);
+    listView.setAdapter(playlistItemAdapter);
 
     wifiModel = new WifiModel(getActivity());
     wifiModel.setScanListener(this);
     wifiModel.scan();
+
+    ViewTreeObserver viewTreeObserver = listView.getViewTreeObserver();
+    if (viewTreeObserver != null) {
+      viewTreeObserver.addOnGlobalLayoutListener(this);
+    }
   }
 
   public void updateVolume() {
@@ -93,36 +127,47 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
   public void updatePlayerInfo(PlayerStore.CurrentPlayerChangedEvent event) {
     Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
     if (currentPlayer == null) {
-      favoriteBtn.setEnabled(false);
       prevButton.setEnabled(false);
       playButton.setEnabled(false);
       nextButton.setEnabled(false);
-      volumeMinButton.setEnabled(false);
-      volumeMaxButton.setEnabled(false);
       volumeBar.setEnabled(false);
-      collectionButton.setEnabled(false);
+      favoriteButton.setEnabled(false);
 
-      playerListBtn.setImageResource(R.drawable.ic_sling_up);
+      playerListBtn.setImageResource(R.drawable.ic_playerlist);
     } else {
-      favoriteBtn.setEnabled(true);
       prevButton.setEnabled(true);
       playButton.setEnabled(true);
       nextButton.setEnabled(true);
-      volumeMinButton.setEnabled(true);
-      volumeMaxButton.setEnabled(true);
       volumeBar.setEnabled(true);
 
-      collectionButton.setEnabled(true);
+      favoriteButton.setEnabled(true);
 
       if (currentPlayer instanceof LocalPlayer) {
-        playerListBtn.setImageResource(R.drawable.ic_sling_up);
+        playerListBtn.setImageResource(R.drawable.ic_playerlist);
       } else {
-        playerListBtn.setImageResource(R.drawable.ic_sling_up);
+        playerListBtn.setImageResource(R.drawable.ic_playerlist);
       }
 
       updateVolume();
       updatePlayerState(null);
+      updatePosition();
+      updatePlaylist(null);
       updatePlayingAudio(null);
+    }
+  }
+
+  @Subscribe
+  public void updatePlaylist(PlayerStore.PlayerPlaylistChangedEvent event) {
+    Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    if (currentPlayer != null) {
+      playlist = currentPlayer.getPlaylist();
+      if (playlist != null) {
+        playlistItemAdapter.setDataList(playlist.getAudios());
+      } else {
+        playlistItemAdapter.setDataList(null);
+        albumArtView.setImageDrawable(null);
+      }
+      playlistItemAdapter.notifyDataSetChanged();
     }
   }
 
@@ -133,21 +178,26 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     if (currentPlayer == null) return;
 
     currentAudio = currentPlayer.getPlayingAudio();
+    playlistItemAdapter.setPlayingAudio(currentAudio);
     if (currentAudio == null) {
-      favoriteBtn.setEnabled(false);
-      collectionButton.setEnabled(false);
+      favoriteButton.setEnabled(false);
+      albumArtView.setImageResource(0);
     } else {
-      favoriteBtn.setEnabled(currentAudio.canFavorite());
-      collectionButton.setEnabled(currentAudio.canFavorite());
+      favoriteButton.setEnabled(currentAudio.canFavorite());
       if (currentAudio.canFavorite()) {
         if (FavoriteAudio.isFavorite(currentAudio)) {
-          favoriteBtn.setImageResource(R.drawable.ic_red_heat_added);
-          collectionButton.setText(R.string.cancel_collection);
+          favoriteButton.setText(R.string.cancel_collection);
         } else {
-          favoriteBtn.setImageResource(R.drawable.ic_red_heart);
-          collectionButton.setText(R.string.collection);
+          favoriteButton.setText(R.string.collection);
         }
       }
+
+      AlbumArtHelper.loadAlbumArt(
+          getActivity(),
+          currentAudio.getAlbumArt(localAudioStore),
+          albumArtView,
+          R.drawable.album_art_default_big
+      );
     }
   }
 
@@ -170,6 +220,21 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
         break;
       case Player.State.PREPARING:
         setPlayButtonsEnabled(false);
+    }
+
+    if (state == Player.State.PLAYING) {
+      handler.post(positionRunnable);
+    } else {
+      handler.removeCallbacks(positionRunnable);
+    }
+
+    switch (state) {
+      case Player.State.PLAYING:
+      case Player.State.PAUSED:
+        positionSeeker.setEnabled(true);
+        break;
+      default:
+        positionSeeker.setEnabled(false);
     }
   }
 
@@ -202,7 +267,6 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
 
   @OnClick(R.id.play)
   public void onPlayClick() {
-//    ToastUtil.show(getActivity(),"playButton");
     switch (state) {
       case Player.State.PLAYING:
         Players.pause();
@@ -237,8 +301,12 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
 
   @Override
   public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
-    if (fromUser) {
-      Players.setVolume(seekBar.getProgress(), false);
+    if (seekBar.getId() == R.id.position_seeker) {
+      positionView.setText(TimeHelper.milli2str(i));
+    } else {
+      if (fromUser) {
+        Players.setVolume(seekBar.getProgress(), false);
+      }
     }
   }
 
@@ -249,7 +317,9 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
 
   @Override
   public void onStopTrackingTouch(SeekBar seekBar) {
-
+    if (seekBar.getId() == R.id.position_seeker) {
+      Players.seek(seekBar.getProgress());
+    }
   }
 
   @OnClick(R.id.collectionButton)
@@ -257,12 +327,10 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     if (currentAudio == null) return;
 
     if (FavoriteAudio.toggleRedHeart(currentAudio)) {
-      favoriteBtn.setImageResource(R.drawable.ic_red_heat_selected);
-      collectionButton.setText(R.string.cancel_collection);
+      favoriteButton.setText(R.string.cancel_collection);
       Toast.makeText(getActivity(), R.string.added_to_red_heart, Toast.LENGTH_SHORT).show();
     } else {
-      favoriteBtn.setImageResource(R.drawable.ic_red_heart_nor);
-      collectionButton.setText(R.string.collection);
+      favoriteButton.setText(R.string.collection);
       Toast.makeText(getActivity(), R.string.removed_frome_red_heart, Toast.LENGTH_SHORT).show();
     }
 
@@ -271,18 +339,6 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
       FavoriteAudioFragment heartFragment = (FavoriteAudioFragment) mainFragment;
       heartFragment.reload();
     }
-  }
-
-  @OnClick(R.id.volume_min)
-  public void volumeDown() {
-    Players.volumeDown(false);
-    updateVolume();
-  }
-
-  @OnClick(R.id.volume_max)
-  public void volumeUp() {
-    Players.volumeUp(false);
-    updateVolume();
   }
 
   @Override
@@ -297,28 +353,16 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     }
   }
 
+  @Override
+  public void onGlobalLayout() {
+    albumArtView.setMinimumHeight(listView.getHeight());
+  }
 
-  class Adapter extends FragmentPagerAdapter {
-
-    public Adapter(FragmentManager fm) {
-      super(fm);
-    }
-
-    @Override
-    public Fragment getItem(int position) {
-//      switch (position) {
-//        case 0:
-      // return new PlaylistFragment();
-//        default:
-      PlaylistFragment playlistFragment = new PlaylistFragment();
-      playlistFragment.setAudioActionsFragment(audioActionsFragment);
-      return playlistFragment;
-//      }
-    }
-
-    @Override
-    public int getCount() {
-      return 1;
+  @Override
+  public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+    if (i > 0) {
+      Audio audio = playlistItemAdapter.getDataItem(i - 1);
+      Players.playWithAudio(audio);
     }
   }
 }
