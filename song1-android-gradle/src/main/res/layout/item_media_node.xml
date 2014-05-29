@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:descendantFocusability="blocksDescendants"
-                android:layout_width="match_parent"
-                android:minHeight="50dp"
-                android:layout_height="50dp">
+              android:descendantFocusability="blocksDescendants"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:paddingLeft="8dp"
+              android:paddingRight="8dp"
+              android:minHeight="50dp"
+              android:layout_height="50dp">
+
+  <ImageView
+      android:id="@+id/icon"
+      android:layout_gravity="center_vertical"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:contentDescription="@null"/>
 
   <TextView
       android:id="@+id/title"
       android:paddingLeft="8dp"
       android:paddingRight="8dp"
       android:gravity="center_vertical"
+      android:singleLine="true"
+      android:ellipsize="end"
       android:layout_width="match_parent"
       android:layout_height="match_parent"/>
 </LinearLayout>

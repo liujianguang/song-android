@@ -6,6 +6,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -61,9 +62,17 @@ public class MediaContainerFragment extends ListFragment<Object> implements Adap
         if (node instanceof Audio) {
           Audio audio = (Audio) node;
           holder.title.setText(audio.getTitle());
+          holder.icon.setImageResource(R.drawable.ic_music);
         } else if (node instanceof MediaNode) {
           MediaNode mediaNode = (MediaNode) node;
           holder.title.setText(mediaNode.getTitle());
+          if ("u-disk".equals(mediaNode.getTitle())) {
+            holder.icon.setImageResource(R.drawable.ic_udisk);
+          } else if ("sdcard".equals(mediaNode.getTitle())) {
+            holder.icon.setImageResource(R.drawable.ic_sdcard);
+          } else {
+            holder.icon.setImageResource(R.drawable.ic_folder);
+          }
         }
         return view;
       }
@@ -73,6 +82,7 @@ public class MediaContainerFragment extends ListFragment<Object> implements Adap
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
+    getListView().setBackgroundResource(R.color.white);
     getListView().setOnItemClickListener(this);
     setHasOptionsMenu(true);
   }
@@ -116,7 +126,8 @@ public class MediaContainerFragment extends ListFragment<Object> implements Adap
   }
 
   class ViewHolder {
-    @InjectView(R.id.title) TextView title;
+    @InjectView(R.id.title) TextView  title;
+    @InjectView(R.id.icon)  ImageView icon;
 
     public ViewHolder(View view) {
       ButterKnife.inject(this, view);

@@ -1,6 +1,8 @@
 package com.song1.musicno1.models.play;
 
+import android.webkit.MimeTypeMap;
 import com.google.common.collect.Lists;
+import de.akquinet.android.androlog.Log;
 import org.cybergarage.upnp.Device;
 import org.cybergarage.upnp.std.av.controller.MediaController;
 import org.cybergarage.upnp.std.av.server.object.ContentNode;
@@ -53,8 +55,23 @@ public class MediaServerImpl implements MediaServer {
         if (itemNode.getResourceNodeList().size() > 0) {
           audio.setLocalPlayUri(itemNode.getResourceNode(0).getURL());
           audio.setRemotePlayUrl(itemNode.getResourceNode(0).getURL());
+          String extension = MimeTypeMap.getFileExtensionFromUrl(audio.getRemotePlayUrl());
+          if (extension != null) {
+            audio.setTitle(audio.getTitle() + "." + extension);
+            String mimeType;
+            if ("ape".equals(extension.toLowerCase())) {
+              mimeType = "audio/x-ape";
+            } else {
+              mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+            }
+            audio.setMimeType(mimeType);
+            if (mimeType != null && mimeType.startsWith("audio/")) {
+              audios.add(audio);
+            } else {
+              Log.d(this, "Not a audio: " + audio.getTitle() + " - " + audio.getMimeType());
+            }
+          }
         }
-        audios.add(audio);
       } else if (node.isContainerNode()) {
         MediaNode mediaNode = new MediaNode();
         mediaNode.setTitle(contentNode.getTitle());
