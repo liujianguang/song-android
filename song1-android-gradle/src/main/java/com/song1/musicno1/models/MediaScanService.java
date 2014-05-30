@@ -41,6 +41,7 @@ public class MediaScanService extends AsyncTask<File, File, Object> implements M
   }
 
   public void disconnect() {
+    this.callback = null;
     cancel(true);
     mediaScannerConnection.disconnect();
   }
