@@ -35,11 +35,11 @@
 
     <com.song1.musicno1.ui.IocTextView
         android:id="@+id/deviceNumView"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="22dp"
+        android:layout_marginBottom="43dp"
         android:gravity="center"
         android:textSize="10dp"
         android:text="5"/>

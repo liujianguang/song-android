@@ -52,7 +52,7 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
   @InjectView(R.id.refresh_layout)     SwipeRefreshLayout refreshLayout;
   @InjectView(R.id.bottom_album_art)   ImageView          albumArtImageView;
   @InjectView(R.id.timer_time)         TextView           timerTextView;
-  @InjectView(R.id.deviceNumView)      IocTextView        deviceNumView;
+  @InjectView(R.id.deviceNumView)      TextView        deviceNumView;
 
   LocalAudioStore localAudioStore;
   protected int timerValue;
@@ -273,8 +273,8 @@ public class PlayBarFragment extends Fragment implements WifiModel.ScanListener 
     List<String> ssidList = DeviceUtil.filterScanResultList(scanResults);
     newDeviceCount = ssidList.size();
     if (newDeviceCount != 0) {
-      deviceNumView.setText(newDeviceCount + "");
-      deviceNumView.setVisibility(View.GONE);
+      //deviceNumView.setText(newDeviceCount + "");
+      deviceNumView.setVisibility(View.VISIBLE);
     } else {
       deviceNumView.setVisibility(View.GONE);
     }

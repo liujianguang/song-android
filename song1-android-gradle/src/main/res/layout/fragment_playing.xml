@@ -200,14 +200,14 @@
         android:layout_height="70dp"
         android:visibility="gone">
 
-      <com.song1.musicno1.ui.IocTextView
-          android:id="@+id/deviceNumView"
-          android:layout_width="20dp"
-          android:layout_height="20dp"
-          android:gravity="center"
-          android:layout_marginTop="12dp"
-          android:layout_marginLeft="35dp"
-          />
+      <!--<com.song1.musicno1.ui.IocTextView-->
+          <!--android:id="@+id/deviceNumView"-->
+          <!--android:layout_width="20dp"-->
+          <!--android:layout_height="20dp"-->
+          <!--android:gravity="center"-->
+          <!--android:layout_marginTop="12dp"-->
+          <!--android:layout_marginLeft="35dp"-->
+          <!--/>-->
     </LinearLayout>
 
     <View
@@ -243,13 +243,53 @@
           style="@style/seekBarStyle"
           android:thumb="@drawable/vol_slider"/>
 
-      <ImageButton
-          android:id="@+id/player_list"
-          android:layout_width="40dp"
-          android:layout_height="match_parent"
-          android:src="@drawable/ic_playerlist"
-          android:background="@null"
-          />
+      <!--<RelativeLayout-->
+          <!--android:layout_width="40dp"-->
+          <!--android:layout_height="match_parent">-->
+
+        <!--<ImageButton-->
+            <!--android:id="@+id/player_list"-->
+            <!--android:layout_width="40dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:src="@drawable/ic_playerlist"-->
+            <!--android:background="@null"-->
+            <!--/>-->
+        <!--<TextView-->
+            <!--android:id="@+id/deviceNumView"-->
+            <!--android:layout_width="7dp"-->
+            <!--android:layout_height="7dp"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:layout_marginLeft="26dp"-->
+            <!--android:background="@drawable/red_point"-->
+      <!--</RelativeLayout>-->
+
+      <RelativeLayout
+          android:id="@+id/bottom_play_list_container"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:clickable="true">
+
+        <ImageButton
+            android:id="@+id/player_list"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_playerlist"
+            android:contentDescription="@null"
+            android:padding="15dp"/>
+
+        <TextView
+            android:id="@+id/deviceNumView"
+            android:visibility="visible"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:gravity="center"
+            android:layout_marginTop="14dp"
+            android:layout_marginLeft="34dp"
+            android:background="@drawable/red_point"
+            />
+      </RelativeLayout>
     </LinearLayout>
   </LinearLayout>
 </LinearLayout>

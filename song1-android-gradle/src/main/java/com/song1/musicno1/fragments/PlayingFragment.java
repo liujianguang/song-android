@@ -40,7 +40,7 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
   @InjectView(R.id.list)             ListView    listView;
   @InjectView(R.id.volume_bar)       SeekBar     volumeBar;
   @InjectView(R.id.player_list)      ImageButton playerListBtn;
-  @InjectView(R.id.deviceNumView)    IocTextView deviceNumView;
+  @InjectView(R.id.deviceNumView)    TextView    deviceNumView;
   @InjectView(R.id.previous)         ImageButton prevButton;
   @InjectView(R.id.play)             ImageButton playButton;
   @InjectView(R.id.next)             ImageButton nextButton;
@@ -381,7 +381,7 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     List<String> ssidList = DeviceUtil.filterScanResultList(scanResults);
     newDeviceCount = ssidList.size();
     if (newDeviceCount != 0) {
-      deviceNumView.setText(newDeviceCount + "");
+      //deviceNumView.setText(newDeviceCount + "");
       deviceNumView.setVisibility(View.VISIBLE);
     } else {
       deviceNumView.setVisibility(View.GONE);
