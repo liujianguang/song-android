@@ -1,5 +1,6 @@
 package com.song1.musicno1.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -9,14 +10,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.util.DisplayMetrics;
 import android.view.*;
 import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.song1.musicno1.App;
 import com.song1.musicno1.R;
-import com.song1.musicno1.dialogs.AlertDialog;
 import com.song1.musicno1.dialogs.PromptDialog;
 import com.song1.musicno1.event.Event;
 import com.song1.musicno1.fragments.*;
@@ -30,7 +29,6 @@ import com.song1.musicno1.services.HttpService;
 import com.song1.musicno1.services.PlayService;
 import com.song1.musicno1.services.UpnpService;
 import com.song1.musicno1.stores.PlayerStore;
-import com.song1.musicno1.util.ToastUtil;
 import com.song1.musicno1.vender.SlidingUpPanelLayout;
 import com.squareup.otto.Subscribe;
 import de.akquinet.android.androlog.Log;
@@ -138,10 +136,12 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
 
   @Subscribe
   public void onCurrentPlayerOccupied(CurrentPlayerOccupiedEvent event) {
-    AlertDialog dialog = new AlertDialog();
-    dialog.setMessage(getString(R.string.current_player_is_occupied));
-    dialog.setTitle(getString(R.string.notice));
-    dialog.show(getSupportFragmentManager(), "alert");
+    AlertDialog.Builder alert = new AlertDialog.Builder(this);
+    alert.setTitle(R.string.notice)
+        .setMessage(R.string.current_player_is_occupied)
+        .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
+        })
+        .show();
   }
 
   @Override

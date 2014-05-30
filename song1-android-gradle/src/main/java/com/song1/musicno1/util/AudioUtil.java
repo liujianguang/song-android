@@ -42,7 +42,7 @@ public class AudioUtil {
       }
     }
 
-    if (otherAudios != null) {
+    if (otherAudios.size() > 0) {
       audios.add(new AudioGroup("#"));
       audios.addAll(otherAudios);
     }
