@@ -169,7 +169,7 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
         playlistItemAdapter.setDataList(playlist.getAudios());
       } else {
         playlistItemAdapter.setDataList(null);
-        albumArtView.setImageDrawable(null);
+        albumArtView.setImageResource(R.drawable.album_art_default_big);
       }
       playlistItemAdapter.notifyDataSetChanged();
     }
@@ -214,7 +214,7 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     playlistItemAdapter.setPlayingAudio(currentAudio);
     if (currentAudio == null) {
       favoriteButton.setEnabled(false);
-      albumArtView.setImageResource(0);
+      albumArtView.setImageResource(R.drawable.album_art_default_big);
     } else {
       favoriteButton.setEnabled(currentAudio.canFavorite());
       if (currentAudio.canFavorite()) {
