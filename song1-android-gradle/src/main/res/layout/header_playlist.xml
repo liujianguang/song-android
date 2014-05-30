@@ -6,6 +6,7 @@
 
   <ImageView
       android:id="@+id/image"
+      android:src="@drawable/album_art_default_big"
       android:scaleType="centerCrop"
       android:layout_width="match_parent"
       android:layout_height="match_parent"/>
