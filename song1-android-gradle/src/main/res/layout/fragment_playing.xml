@@ -33,6 +33,7 @@
         <Button
             android:background="@null"
             android:layout_gravity="center"
+            android:textColor="@color/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/offline"
@@ -52,7 +53,7 @@
         <Button
             android:id="@+id/collectionButton"
             android:layout_gravity="center"
-            android:textColor="@color/white"
+            android:textColor="@color/button"
             android:background="@null"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -71,6 +72,7 @@
         <Button
             android:background="@null"
             android:layout_gravity="center"
+            android:textColor="@color/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/description"
@@ -88,6 +90,7 @@
 
         <Button
             android:background="@null"
+            android:textColor="@color/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

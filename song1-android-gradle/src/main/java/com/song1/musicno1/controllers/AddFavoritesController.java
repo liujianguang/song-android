@@ -3,7 +3,6 @@ package com.song1.musicno1.controllers;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 import butterknife.ButterKnife;
@@ -65,7 +64,7 @@ public class AddFavoritesController {
         .setView(view)
         .setPositiveButton(android.R.string.ok, (dialog, i) -> {
           dialog.dismiss();
-          if (editText.getText() != null && !Strings.isNullOrEmpty(editText.getText().toString())) {
+          if (editText.getText() != null && !Strings.isNullOrEmpty(editText.getText().toString().trim())) {
             Favorite favorite = Favorite.create(editText.getText().toString());
             favorite.add(audio);
             showSuccessToast(favorite.name, audio.getTitle());

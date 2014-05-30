@@ -223,6 +223,8 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
         } else {
           favoriteButton.setText(R.string.collection);
         }
+      } else {
+        favoriteButton.setText(R.string.collection);
       }
 
       AlbumArtHelper.loadAlbumArt(

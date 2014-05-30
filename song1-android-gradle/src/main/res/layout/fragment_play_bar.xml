@@ -143,6 +143,7 @@
     <TextView
         android:id="@+id/timer_time"
         android:layout_marginTop="48dp"
+        android:textColor="@color/white"
         android:layout_alignLeft="@id/timer"
         android:layout_alignRight="@id/timer"
         android:textSize="8sp"

@@ -8,6 +8,7 @@
   <EditText
       android:id="@+id/input"
       android:hint="@string/please_input_favorite_name"
+      android:maxLength="30"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"/>
 </FrameLayout>

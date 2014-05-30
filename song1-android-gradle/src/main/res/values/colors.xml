@@ -11,7 +11,7 @@
   <color name="title_bg">#fff5f5f5</color>
   <color name="dark_green">#437012</color>
   <color name="subtitle_text_color">#B1C0A4</color>
-  <color name="button_disabled">#ffb5c0a8</color>
+  <color name="button_disabled">#ff8b8b8b</color>
   <color name="dark_button">#344320</color>
   <color name="seek_bar_bg">#ff2a2c27</color>
   <color name="number_color">#ffdbeacd</color>
