@@ -139,8 +139,7 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
     AlertDialog.Builder alert = new AlertDialog.Builder(this);
     alert.setTitle(R.string.notice)
         .setMessage(R.string.current_player_is_occupied)
-        .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
-        })
+        .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> dialog.dismiss())
         .show();
   }
 
