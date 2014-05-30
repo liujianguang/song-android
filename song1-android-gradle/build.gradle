@@ -124,6 +124,7 @@ dependencies {
     compile 'com.squareup.dagger:dagger:1.+'
     compile 'com.github.kevinsawicki:http-request:5.+'
     compile 'com.viewpagerindicator:library:2.+@aar'
+    compile 'com.belerweb:pinyin4j:2.5.0'
     apt 'com.squareup.dagger:dagger-compiler:1.+'
 
 }

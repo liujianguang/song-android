@@ -4,6 +4,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.song1.musicno1.entity.AudioGroup;
 import com.song1.musicno1.models.play.Audio;
+import de.akquinet.android.androlog.Log;
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
 import java.util.List;
 import java.util.Map;
@@ -14,17 +20,12 @@ import java.util.Map;
 public class AudioUtil {
   public static List<Audio> doAudioGroup(List<Audio> audioList) {
     Map<Character, List<Audio>> audioGroupMap = Maps.newTreeMap();
-    List<Audio> otherAudios = Lists.newArrayList();
 
     for (Audio audio : audioList) {
-      Character character = FirstLetterUtil.getFirstLetter(audio.getTitle()).toUpperCase().charAt(0);
+      Character character = getFirstLetter(audio.getTitle().trim().toUpperCase());
+      Log.d("" + character);
 
       List<Audio> audioGroup = audioGroupMap.get(character);
-
-      if (character < 'A' || character > 'Z') {
-        character = '#';
-        audioGroup = otherAudios;
-      }
 
       if (audioGroup == null) {
         audioGroup = Lists.newArrayList();
@@ -42,10 +43,32 @@ public class AudioUtil {
       }
     }
 
-    if (otherAudios.size() > 0) {
+    List<Audio> otherAudios = audioGroupMap.get('#');
+    if (otherAudios != null) {
       audios.add(new AudioGroup("#"));
       audios.addAll(otherAudios);
     }
     return audios;
+  }
+
+  private static Character getFirstLetter(String input) {
+    char c = input.toCharArray()[0];
+    if (c >= 'A' && c <= 'Z') {
+      return c;
+    }
+
+    HanyuPinyinOutputFormat defaultFormat = new HanyuPinyinOutputFormat();
+    defaultFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+    defaultFormat.setVCharType(HanyuPinyinVCharType.WITH_V);
+    c = input.charAt(0);
+    try {
+      String[] strings = PinyinHelper.toHanyuPinyinStringArray(c, defaultFormat);
+      if (strings == null) {
+        return '#';
+      }
+      return strings[0].toUpperCase().toCharArray()[0];
+    } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
+      return '#';
+    }
   }
 }
