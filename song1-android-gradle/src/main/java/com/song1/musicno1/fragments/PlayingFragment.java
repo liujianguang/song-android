@@ -214,6 +214,7 @@ public class PlayingFragment extends Fragment implements SeekBar.OnSeekBarChange
     playlistItemAdapter.setPlayingAudio(currentAudio);
     if (currentAudio == null) {
       favoriteButton.setEnabled(false);
+      favoriteButton.setText(R.string.collection);
       albumArtView.setImageResource(R.drawable.album_art_default_big);
     } else {
       favoriteButton.setEnabled(currentAudio.canFavorite());
