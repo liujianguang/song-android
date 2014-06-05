@@ -23,6 +23,7 @@ public enum PlayerStore implements Player.Callback {
   protected Player              currentPlayer;
 
   private PlayerStore() {
+    System.out.println("PlayerStore");
     playerMap = Maps.newLinkedHashMap();
   }
 
@@ -113,6 +114,7 @@ public enum PlayerStore implements Player.Callback {
   }
 
   public void clear() {
+    System.out.println("clear");
     playerMap.clear();
     currentPlayer = null;
     localPlayer = null;

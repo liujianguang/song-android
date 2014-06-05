@@ -12,6 +12,7 @@
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.WAKE_LOCK"/>
   <uses-permission android:name="android.permission.READ_LOGS"/>
+  <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
   <application
       android:allowBackup="true"
@@ -50,7 +51,15 @@
     </activity>
 
     <service android:name=".services.UpnpService"/>
-    <service android:name=".services.PlayService"/>
+    <service android:name=".services.PlayService">
+      <intent-filter>
+        <action android:name="playService.exit"/>
+        <action android:name="playService.prev"/>
+        <action android:name="playService.play"/>
+        <action android:name="playService.pause"/>
+        <action android:name="playService.next"/>
+      </intent-filter>
+    </service>
     <service android:name=".services.HttpService"/>
 
     <meta-data

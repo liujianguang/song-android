@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center_vertical">
+
+  <ImageView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:src="@drawable/song1"/>
+
+  <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:orientation="horizontal"
+      android:gravity="center_vertical"
+      android:id="@+id/contentLayout"
+      android:visibility="visible">
+
+    <LinearLayout
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:paddingLeft="20dp">
+
+      <TextView
+          android:id="@+id/titleTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="@dimen/list_item_title_text_size"
+          android:text=""
+          android:singleLine="true"
+          />
+
+      <TextView
+          android:id="@+id/artistTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="@dimen/text_size_small"
+          android:text=""
+          android:singleLine="true"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+      <Button
+          android:id="@+id/exitButton"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:text="exit"
+          android:background="@null"/>
+
+      <ImageButton
+          android:id="@+id/playButton"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:src="@drawable/ic_play"
+          android:background="@null"/>
+
+      <ImageButton
+          android:id="@+id/pauseButton"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:src="@drawable/ic_pause"
+          android:background="@null"
+          android:visibility="gone"/>
+
+
+      <Button
+          android:id="@+id/nextButton"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:text="next"
+          android:background="@null"/>
+    </LinearLayout>
+  </LinearLayout>
+
+
+  <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:orientation="horizontal"
+      android:gravity="center_vertical"
+      android:id="@+id/otherLayout"
+      android:visibility="gone">
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:gravity="center_vertical"
+          android:orientation="vertical"
+          android:paddingLeft="20dp">
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/song1"
+              android:textSize="@dimen/list_item_title_text_size"/>
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/song1_working"
+              android:textSize="@dimen/text_size_small"/>
+      </LinearLayout>
+    <Button
+        android:id="@+id/exitButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="exit"
+        android:background="@null"/>
+  </LinearLayout>
+</LinearLayout>

@@ -81,6 +81,8 @@ public class LocalPlayer implements Player, MediaPlayer.OnCompletionListener, Me
         try {
           mediaPlayer.reset();
           mediaPlayer.setDataSource(audio.getLocalPlayUri());
+
+          System.out.println("*" + audio.getLocalPlayUri());
           mediaPlayer.prepareAsync();
         } catch (IOException e) {
           stop();
@@ -92,6 +94,7 @@ public class LocalPlayer implements Player, MediaPlayer.OnCompletionListener, Me
 
   @Override
   public void pause() {
+    System.out.println("pause");
     mediaPlayer.pause();
     setState(State.PAUSED);
   }
@@ -112,12 +115,14 @@ public class LocalPlayer implements Player, MediaPlayer.OnCompletionListener, Me
 
   @Override
   public void stop() {
+    System.out.println("stop");
     mediaPlayer.stop();
     setState(State.STOPPED);
   }
 
   @Override
   public void release() {
+    System.out.println("release");
     mediaPlayer.release();
     callback = null;
   }

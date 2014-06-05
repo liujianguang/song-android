@@ -100,30 +100,9 @@ public class HttpService extends Service {
     if (!isStarted) {
       Toast.makeText(this, getString(R.string.start_http_service_failed), Toast.LENGTH_LONG).show();
     }
-
-    createNotification();
   }
 
-  private void createNotification() {
-    NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-    final Intent intent = new Intent(this, MainActivity.class);
-    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-    PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-//    RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.remote_view_play);
-
-    builder.setSmallIcon(R.drawable.song1)
-        .setAutoCancel(false)
-        .setContentText(getString(R.string.song1_working))
-        .setContentTitle(getString(R.string.song1))
-        .setContentIntent(pendingIntent);
-
-    Notification notification = builder.build();
-    notification.flags |= Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
-
-    NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-    manager.notify(0, notification);
-  }
 
   private int new_port() {
     port++;

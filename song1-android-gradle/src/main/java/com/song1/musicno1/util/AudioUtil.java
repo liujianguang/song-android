@@ -21,10 +21,13 @@ public class AudioUtil {
   public static List<Audio> doAudioGroup(List<Audio> audioList) {
     Map<Character, List<Audio>> audioGroupMap = Maps.newTreeMap();
 
+    System.out.println("************************************");
     for (Audio audio : audioList) {
       Character character = getFirstLetter(audio.getTitle().trim().toUpperCase());
       Log.d("" + character);
 
+      System.out.println(character + "");
+      System.out.println(audio.getTitle());
       List<Audio> audioGroup = audioGroupMap.get(character);
 
       if (audioGroup == null) {

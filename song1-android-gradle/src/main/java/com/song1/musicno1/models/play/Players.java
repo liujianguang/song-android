@@ -89,7 +89,9 @@ public class Players {
   }
 
   public static void resume() {
+    System.out.println("resume");
     Player currentPlayer = PlayerStore.INSTANCE.getCurrentPlayer();
+    System.out.println(currentPlayer);
     if (currentPlayer != null) {
       currentPlayer.resume();
     }

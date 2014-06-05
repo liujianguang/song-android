@@ -81,6 +81,7 @@ public class LocalAudiosWithIndexFragment extends DataFragment<Audio> implements
     indexView.setText(sb.toString());
   }
 
+
   @Override
   public void onResume() {
     super.onResume();

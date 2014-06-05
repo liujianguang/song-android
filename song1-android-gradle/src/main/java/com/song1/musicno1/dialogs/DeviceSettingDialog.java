@@ -294,6 +294,7 @@ public class DeviceSettingDialog extends SpecialDialog implements WifiModel.Conn
     }).start();
   }
 
+
   private void sendEmptyMessage(int what) {
     if (handler != null) {
       handler.sendEmptyMessage(what);
