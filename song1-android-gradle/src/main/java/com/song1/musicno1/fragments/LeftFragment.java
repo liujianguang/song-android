@@ -20,7 +20,6 @@ import com.song1.musicno1.adapter.NavigationAdapter;
 import com.song1.musicno1.dialogs.LoadingDialog;
 import com.song1.musicno1.fragments.base.BaseFragment;
 import com.song1.musicno1.fragments.download.DownLoadManagerFragment;
-import com.song1.musicno1.fragments.test.TestFragment;
 import com.song1.musicno1.helpers.MainBus;
 import com.song1.musicno1.models.events.ExitEvent;
 import com.song1.musicno1.models.events.upnp.MediaServerEvent;
@@ -88,9 +87,11 @@ public class LeftFragment extends Fragment implements AdapterView.OnItemClickLis
     adapter.setCurrentChannel(adapter.getItem(1));
     adapter.notifyDataSetChanged();
     listView.setOnItemClickListener(this);
-    mainActivity = (MainActivity) getActivity();
 
+
+    mainActivity = (MainActivity) getActivity();
     showFragment(R.string.local_source);
+
   }
 
   private void showFragment(int resId) {

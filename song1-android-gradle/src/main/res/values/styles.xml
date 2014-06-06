@@ -39,6 +39,10 @@
     <item name="android:actionBarStyle">@style/ActionBarStyle</item>
     <item name="android:windowActionBarOverlay">true</item>
   </style>
+  
+  <style name="TestTheme" parent="Theme.AppCompat.Light">
+    <item name="android:windowActionBar">false</item>
+  </style>
 
   <style name="ListItem">
     <item name="android:layout_height">@dimen/list_item_height</item>

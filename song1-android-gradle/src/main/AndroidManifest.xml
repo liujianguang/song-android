@@ -17,8 +17,8 @@
   <application
       android:allowBackup="true"
       android:name=".App"
-      android:label="@string/app_name"
       android:icon="@drawable/song1"
+      android:label="@string/song1"
       android:theme="@style/AppTheme"
       android:hardwareAccelerated="false">
     <meta-data
@@ -42,6 +42,7 @@
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
+
     <activity
         android:name=".activities.SearchActivity"
         android:screenOrientation="portrait">
