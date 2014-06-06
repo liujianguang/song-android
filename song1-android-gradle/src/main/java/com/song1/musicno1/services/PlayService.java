@@ -168,6 +168,7 @@ public class PlayService extends Service {
         .setContentIntent(pendingIntent)
         .setContent(remoteViews);
 
+
     notification = builder.build();
     notification.flags |= Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
 

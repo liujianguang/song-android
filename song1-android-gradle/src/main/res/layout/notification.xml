@@ -9,6 +9,7 @@
   <ImageView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginLeft="5dp"
       android:src="@drawable/song1"/>
 
   <LinearLayout
@@ -25,7 +26,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center_vertical"
-        android:paddingLeft="20dp">
+        android:paddingLeft="30dp">
 
       <TextView
           android:id="@+id/titleTextView"
@@ -51,12 +52,13 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
-      <Button
+      <ImageButton
           android:id="@+id/exitButton"
           android:layout_width="wrap_content"
           android:layout_height="match_parent"
           android:layout_weight="1"
           android:text="exit"
+          android:src="@drawable/ic_exit"
           android:background="@null"/>
 
       <ImageButton
@@ -77,12 +79,13 @@
           android:visibility="gone"/>
 
 
-      <Button
+      <ImageButton
           android:id="@+id/nextButton"
           android:layout_width="wrap_content"
           android:layout_height="match_parent"
           android:layout_weight="1"
           android:text="next"
+          android:src="@drawable/ic_next"
           android:background="@null"/>
     </LinearLayout>
   </LinearLayout>
@@ -114,11 +117,12 @@
               android:text="@string/song1_working"
               android:textSize="@dimen/text_size_small"/>
       </LinearLayout>
-    <Button
+    <ImageButton
         android:id="@+id/exitButton2"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:text="exit"
+        android:src="@drawable/ic_exit"
         android:background="@null"/>
   </LinearLayout>
 </LinearLayout>
