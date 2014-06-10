@@ -17,7 +17,6 @@ import com.song1.musicno1.R;
  */
 public class BaseFragment extends Fragment {
   private String title;
-  private TextView titleView;
 
   public BaseFragment() {
   }
@@ -30,9 +29,6 @@ public class BaseFragment extends Fragment {
       if (actionBar != null) {
         actionBar.setTitle(title);
       }
-      if(titleView != null){
-        titleView.setText(title);
-      }
     }
 
   }
@@ -41,10 +37,8 @@ public class BaseFragment extends Fragment {
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     View view = getActionBarActivity().getSupportActionBar().getCustomView();
-    titleView = (TextView) view.findViewById(R.id.title);
     if (title != null) {
-      titleView.setText(title);
-//      getActivity().getActionBar().setTitle(title);
+      getActivity().getActionBar().setTitle(title);
     }
   }
 

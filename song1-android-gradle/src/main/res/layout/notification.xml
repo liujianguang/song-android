@@ -53,15 +53,6 @@
         android:orientation="horizontal">
 
       <ImageButton
-          android:id="@+id/exitButton"
-          android:layout_width="wrap_content"
-          android:layout_height="match_parent"
-          android:layout_weight="1"
-          android:text="exit"
-          android:src="@drawable/ic_exit"
-          android:background="@null"/>
-
-      <ImageButton
           android:id="@+id/playButton"
           android:layout_width="wrap_content"
           android:layout_height="match_parent"
@@ -85,7 +76,17 @@
           android:layout_height="match_parent"
           android:layout_weight="1"
           android:text="next"
-          android:src="@drawable/ic_next"
+          android:src="@drawable/ic_next_notification"
+          android:background="@null"/>
+
+
+      <ImageButton
+          android:id="@+id/exitButton"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:text="exit"
+          android:src="@drawable/ic_exit"
           android:background="@null"/>
     </LinearLayout>
   </LinearLayout>

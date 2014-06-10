@@ -10,6 +10,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.internal.widget.ActionBarView;
+import android.util.DisplayMetrics;
 import android.view.*;
 import android.widget.Toast;
 import butterknife.ButterKnife;
@@ -44,17 +47,23 @@ import javax.inject.Inject;
  */
 public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.PanelSlideListener {
   protected
-  @InjectView(R.id.drawer)          DrawerLayout         drawerLayout;
-  @InjectView(R.id.sling_up)        SlidingUpPanelLayout slidingUpPanel;
-  @InjectView(R.id.play_bar)        View                 playBarView;
-  @InjectView(R.id.main)            View                 mainView;
-  @InjectView(R.id.playing_section) View                 playingSectionView;
+  @InjectView(R.id.drawer)
+  DrawerLayout drawerLayout;
+  @InjectView(R.id.sling_up)
+  SlidingUpPanelLayout slidingUpPanel;
+  @InjectView(R.id.play_bar)
+  View playBarView;
+  @InjectView(R.id.main)
+  View mainView;
+  @InjectView(R.id.playing_section)
+  View playingSectionView;
 
 
-  private MenuDrawer   mMenuDrawer;
-  @Inject LeftFragment leftFragment;
-  private   PlayingFragment       playingFragment;
-  private   PlayBarFragment      playBarFragment;
+  private MenuDrawer mMenuDrawer;
+  @Inject
+  LeftFragment leftFragment;
+  private PlayingFragment playingFragment;
+  private PlayBarFragment playBarFragment;
 
 
 //  protected ActionBarDrawerToggle actionBarDrawerToggle;
@@ -62,14 +71,16 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    initActionBar();
+
     Log.init();
     App.inject(this);
-    initActionBar();
-    setContentView(R.layout.activity_main);
 
+    //setContentView(R.layout.activity_main);
 
-    ButterKnife.inject(this);
     initMenuDrawer();
+    ButterKnife.inject(this);
+
 
     startService(new Intent(this, UpnpService.class));
     startService(new Intent(this, PlayService.class));
@@ -91,26 +102,50 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
         .commit();
 //    drawerLayout.setDrawerListener(actionBarDrawerToggle);
     //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-   // initActionBar();
+    // initActionBar();
   }
 
-  private void initActionBar(){
-    getSupportActionBar().setDisplayShowTitleEnabled(false);
-    getSupportActionBar().setIcon(R.drawable.ic_home);
+  private void initActionBar() {
+
+    getSupportActionBar().setDisplayShowHomeEnabled(true);
     getSupportActionBar().setHomeButtonEnabled(true);
-    getSupportActionBar().setDisplayShowCustomEnabled(true);
-    getSupportActionBar().setCustomView(R.layout.custom_title);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home);
+    getSupportActionBar().setIcon(R.drawable.point);
+
+    View view = findViewById(android.R.id.home);
+//    view.setVisibility(View.GONE);
+
+//    View parent = (View) view.getParent();
+//    parent.setVisibility(View.GONE);
+//    System.out.println("_________________________________" + parent);
+
+
+//        getSupportActionBar().setDisplayShowCustomEnabled(true);
+//        getSupportActionBar().setCustomView(R.layout.custom_title);
   }
 
 
-  private void initMenuDrawer(){
+  private void initMenuDrawer() {
     mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.BEHIND, Position.LEFT, MenuDrawer.MENU_DRAG_WINDOW);
     mMenuDrawer.setMenuView(R.layout.left);
-//    mMenuDrawer.setContentView(R.layout.activity_main);
+    mMenuDrawer.setContentView(R.layout.activity_main);
     mMenuDrawer.setDropShadow(R.drawable.shadow);
 //    mMenuDrawer.setMaxAnimationDuration(3000);
 //    mMenuDrawer.setHardwareLayerEnabled(false);
-    mMenuDrawer.setMenuSize((int)getResources().getDimension(R.dimen.left_fragment_width));
+    DisplayMetrics dm = new DisplayMetrics();
+    getWindowManager().getDefaultDisplay().getMetrics(dm);
+    System.out.println("&&&&&&&&&&&&&&&&&&&&" + dm.widthPixels);
+
+    int width = 50;
+    System.out.println(width);
+    System.out.println(dm.density);
+    System.out.println(dm.density * width);
+    System.out.println(ViewHelper.dp2pixels(this,width));
+    int menuWidth = dm.widthPixels - ViewHelper.dp2pixels(this,width);
+
+    mMenuDrawer.setMenuSize(menuWidth);
+    mMenuDrawer.peekDrawer();
   }
 
   @Override
@@ -180,7 +215,7 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
   public void onBackPressed() {
 
     int state = mMenuDrawer.getDrawerState();
-    if (state == MenuDrawer.STATE_OPEN || state == MenuDrawer.STATE_OPENING){
+    if (state == MenuDrawer.STATE_OPEN || state == MenuDrawer.STATE_OPENING) {
       mMenuDrawer.closeMenu();
       return;
     }
@@ -194,7 +229,8 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
       super.onBackPressed();
       if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
 //        actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.ic_home);
+        //getSupportActionBar().setIcon(R.drawable.ic_home);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
       }
 
@@ -215,7 +251,8 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
         .addToBackStack(stackName)
         .commit();
 //    actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
-    getSupportActionBar().setIcon(R.drawable.back);
+    // getSupportActionBar().setIcon(R.drawable.home_back);
+    getSupportActionBar().setHomeAsUpIndicator(R.drawable.home_back);
     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
   }
 
@@ -233,7 +270,7 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
   @Override
   public void onPanelCollapsed(View panel) {
     //ToastUtil.show(this,"onPanelCollapsed");
-    mMenuDrawer.setMenuSize((int)getResources().getDimension(R.dimen.left_fragment_width));
+    mMenuDrawer.setMenuSize((int) getResources().getDimension(R.dimen.left_fragment_width));
     if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
       drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }

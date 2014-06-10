@@ -20,7 +20,7 @@
       android:icon="@drawable/song1"
       android:label="@string/song1"
       android:theme="@style/AppTheme"
-      android:hardwareAccelerated="false">
+      android:hardwareAccelerated="true">
     <meta-data
         android:name="AA_DB_NAME"
         android:value="song1.db"/>

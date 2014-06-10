@@ -2,7 +2,7 @@
 
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
   <item
-      android:drawable="@drawable/ic_back"
+      android:drawable="@drawable/back"
       android:left="15dp"
       android:right="9dp"/>
 </layer-list>
