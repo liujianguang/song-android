@@ -139,7 +139,7 @@ public class UpnpService extends Service implements DeviceChangeListener {
 
   private void removeAllDevice(DeviceList deviceList) {
     for (int i = 0; i < deviceList.size(); i++) {
-      deviceRemoved(deviceList.getDevice(i));
+      PlayerStore.INSTANCE.removePlayerById(deviceList.getDevice(i).getUDN());
     }
   }
 
@@ -175,7 +175,6 @@ public class UpnpService extends Service implements DeviceChangeListener {
   @Override
   public void deviceRemoved(Device removedDevice) {
     Log.d(this, "Device removed " + removedDevice.getFriendlyName() + " " + removedDevice.getDeviceType());
-    PlayerStore.INSTANCE.removePlayerById(removedDevice.getUDN());
   }
 
   @Subscribe
