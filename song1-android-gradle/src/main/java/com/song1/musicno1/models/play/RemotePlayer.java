@@ -231,7 +231,9 @@ public class RemotePlayer implements Player {
 
   @Override
   public void release() {
-    stop();
+    if (state == State.PLAYING){
+      stop();
+    }
     playExecutor.shutdown();
     volumeExecutors.shutdown();
   }
