@@ -138,10 +138,6 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
     System.out.println("&&&&&&&&&&&&&&&&&&&&" + dm.widthPixels);
 
     int width = 50;
-    System.out.println(width);
-    System.out.println(dm.density);
-    System.out.println(dm.density * width);
-    System.out.println(ViewHelper.dp2pixels(this,width));
     int menuWidth = dm.widthPixels - ViewHelper.dp2pixels(this,width);
 
     mMenuDrawer.setMenuSize(menuWidth);
@@ -238,9 +234,15 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
   }
 
   public void replaceMain(Fragment fragment) {
+    int backStackCount = getSupportFragmentManager().getBackStackEntryCount();
+    for(int i = 0; i < backStackCount; i++) {
+      getSupportFragmentManager().popBackStack();
+    }
+
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.main, fragment)
         .commit();
+    getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home);
     mMenuDrawer.closeMenu();
     drawerLayout.closeDrawers();
   }
@@ -270,7 +272,11 @@ public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.P
   @Override
   public void onPanelCollapsed(View panel) {
     //ToastUtil.show(this,"onPanelCollapsed");
-    mMenuDrawer.setMenuSize((int) getResources().getDimension(R.dimen.left_fragment_width));
+    DisplayMetrics dm = new DisplayMetrics();
+    getWindowManager().getDefaultDisplay().getMetrics(dm);
+    int width = 50;
+    int menuWidth = dm.widthPixels - ViewHelper.dp2pixels(this,width);
+    mMenuDrawer.setMenuSize(menuWidth);
     if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
       drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
